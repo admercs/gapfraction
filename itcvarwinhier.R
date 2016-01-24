@@ -1,0 +1,50 @@
+itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, type='circle', res=1, fun=max, num=TRUE, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
+  
+  require(raster)
+  require(igraph)
+  
+  myColorRamp <- function(colors, values) {
+    v <- (values - min(values))/diff(range(values))
+    x <- colorRamp(colors)(v)
+    rgb(x[,1], x[,2], x[,3], maxColorValue=255)
+  }
+  
+  val <- seq(from=0, to=max(values(chm.stack)[!is.na(values(chm.stack))]), length.out=length(values(chm.stack)))
+  bw  <- myColorRamp(colors=c('black','white'), values=val)
+  
+  chm.out   <- stackApply(chm.stack, indices=c(1), fun=max, na.rm=T)
+  chm.unstk <- unstack(chm.stack)
+  itc.layer <- list()
+  
+  for(i in 2:(length(chm.unstk))) {
+    layer.in  <- chm.unstk[[i]]
+    itc.out   <- itc.varwin(chm=layer.in, ht2rad=ht2rad, type=type, plots=plots, geoTIFF=geoTIFF, num=FALSE)
+    layer.ext <- extend(itc.out, c(1,1))
+    itc.clump <- clump(layer.ext, directions=8)
+    f <- freq(itc.clump)
+    f <- as.data.frame(f)
+    exclude <- f$value[which(f$count > 1)]
+    itc.clump[itc.clump %in% exclude]  <- NA
+    itc.clump[!itc.clump %in% exclude] <- 1
+    itc.layer[i] <- itc.clump
+  }
+  
+  itc.layer <- itc.layer[!sapply(itc.layer, is.null)]
+  itc.stack <- stack(itc.layer)
+  itc.out   <- stackApply(itc.stack, indices=c(1), fun=fun, na.rm=T)
+  values(itc.out)[values(itc.out)==0] <- NA
+  itc.trees <- clump(itc.out, directions=8)
+  ntrees    <- length(unique(itc.trees))
+  message('There are an estimated ',ntrees,' trees in the plot')
+  
+  itc.crowns <- ht2rad(values(chm.out)[!is.na(values(itc.trees))])
+  crown.area <- sum(itc.crowns[!is.na(itc.crowns)]) / (length(chm.out[!is.na(chm.out)]) * res^2) * 100
+  
+  if(num==TRUE) {
+    return( c(trees=ntrees, crown.area=crown.area) )
+  } else if(stacked==FALSE) {
+    return(itc.out)
+  } else if(stacked==TRUE) {
+    return(itc.stack)
+  }
+}
