@@ -1,17 +1,17 @@
 itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
-  
+
   require(rgdal)
   require(igraph)
   require(raster)
   require(spatstat)
-  
+
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
-  
-  run.focal <- function(x=chm, y=ht2rad, rad=rd3) {
+
+  run.focal <- function(x=chm, y=ht2rad, rad=rd3, type=type) {
     htt <- hts[rd2==rad | rd2==rad-1]
     x2  <- x > min(htt) & x < max(htt)
     x3  <- x2 * x
@@ -20,18 +20,18 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     itd <- focal(x=x, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
     return(itd)
   }
-  
+
   if(nlayers(chm) > 1) {
     chm <- stackApply(chm, indices=c(1), fun=max, na.rm=T)
   }
-  
+
   if(is.character(chm)) {
     isPath <- TRUE
     folder <- dirname(chm)
     name   <- strsplit(basename(chm), '\\.')[[1]][1]
     chm    <- raster(chm)
   } else isPath <- FALSE
-  
+
   hts <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
   rd1 <- ht2rad(hts)
   rd2 <- round(rd1)
@@ -39,27 +39,27 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   for(i in 1:length(rd3)) rd3[i] <- ifelse(rd3[i] %% 2 != 0, rd3[i], rd3[i] + 1)
   if(length(rd3)==0) stop('Trees of no suitable height classes exist for the crown area moving window')
   message('Computing ', length(rd3), ' moving window(s)')
-  
+
   if(length(rd3==1)) {
-    itc.out  <- run.focal(x=chm, y=ht2rad, rad=rd3)
+    itc.out  <- run.focal(x=chm, y=ht2rad, rad=rd3, type=type)
   } else {
     itc.stk <- stack()
     for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(x=chm, y=ht2rad, rad=rd3[i])
+      itc.new  <- run.focal(x=chm, y=ht2rad, rad=rd3[i], type=type)
       itc.stk  <- stack(itc.stk, itc.new)
     }
     itc.out  <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
   }
-  
+
   itc.trees <- clump(itc.out, directions=8)
   ntrees    <- length(unique(itc.trees))
   message('There are an estimated ',ntrees,' trees in the plot')
   itc.crowns <- ht2rad(chm) * itc.out
   crown.area <- sum(values(itc.crowns)[!is.na(values(itc.crowns))]) / (length(chm[!is.na(chm)]) * res^2) * 100
-  
+
   val <- seq(from=0, to=max(values(chm)[!is.na(values(chm))]), length.out=length(values(chm)))
   bw  <- myColorRamp(colors=c('black','white'), values=val)
-  
+
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_trees.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
@@ -79,7 +79,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   plot(itc.out, col='red', add=T, legend=F)
   pts <- rasterToPoints(itc.out)
   points(pts, cex=chm[!is.na(itc.out)]/4, pch=10, lwd=1)
-  
+
   if(num==TRUE){
     return( c(trees=ntrees, crown.area=crown.area))
   } else return(itc.out)
