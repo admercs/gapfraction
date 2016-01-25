@@ -42,6 +42,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
 
   if(length(rd3==1)) {
     itc.out  <- run.focal(rad=rd3)
+    return(itc.out)
   } else {
     itc.stk <- stack()
     for(i in 1:length(rd3)) {
@@ -49,6 +50,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
       itc.stk  <- stack(itc.stk, itc.new)
     }
     itc.out  <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
+    return(itc.out)
   }
 
   itc.trees <- clump(itc.out, directions=8)
