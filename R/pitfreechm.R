@@ -1,51 +1,53 @@
 pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
-  
-  require(abind)
-  require(magic)
-  require(geometry)
-  require(raster)
-  require(sp)
-  require(spatstat)
-  require(rLiDAR)
-  require(Matrix)
-  require(rasterVis)
-  
+
+  if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
+
+  #require(abind)
+  #require(magic)
+  #require(geometry)
+  #require(raster)
+  #require(sp)
+  #require(spatstat)
+  #require(rLiDAR)
+  #require(Matrix)
+  #require(rasterVis)
+
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
-  
+
   bary.2d <- function(X=NA, f=NA, Xi=NA, k=NA) {
     dn  <- delaunayn(X)
     tri <- tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi[,1], yi=Xi[,2], bary=T)
-    
+
     active <- dn[tri$idx,]
 
     cart.pt1 <- matrix(X[active[,1],], ncol=2); colnames(cart.pt1) <- c('x','y')
     cart.pt2 <- matrix(X[active[,2],], ncol=2); colnames(cart.pt2) <- c('x','y')
     cart.pt3 <- matrix(X[active[,3],], ncol=2); colnames(cart.pt3) <- c('x','y')
-    
+
     tri.dist1 <- pointDistance(p1=cart.pt1, p2=cart.pt2, lonlat=F, allpairs=F)
     tri.dist2 <- pointDistance(p1=cart.pt2, p2=cart.pt3, lonlat=F, allpairs=F)
     tri.dist3 <- pointDistance(p1=cart.pt1, p2=cart.pt3, lonlat=F, allpairs=F)
-    
+
     active[tri.dist1 > k,] <- NA
     active[tri.dist2 > k,] <- NA
     active[tri.dist3 > k,] <- NA
-    
+
     active.filt <- active[complete.cases(active[,c(1,2,3)]),]
     Xi.filt <- Xi[complete.cases(active[,c(1,2,3)]),]
-    
+
     tri <- tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi.filt[,1], yi=Xi.filt[,2], bary=T)
-    
+
     M <- sparseMatrix(i=rep(1:nrow(Xi.filt),each=3), j=as.numeric(t(active.filt)), x=as.numeric(t(tri$p)), dims=c(nrow(Xi.filt), length(f)))
     result <- as.numeric(M %*% f)
     output <- matrix(c(Xi.filt, result), ncol=3)
     colnames(output) <- c('x','y','z')
     return(output)
   }
-  
+
   chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
     centers <- gridcentres(w, nx=nx, ny=ny)
     in.win  <- inside.owin(x=centers$x, y=centers$y, w=w)
@@ -58,7 +60,7 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     las.chm <- rasterize(las[,1:2], las.ras, las[,3], fun=max)
     return(las.chm)
   }
-  
+
   tin <- function(las=NA, nx=nx, ny=ny, k=NA, w=chull.all) {
     centers <- gridcentres(w, nx=nx, ny=ny)
     in.win  <- inside.owin(x=centers$x, y=centers$y, w=w)
@@ -71,13 +73,13 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     chm.tin <- rasterize(tin.las[,1:2], tin.ras, tin.las[,3], fun=max)
     return(chm.tin)
   }
-  
+
   # Read LAS data
   LAS       <- readLAS(las.path, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
-  
+
   # Reproject LAS data if specified
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
@@ -87,45 +89,45 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     rpLAS  <- coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
-  
+
   if(!is.na(las.reproj)) {
     r.crs <- las.reproj
   } else r.crs <- las.proj
-  
+
   # Create color ramp for plots
   val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
-  
+
   # Compute convex hull to use as a window
   chull.all <- convexhull.xy(x=LAS[,1], y=LAS[,2])
-  
+
   # Barycentrically interpolated (effective TIN) canopy height models
   ground  <- tin(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, k=ku, w=chull.all)
   tin.all <- tin(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, k=ko)
   tin.all <- stackApply(stack(tin.all,ground), indices=c(1), fun=max, na.rm=T)
   tins    <- list()
-  
+
   for(i in 1:length(breaks)) {
     tin.break <- tin(las=LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],], nx=nx, ny=ny, k=ko, w=chull.all)
     tin.break <- stack(tin.break, ground)
     tins[i]   <- stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
   }
-  
+
   # Pit-free CHM
   tins    <- stack(tins)
   chms    <- stack(ground, tins, tin.all)
   names(chms) <- c('Ground Returns',breaks,'All First Returns')
   pitfree <- stackApply(chms, indices=c(1), fun=max, na.rm=T)
-  
+
   if(plots==TRUE) {
-    
+
     jpeg(file.path(LASfolder, paste(LASname,'_chm_tin.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,3), pty='s', xpd=TRUE)
     plot(ground,  col=col, box=F)
     plot(tin.all, col=col, box=F)
     plot(stack(tins), col=col, box=F)
     dev.off()
-    
+
     jpeg(file.path(LASfolder, paste(LASname,'_chm_pitfree.jpg',sep='')), width=16, height=16, units='in', res=300, quality=100)
     par(mfrow=c(2,2), pty='s', xpd=TRUE)
     plot(LAS, pch=19, cex=1, col=col)
@@ -133,17 +135,17 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     plot(tin.all, col=col, box=F)
     plot(pitfree, col=col, box=F)
     dev.off()
-    
+
     jpeg(file.path(LASfolder, paste(LASname,'_chm_all_vis.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
     levelplot(chm.all, contour=TRUE, col.regions=col)
     dev.off()
-    
+
     jpeg(file.path(LASfolder, paste(LASname,'_chm_tin_vis.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
     levelplot(tin.all, contour=TRUE, col.regions=col)
     dev.off()
-    
+
     jpeg(file.path(LASfolder, paste(LASname,'_chm_pitfree_vis.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
     levelplot(pitfree, contour=TRUE, col.regions=col)

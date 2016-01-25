@@ -1,9 +1,9 @@
 itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
 
-  require(raster)
-  require(spatstat)
-  require(rgdal)
-  require(igraph)
+  #require(raster)
+  #require(spatstat)
+  #require(rgdal)
+  #require(igraph)
 
   myColorRamp <- function(cols, vals) {
     vx <- (vals - min(vals))/diff(range(vals))
