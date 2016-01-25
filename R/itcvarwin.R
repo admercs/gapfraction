@@ -30,22 +30,38 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   if(length(rd3)==0) stop('Trees of no suitable height classes exist for the crown area moving window')
   message('Computing ', length(rd3), ' moving window(s)')
 
-  run.focal <- function(chm=chm, hts=hts, rd2=rd2, rd3=rd3, type=type) {
+#   run.focal <- function(chm=chm, hts=hts, rd2=rd2, rd3=rd3, type=type) {
+#     htt <- hts[rd2==rd3 | rd2==rd3-1]
+#     x2  <- chm > min(htt) & chm < max(htt)
+#     x3  <- x2 * chm
+#     fun <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
+#     wts <- focalWeight(x=x3, d=rd3, type=type)
+#     itc <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rd3, padValue=NA, NAonly=F)
+#     return(itc)
+#   }
+
+  if(length(rd3==1)) {
+
     htt <- hts[rd2==rd3 | rd2==rd3-1]
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
     fun <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
     wts <- focalWeight(x=x3, d=rd3, type=type)
-    itc <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rd3, padValue=NA, NAonly=F)
-    return(itc)
-  }
+    itc.out <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rd3, padValue=NA, NAonly=F)
+    #itc.out  <- run.focal(chm=chm, hts=hts, rd2=rd2, rd3=rd3, type=type)
 
-  if(length(rd3==1)) {
-    itc.out  <- run.focal(chm=chm, hts=hts, rd2=rd2, rd3=rd3, type=type)
   } else {
     itc.stk <- stack()
     for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(chm=chm, hts=hts, rd2=rd2, rd3=rd3, type=type)
+
+      htt <- hts[rd2==rd3[i] | rd2==rd3[i]-1]
+      x2  <- chm > min(htt) & chm < max(htt)
+      x3  <- x2 * chm
+      fun <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
+      wts <- focalWeight(x=x3, d=rd3[i], type=type)
+      itc.new <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rd3[i], padValue=NA, NAonly=F)
+
+      #itc.new  <- run.focal(chm=chm, hts=hts, rd2=rd2, rd3=rd3[i], type=type)
       itc.stk  <- stack(itc.stk, itc.new)
     }
     itc.out  <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
