@@ -24,7 +24,7 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
     return(out)
   }
 
-  LAS       <- readLAS(LASpath, short=FALSE)
+  LAS       <- rLiDAR::readLAS(LASpath, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(LASpath)
   LASname   <- strsplit(basename(LASpath), '\\.')[[1]][1]
@@ -33,9 +33,9 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
     try(if(length(reprojection) != 2) stop('Please supply input and output CRS strings in the form: c(input,output)'))
     CRSin  <- reprojection[1]
     CRSout <- reprojection[2]
-    spLAS  <- SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
-    tmLAS  <- spTransform(spLAS, CRSobj=CRS(CRSout))
-    rpLAS  <- coordinates(tmLAS)
+    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
+    tmLAS  <- sp::spTransform(spLAS, CRSobj=CRS(CRSout))
+    rpLAS  <- sp::coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
 
@@ -114,7 +114,6 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
   result <- c(gapfraction=sum(gapfrac), e.lai=mean(e.lai), aci=mean(aci))
 
   if (plots==TRUE) {
-
     jpeg(file.path(LASfolder, paste(LASname,'_gf_lai_aci.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
@@ -129,7 +128,6 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
 
     plot(aci, type='b', xaxt='n', xlab='Zenith Angle', ylab='Apparent Clumping Index', lwd=2, main='Apparent Clumping Index by Zenith Angle')
     axis(1, at=1:length(pol.sum), labels=names(pol.sum))
-
     dev.off()
   }
   if(silent==FALSE) {
@@ -146,7 +144,6 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
 
     plot(aci, type='b', xaxt='n', xlab='Zenith Angle', ylab='Apparent Clumping Index', lwd=2, main='Apparent Clumping Index by Zenith Angle')
     axis(1, at=1:length(pol.sum), labels=names(pol.sum))
-
     par(mfrow=c(1,1))
   }
   return(result)

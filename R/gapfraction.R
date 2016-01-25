@@ -17,7 +17,6 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  # Cartesian to stereo-graphic
   crt2str <- function(m) {
     x     <- m[,1]
     y     <- m[,2]
@@ -29,7 +28,6 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     return(out)
   }
 
-  # Cartesian to equi-distant
   crt2eqd <- function(m) {
     x     <- m[,1]
     y     <- m[,2]
@@ -41,7 +39,6 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     return(out)
   }
 
-  # Cartesian to orthogonal
   crt2ort <- function(m) {
     x     <- m[,1]
     y     <- m[,2]
@@ -53,7 +50,6 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     return(out)
   }
 
-  # Cartesian to equi-solid-angle
   crt2esa <- function(m) {
     x     <- m[,1]
     y     <- m[,2]
@@ -65,7 +61,7 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     return(out)
   }
 
-  LAS       <- readLAS(LASpath, short=FALSE)
+  LAS       <- rLiDAR::readLAS(LASpath, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(LASpath)
   LASname   <- strsplit(basename(LASpath), '\\.')[[1]][1]
@@ -74,9 +70,9 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     try(if(length(reprojection) != 2) stop('Please supply input and output CRS strings in the form: c(input,output)'))
     CRSin  <- reprojection[1]
     CRSout <- reprojection[2]
-    spLAS  <- SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
-    tmLAS  <- spTransform(spLAS, CRSobj=CRS(CRSout))
-    rpLAS  <- coordinates(tmLAS)
+    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
+    tmLAS  <- sp::spTransform(spLAS, CRSobj=CRS(CRSout))
+    rpLAS  <- sp::coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
 
@@ -106,7 +102,7 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
   if(model == 'equidist')  xy <- crt2eqd(m)
   if(model == 'equiangle') xy <- crt2esa(m)
 
-  md <- delaunayn(xy, full=F)
+  md <- geometry::delaunayn(xy, full=F)
 
   thresh.var <- rep(thresh.var, nrows)
 
@@ -120,10 +116,9 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
                 z)))))))
 
   canopy <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, 1, 0)
-  mv     <- deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
+  mv     <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
   gf     <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$del.area )
 
-  # Plot setup
   start      <- pi/2
   rp.type    <- 's'
   point.symbols <- 19
@@ -138,11 +133,10 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
   angles     <- seq(0, 1.96*pi, by=0.04*pi)
   nlpos      <- 8
   label.pos  <- seq(0, pi*(2-2/nlpos), length.out=nlpos)
-  cvex       <- convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
+  cvex       <- spatstat::convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
   clipp      <- cvex$bdry[[1]]
 
   if (plots == TRUE) {
-
     jpeg(file.path(LASfolder, paste(LASname,'_closure.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
@@ -150,23 +144,22 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE)
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    trimesh(md, xy, add=TRUE)
-    radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    geometry::trimesh(md, xy, add=TRUE)
+    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE)
 
-    cvex <- convexhull.xy(matrix(c(x=x,y=y),ncol=2))
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
-    plot.tile.list(tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
+    deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
-    radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE)
     dev.off()
@@ -177,22 +170,22 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE)
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    trimesh(md, xy, add=TRUE)
-    radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    geometry::trimesh(md, xy, add=TRUE)
+    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE)
 
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
-    plot.tile.list(tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
+    deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
-    radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE)
     par(mfrow=c(1,1))

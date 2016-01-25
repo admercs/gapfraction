@@ -5,10 +5,10 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   #require(rgdal)
   #require(igraph)
 
-  myColorRamp <- function(cols, vals) {
-    vx <- (vals - min(vals))/diff(range(vals))
-    xx <- colorRamp(cols)(vx)
-    rgb(xx[,1], xx[,2], xx[,3], maxColorValue=255)
+  myColorRamp <- function(colors, values) {
+    v <- (values - min(values))/diff(range(values))
+    x <- colorRamp(colors)(v)
+    rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
   run.focal <- function(rad) {
@@ -16,23 +16,23 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
     fun <- function(z) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
-    wts <- focalWeight(x=x3, d=rad, type=type)
-    res <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
+    wts <- raster::focalWeight(x=x3, d=rad, type=type)
+    res <- raster::focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
     return(res)
   }
 
   if(nlayers(chm) > 1) {
-    chm <- stackApply(chm, indices=c(1), fun=max, na.rm=T)
+    chm <- raster::stackApply(chm, indices=c(1), fun=max, na.rm=T)
   }
 
   if(is.character(chm)) {
     isPath <- TRUE
     folder <- dirname(chm)
     name   <- strsplit(basename(chm), '\\.')[[1]][1]
-    chm    <- raster(chm)
+    chm    <- raster::raster(chm)
   } else isPath <- FALSE
 
-  hts <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
+  hts <- sort(unique(round(raster::values(chm)[raster::values(chm) >= 2 & !is.na(raster::values(chm))])))
   rd1 <- ht2rad(hts)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
@@ -43,44 +43,44 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   if(length(rd3==1)) {
     itc.out <- run.focal(rad=rd3)
   } else {
-    itc.stk <- stack()
+    itc.stk <- raster::stack()
     for(i in 1:length(rd3)) {
       itc.new  <- run.focal(rad=rd3[i])
-      itc.stk  <- stack(itc.stk, itc.new)
+      itc.stk  <- raster::stack(itc.stk, itc.new)
     }
-    itc.out <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
+    itc.out <- raster::stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
   }
 
-  itc.trees <- clump(itc.out, directions=8)
-  ntrees <- length(unique(values(itc.trees)[!is.na(values(itc.trees))]))
+  itc.trees <- raster::clump(itc.out, directions=8)
+  ntrees <- length(unique(raster::values(itc.trees)[!is.na(raster::values(itc.trees))]))
   message('There are an estimated ',ntrees,' trees in the plot')
   itc.crowns <- ht2rad(chm) * itc.out
-  crown.area <- sum(values(itc.crowns)[!is.na(values(itc.crowns))]) / (length(chm[!is.na(chm)]) * res^2) * 100
+  crown.area <- sum(raster::values(itc.crowns)[!is.na(raster::values(itc.crowns))]) / (length(raster::values(chm)[!is.na(raster::values(chm))]) * res^2) * 100
 
-  val <- seq(from=0, to=max(values(chm)[!is.na(values(chm))]), length.out=length(values(chm)))
+  val <- seq(from=0, to=max(raster::values(chm)[!is.na(raster::values(chm))]), length.out=length(raster::values(chm)))
   bw  <- myColorRamp(cols=c('black','white'), vals=val)
 
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_trees.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
-    plot(chm, col=bw)
-    plot(itc.out, col='red', add=T, legend=F)
-    pts <- rasterToPoints(itc.out)
+    raster::plot(chm, col=bw)
+    raster::plot(itc.out, col='red', add=T, legend=F)
+    pts <- raster::rasterToPoints(itc.out)
     points(pts, cex=x[!is.na(itc.out)]/5, pch=10, lwd=1)
     dev.off()
   }
   if(isPath==TRUE & geoTIFF==TRUE) {
     fname <- paste(name,'_itd.tiff',sep='')
-    writeRaster(x=itc.out, filename=file.path(folder,fname), format='GTiff', overwrite=T)
+    raster::writeRaster(x=itc.out, filename=file.path(folder,fname), format='GTiff', overwrite=T)
   } else if(isPath==FALSE & geoTIFF==TRUE) {
-    writeRaster(x=itc.out, filename='itd.tiff', format='GTiff', overwrite=T)
+    raster::writeRaster(x=itc.out, filename='itd.tiff', format='GTiff', overwrite=T)
   }
-  plot(chm, col=bw)
-  plot(itc.out, col='red', add=T, legend=F)
-  pts <- rasterToPoints(itc.out)
+  raster::plot(chm, col=bw)
+  raster::plot(itc.out, col='red', add=T, legend=F)
+  pts <- raster::rasterToPoints(itc.out)
   points(pts, cex=chm[!is.na(itc.out)]/4, pch=10, lwd=1)
 
-  if(num==TRUE){
+  if(num==TRUE) {
     return( c(trees=ntrees, crown.area=crown.area))
   } else return(itc.out)
 }

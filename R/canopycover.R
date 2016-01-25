@@ -16,7 +16,7 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  LAS       <- readLAS(LASpath, short=FALSE)
+  LAS       <- rLiDAR::readLAS(LASpath, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(LASpath)
   LASname   <- strsplit(basename(LASpath), '\\.')[[1]][1]
@@ -25,9 +25,9 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
     try(if(length(reprojection) != 2) stop('Please supply input and output CRS strings in the form: c(input,output)'))
     CRSin  <- reprojection[1]
     CRSout <- reprojection[2]
-    spLAS  <- SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
-    tmLAS  <- spTransform(spLAS, CRSobj=CRS(CRSout))
-    rpLAS  <- coordinates(tmLAS)
+    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
+    tmLAS  <- sp::spTransform(spLAS, CRSobj=CRS(CRSout))
+    rpLAS  <- sp::coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
 
@@ -51,8 +51,8 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
           ifelse(col2 == 'class',     myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,9]),
           'forestgreen'))))
 
-  mhemi <- cbind(x, y)
-  md    <- delaunayn(mhemi, full=F)
+  xy <- matrix(c(x,y), nrow=length(x), ncol=2, dimnames=list(c(1:length(x)),c('x','y')))
+  md <- geometry::delaunayn(xy, full=F)
 
   thresh.var <- rep(thresh.var, nrows)
 
@@ -66,10 +66,10 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
                 z)))))))
 
   canopy     <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, 1, 0)
-  mv         <- deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
+  mv         <- deldir::deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
   cancover <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$del.area )
 
-  cvex  <- convexhull.xy(matrix(c(x=x,y=y),ncol=2))
+  cvex  <- spatstat::convexhull.xy(matrix(c(x=x,y=y),ncol=2))
   clipp <- cvex$bdry[[1]]
 
   if (plots == TRUE) {
@@ -77,15 +77,16 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
     jpeg(file.path(LASfolder, paste(LASname,'_closure.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
-    plot(LASord[,1],LASord[,2], pch=19, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
-    points(x, y, pch=point.symbols, col=point.col)
+    plot(x, y, pch=10, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(x, y, pch=10, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
-    points(x, y, pch=point.symbols, col=point.col)
+    plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
     trimesh(md, mhemi, add=TRUE)
 
+    plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
-    plot.tile.list(tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
-                   showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
+    deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
+                           showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
     dev.off()
   }
   if(silent==FALSE) {
@@ -99,7 +100,7 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
 
     plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
-    plot.tile.list(tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
+    deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
 
     par(mfrow=c(1,1))
