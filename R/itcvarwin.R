@@ -27,7 +27,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     chm    <- raster::raster(chm)
   } else isPath <- FALSE
 
-  hts <- sort(unique(round(raster::values(chm)[raster::values(chm) >= 2 & !is.na(raster::values(chm))])))
+  hts <- sort(unique(round(chm[chm >= 2 & !is.na(chm)])))
   rd1 <- ht2rad(hts)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
@@ -47,7 +47,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   }
 
   itc.trees <- raster::clump(itc.out, directions=8)
-  ntrees <- length(unique(raster::values(itc.trees)[!is.na(raster::values(itc.trees))]))
+  ntrees <- length(unique(itc.trees[!is.na(itc.trees)]))
   message('There are an estimated ',ntrees,' trees in the plot')
   itc.crowns <- ht2rad(chm) * itc.out
   crown.area <- sum(raster::values(itc.crowns)[!is.na(raster::values(itc.crowns))]) / (length(raster::values(chm)[!is.na(raster::values(chm))]) * res^2) * 100
