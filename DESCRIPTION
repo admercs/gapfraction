@@ -3,7 +3,8 @@ Title: Functions for processing airborne and terrestrial laser scanning LiDAR da
 Version: 1.0.0
 Authors@R: person("Adam", "Erickson", email = "adam.erickson@ubc.ca", role = c("aut", "cre"))
 Description: This package is designed for forestry applications. It includes functions for creating raw and fast-pit-free canopy height models (CHMs) that can be processed with included hierarchical variable-window and watershed segmentation tree crown detection functions. The package includes additional functions to estimate gap fraction (canopy closure), canopy cover, leaf area index (LAI), apparent clumping index, and a number of other canopy metrics. Finally, the package includes four common camera models used in hemispherical photography.
-Depends: R (>= 3.2.2), rLiDAR, raster, sp, spatstat, rgdal, rasterVis, plotrix, abind, magic, geometry, Matrix, deldir, igraph
+Depends: R (>= 3.2.2)
+Imports: rLiDAR, raster, sp, spatstat, rgdal, rasterVis, plotrix, abind, magic, geometry, Matrix, deldir, igraph
 Suggests: Cairo, EBImage
 License: MIT
 LazyData: true
