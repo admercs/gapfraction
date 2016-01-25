@@ -6,7 +6,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  run.focal <- function(rad) {
+  run.focal <- function(chm=chm, hts=hts, rd2=rd2, rad, type=type) {
     htt <- hts[rd2==rad | rd2==rad-1]
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
@@ -36,11 +36,11 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   message('Computing ', length(rd3), ' moving window(s)')
 
   if(length(rd3==1)) {
-    itc.out <- run.focal(rad=rd3)
+    itc.out <- run.focal(chm=chm, hts=hts, rd2=rd2, rad=rd3, type=type)
   } else {
     itc.stk <- raster::stack()
     for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(rad=rd3[i])
+      itc.new  <- run.focal(chm=chm, hts=hts, rd2=rd2, rad=rd3[i], type=type)
       itc.stk  <- raster::stack(itc.stk, itc.new)
     }
     itc.out <- raster::stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
