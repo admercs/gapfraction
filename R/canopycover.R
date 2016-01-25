@@ -2,14 +2,6 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
 
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
-  #require(abind)
-  #require(magic)
-  #require(geometry)
-  #require(sp)
-  #require(spatstat)
-  #require(rLiDAR)
-  #require(deldir)
-
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
@@ -81,7 +73,7 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
     plot(x, y, pch=10, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
     plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
-    trimesh(md, mhemi, add=TRUE)
+    geometry::trimesh(md, xy, add=TRUE)
 
     plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
@@ -96,7 +88,7 @@ canopycover <- function(LASpath=NA, reprojection=NA, col='height', col2=NA, thre
     plot(x, y, pch=10, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
     plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
-    trimesh(md, mhemi, add=TRUE)
+    geometry::trimesh(md, xy, add=TRUE)
 
     plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)

@@ -1,8 +1,5 @@
 itc.watershed.hier <- function(chm.stack=NA, ht2rad=NA, tolerance=0.1, fun=max, res=1, num=TRUE, stacked=FALSE, silent=FALSE, ws.plot=FALSE) {
 
-  #require(raster)
-  #require(igraph)
-
   if(nlayers(chm.stack)==1) stop('Only a single raster layer found; Please input a raster stack')
 
   myColorRamp <- function(colors, values) {
@@ -36,14 +33,14 @@ itc.watershed.hier <- function(chm.stack=NA, ht2rad=NA, tolerance=0.1, fun=max, 
 
   if(stacked==FALSE) {
     if(num==FALSE) {
-      raster::plot(chm.out, col=gray.colors(256, start=0, end=1, gamma=1, alpha=NULL))
-      raster::plot(itc.out, add=TRUE, col='red', legend=FALSE)
+      plot(chm.out, col=gray.colors(256, start=0, end=1, gamma=1, alpha=NULL))
+      plot(itc.out, add=TRUE, col='red', legend=FALSE)
       pts <- raster::rasterToPoints(itc.out)
       points(pts, cex=chm.out[!is.na(itc.out)]/4, pch=10, lwd=1)
       return(itc.out)
     } else return(c( trees=ntrees, crown.area=crown.area ))
   } else if(stacked==TRUE) {
-    raster::plot(itc.stack, col=col)
+    plot(itc.stack, col=bw)
     return(itc.stack)
   }
 }

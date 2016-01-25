@@ -2,10 +2,6 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
 
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
-  #require(sp)
-  #require(rLiDAR)
-  #require(plotrix)
-
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
@@ -39,9 +35,9 @@ lai <- function(LASpath=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
 
-  x    <- (LAS[,1]-min(LAS[,1])) - (diff(range(LAS[,1]))/2)
-  y    <- (LAS[,2]-min(LAS[,2])) - (diff(range(LAS[,2]))/2)
-  z    <-  LAS[,3]
+  x <- (LAS[,1]-min(LAS[,1])) - (diff(range(LAS[,1]))/2)
+  y <- (LAS[,2]-min(LAS[,2])) - (diff(range(LAS[,2]))/2)
+  z <-  LAS[,3]
 
   nrows <- length(x)
   m     <- matrix(c(x,y,z), nrow=nrows, ncol=3, dimnames=list(c(1:nrows),c('X','Y','Z')))

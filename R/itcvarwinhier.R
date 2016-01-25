@@ -1,16 +1,10 @@
 itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, type='circle', res=1, fun=max, num=TRUE, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  #require(raster)
-  #require(igraph)
-
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
-
-  #val <- seq(from=0, to=max(values(chm.stack)[!is.na(values(chm.stack))]), length.out=length(values(chm.stack)))
-  #bw  <- myColorRamp(colors=c('black','white'), values=val)
 
   chm.out   <- raster::stackApply(chm.stack, indices=c(1), fun=max, na.rm=T)
   chm.unstk <- raster::unstack(chm.stack)

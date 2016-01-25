@@ -2,16 +2,6 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
 
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
-  #require(abind)
-  #require(magic)
-  #require(geometry)
-  #require(raster)
-  #require(sp)
-  #require(spatstat)
-  #require(rLiDAR)
-  #require(Matrix)
-  #require(rasterVis)
-
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
@@ -54,7 +44,6 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     yo      <- centers$y[in.win]
     grd.2d  <- matrix(c(xo,yo), nrow=length(xo), ncol=2)
     las.ext <- raster::extent(grd.2d)
-    #las.ext <- extent(las[,1:2])
     las.ras <- raster::raster(las.ext, ncols=nx, nrows=ny)
     las.chm <- raster::rasterize(las[,1:2], las.ras, las[,3], fun=max)
     return(las.chm)
@@ -73,18 +62,16 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     return(chm.tin)
   }
 
-  # Read LAS data
   LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
 
-  # Reproject LAS data if specified
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
     CRSout <- las.reproj
-    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
-    tmLAS  <- sp::spTransform(spLAS, CRSobj=CRS(CRSout))
+    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=sp::CRS(CRSin))
+    tmLAS  <- sp::spTransform(spLAS, CRSobj=sp::CRS(CRSout))
     rpLAS  <- sp::coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
@@ -93,14 +80,11 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     r.crs <- las.reproj
   } else r.crs <- las.proj
 
-  # Create color ramp for plots
   val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
 
-  # Compute convex hull to use as a window
   chull.all <- spatstat::convexhull.xy(x=LAS[,1], y=LAS[,2])
 
-  # Barycentrically interpolated (effective TIN) canopy height models
   ground  <- tin(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, k=ku, w=chull.all)
   tin.all <- tin(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, k=ko)
   tin.all <- raster::stackApply(raster::stack(tin.all,ground), indices=c(1), fun=max, na.rm=T)
@@ -112,7 +96,6 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     tins[i]   <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
   }
 
-  # Pit-free CHM
   tins <- raster::stack(tins)
   chms <- raster::stack(ground, tins, tin.all)
   names(chms) <- c('Ground Returns',breaks,'All First Returns')
@@ -121,17 +104,17 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_chm_tin.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,3), pty='s', xpd=TRUE)
-    raster::plot(ground,  col=col, box=F)
-    raster::plot(tin.all, col=col, box=F)
-    raster::plot(tins, col=col, box=F)
+    plot(ground,  col=col, box=F)
+    plot(tin.all, col=col, box=F)
+    plot(tins, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_pitfree.jpg',sep='')), width=16, height=16, units='in', res=300, quality=100)
     par(mfrow=c(2,2), pty='s', xpd=TRUE)
     plot(LAS, pch=19, cex=1, col=col)
-    raster::plot(chm.all, col=col, box=F)
-    raster::plot(tin.all, col=col, box=F)
-    raster::plot(pitfree, col=col, box=F)
+    plot(chm.all, col=col, box=F)
+    plot(tin.all, col=col, box=F)
+    plot(pitfree, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_all_vis.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
@@ -150,14 +133,14 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     dev.off()
   }
   if(stacked==FALSE) {
-    raster::plot(pitfree, col=col)
+    plot(pitfree, col=col)
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_pfchm.tiff',sep='')
       raster::writeRaster(x=pitfree, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
     return(pitfree)
   } else if(stacked==TRUE) {
-    raster::plot(chms,  col=col)
+    plot(chms,  col=col)
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_pfchm_stack.tiff',sep='')
       raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)

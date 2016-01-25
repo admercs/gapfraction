@@ -1,10 +1,5 @@
 itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
 
-  #require(raster)
-  #require(spatstat)
-  #require(rgdal)
-  #require(igraph)
-
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
@@ -63,8 +58,8 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_trees.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
-    raster::plot(chm, col=bw)
-    raster::plot(itc.out, col='red', add=T, legend=F)
+    plot(chm, col=bw)
+    plot(itc.out, col='red', add=T, legend=F)
     pts <- raster::rasterToPoints(itc.out)
     points(pts, cex=x[!is.na(itc.out)]/5, pch=10, lwd=1)
     dev.off()
@@ -75,8 +70,8 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   } else if(isPath==FALSE & geoTIFF==TRUE) {
     raster::writeRaster(x=itc.out, filename='itd.tiff', format='GTiff', overwrite=T)
   }
-  raster::plot(chm, col=bw)
-  raster::plot(itc.out, col='red', add=T, legend=F)
+  plot(chm, col=bw)
+  plot(itc.out, col='red', add=T, legend=F)
   pts <- raster::rasterToPoints(itc.out)
   points(pts, cex=chm[!is.na(itc.out)]/4, pch=10, lwd=1)
 

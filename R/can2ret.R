@@ -2,9 +2,6 @@ can2ret <- function(LASpath=NA, thresh.val=1.25, silent=FALSE) {
 
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
-  #require(sp)
-  #require(rLiDAR)
-
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)

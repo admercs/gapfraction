@@ -2,11 +2,6 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
 
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
-  #require(raster)
-  #require(spatstat)
-  #require(rLiDAR)
-  #require(rasterVis)
-
   chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
     centers <- spatstat::gridcentres(w, nx=nx, ny=ny)
     in.win  <- spatstat::inside.owin(x=centers$x, y=centers$y, w=w)
@@ -14,7 +9,6 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
     yo      <- centers$y[in.win]
     grd.2d  <- matrix(c(xo,yo), nrow=length(xo), ncol=2)
     las.ext <- raster::extent(grd.2d)
-    #las.ext <- extent(las[,1:2])
     las.ras <- raster::raster(las.ext, ncols=nx, nrows=ny)
     las.chm <- raster::rasterize(las[,1:2], las.ras, las[,3], fun=max)
     return(las.chm)
@@ -34,8 +28,8 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
     CRSout <- las.reproj
-    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=CRS(CRSin))
-    tmLAS  <- sp::spTransform(spLAS, CRSobj=CRS(CRSout))
+    spLAS  <- sp::SpatialPoints(LAS[,c(1:3)], proj4string=sp::CRS(CRSin))
+    tmLAS  <- sp::spTransform(spLAS, CRSobj=sp::CRS(CRSout))
     rpLAS  <- sp::coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
@@ -64,12 +58,13 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
 
   if(plots==TRUE) {
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
+
     jpeg(file.path(LASfolder, paste(LASname,'_chm_raw_breeaks.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
-    raster::plot(chm.brks, col=col, box=F)
+    plot(chm.brks, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_raw.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
-    raster::plot(chm, col=col, box=F)
+    plot(chm, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_raw_level.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
@@ -81,14 +76,14 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
       fname <- paste(LASname,'_rawchm.tiff',sep='')
       raster::writeRaster(x=chm, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
-    raster::plot(chm, col=col)
+    plot(chm, col=col)
     return(chm)
   } else if(stacked==TRUE) {
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_rawchm_stack.tiff',sep='')
       raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
-    raster::plot(chms, col=col)
+    plot(chms, col=col)
     return(chms)
   }
 }

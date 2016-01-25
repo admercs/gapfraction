@@ -1,8 +1,5 @@
 sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='', type='polar', lang='en', locale='English', ieqot=F, summert=0) {
 
-  #require(Cairo)
-  #require(plotrix)
-
   if (lang=="de") {
     ltext=c("N","O","S","W","Nord","Ost","S?d","West","Azimuth","H?henwinkel","MEZ","MESZ","Uhr","Sonnenstandsdiagramm","Zenit","Horizont")
   } else if (lang=="en") {
