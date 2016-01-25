@@ -30,7 +30,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   if(length(rd3)==0) stop('Trees of no suitable height classes exist for the crown area moving window')
   message('Computing ', length(rd3), ' moving window(s)')
 
-  run.focal <- function(chm, hts, rd2, rd3, type) {
+  run.focal <- function(chm=chm, hts=hts, rd2=rd2, rd3=rd3, type=type) {
     htt <- hts[rd2==rd3 | rd2==rd3-1]
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
