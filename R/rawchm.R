@@ -53,7 +53,7 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
 
   chm.brks <- raster::stack(chm.brks)
   chms <- raster::stack(ground, chm.brks, chm.all)
-  names(chms) <- c('Ground Returns',breaks,'All First Returns')
+  raster::names(chms) <- c('Ground Returns',breaks,'All First Returns')
   chm  <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
 
   if(plots==TRUE) {

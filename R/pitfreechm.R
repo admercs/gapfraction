@@ -56,7 +56,7 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     yo      <- centers$y[in.win]
     grd.2d  <- matrix(c(xo,yo), nrow=length(xo), ncol=2)
     tin.ext <- raster::extent(grd.2d)
-    tin.ras <- raster::raster(tin.ext, ncols=nx, nrows=ny, crs=CRS(r.crs))
+    tin.ras <- raster::raster(tin.ext, ncols=nx, nrows=ny, crs=sp::CRS(r.crs))
     tin.las <- bary.2d(X=las[,1:2], f=las[,3], Xi=grd.2d, k=k)
     chm.tin <- raster::rasterize(tin.las[,1:2], tin.ras, tin.las[,3], fun=max)
     return(chm.tin)
