@@ -11,7 +11,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  run.focal <- function(x=chm, y=ht2rad, rad, type=type) {
+  run.focal <- function(hts=hts, x=chm, y=ht2rad, rad, type=type) {
     htt <- hts[rd2==rad | rd2==rad-1]
     x2  <- x > min(htt) & x < max(htt)
     x3  <- x2 * x
