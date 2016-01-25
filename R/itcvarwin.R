@@ -1,4 +1,4 @@
-itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
+itc.varwin <- function(chm=NA, ht2rad=NA, geom='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
 
   require(rgdal)
   require(igraph)
@@ -6,18 +6,18 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   require(spatstat)
 
   myColorRamp <- function(colors, values) {
-    vx <- (values - min(values))/diff(range(values))
-    xx <- colorRamp(colors)(vx)
-    rgb(xx[,1], xx[,2], xx[,3], maxColorValue=255)
+    v <- (values - min(values))/diff(range(values))
+    x <- colorRamp(colors)(v)
+    rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  run.focal <- function(chm=chm, hts, rads, rad, type=type) {
-    htt <- hts[rads==rad | rads==rad-1]
-    x2  <- chm > min(htt) & chm < max(htt)
-    x3  <- x2 * chm
-    fun <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
-    wts <- focalWeight(x=x3, d=rad, type=type)
-    itd <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
+  run.focal <- function(xx, hgt, rds, rad, win.geom) {
+    htt <- hgt[rds==rad | rds==rad-1]
+    x2  <- xx > min(htt) & xx < max(htt)
+    x3  <- x2 * xx
+    fnc <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
+    wts <- focalWeight(x=x3, d=rad, type=win.geom)
+    itd <- focal(x=xx, w=wts, fun=fnc, na.rm=F, pad=rad, padValue=NA, NAonly=F)
     return(itd)
   }
 
@@ -32,8 +32,8 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     chm    <- raster(chm)
   } else isPath <- FALSE
 
-  htz <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
-  rd1 <- ht2rad(htz)
+  hts <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
+  rd1 <- ht2rad(hts)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
   for(i in 1:length(rd3)) rd3[i] <- ifelse(rd3[i] %% 2 != 0, rd3[i], rd3[i] + 1)
@@ -41,11 +41,11 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   message('Computing ', length(rd3), ' moving window(s)')
 
   if(length(rd3==1)) {
-    itc.out  <- run.focal(chm=chm, hts=htz, rads=rd2, rad=rd3, type=type)
+    itc.out  <- run.focal(xx=chm, hgt=hts, rds=rd2, rad=rd3, win.geom=geom)
   } else {
     itc.stk <- stack()
     for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(chm=chm, hts=htz, rads=rd2, rad=rd3[i], type=type)
+      itc.new  <- run.focal(xx=chm, hgt=hts, rds=rd2, rad=rd3[i], win.geom=geom)
       itc.stk  <- stack(itc.stk, itc.new)
     }
     itc.out  <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
