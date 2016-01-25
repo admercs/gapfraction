@@ -11,7 +11,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  run.focal <- function(ras=chm, hts=htz, rds=rd2, rad=rd3, geom=type) {
+  run.focal <- function(ras, hts, rds, rad, geom) {
     htt <- hts[rds==rad | rds==rad-1]
     x2  <- ras > min(htt) & ras < max(htt)
     x3  <- x2 * ras
@@ -33,7 +33,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   } else isPath <- FALSE
 
   htz <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
-  rd1 <- ht2rad(hts)
+  rd1 <- ht2rad(htz)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
   for(i in 1:length(rd3)) rd3[i] <- ifelse(rd3[i] %% 2 != 0, rd3[i], rd3[i] + 1)
