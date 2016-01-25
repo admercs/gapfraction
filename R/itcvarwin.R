@@ -33,7 +33,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   } else isPath <- FALSE
 
   htz <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
-  rd1 <- ht2rad(hts)
+  rd1 <- ht2rad(htz)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
   for(i in 1:length(rd3)) rd3[i] <- ifelse(rd3[i] %% 2 != 0, rd3[i], rd3[i] + 1)
