@@ -11,12 +11,12 @@ itc.varwin <- function(chm=NA, ht2rad=NA, geom='circle', res=1, num=TRUE, plots=
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  run.focal <- function(hts, x=chm, y=ht2rad, rad, geom=geom) {
-    htt <- hts[rd2==rad | rd2==rad-1]
+  run.focal <- function(htz=hts, x=chm, rad=rd3, type=geom) {
+    htt <- htz[rd2==rad | rd2==rad-1]
     x2  <- x > min(htt) & x < max(htt)
     x3  <- x2 * x
     fun <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
-    wts <- focalWeight(x=x3, d=rad, type=geom)
+    wts <- focalWeight(x=x3, d=rad, type=type)
     itd <- focal(x=x, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
     return(itd)
   }
@@ -41,11 +41,11 @@ itc.varwin <- function(chm=NA, ht2rad=NA, geom='circle', res=1, num=TRUE, plots=
   message('Computing ', length(rd3), ' moving window(s)')
 
   if(length(rd3==1)) {
-    itc.out  <- run.focal(hts=hts, x=chm, y=ht2rad, rad=rd3, geom=geom)
+    itc.out  <- run.focal(htz=hts, x=chm, rad=rd3, type=geom)
   } else {
     itc.stk <- stack()
     for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(hts=hts, x=chm, y=ht2rad, rad=rd3[i], geom=geom)
+      itc.new  <- run.focal(htz=hts, x=chm, rad=rd3[i], type=geom)
       itc.stk  <- stack(itc.stk, itc.new)
     }
     itc.out  <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
