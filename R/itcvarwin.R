@@ -1,32 +1,33 @@
 itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
 
-  require(rgdal)
   require(igraph)
-  require(raster)
+  require(rgdal)
   require(spatstat)
+  require(raster)
 
-  myColorRamp <- function(colors, values) {
-    v <- (values - min(values))/diff(range(values))
-    x <- colorRamp(colors)(v)
-    rgb(x[,1], x[,2], x[,3], maxColorValue=255)
+  myColorRamp <- function(cols, vals) {
+    vx <- (vals - min(vals))/diff(range(vals))
+    xx <- colorRamp(cols)(vx)
+    rgb(xx[,1], xx[,2], xx[,3], maxColorValue=255)
   }
 
   if(nlayers(chm) > 1) {
     chm <- stackApply(chm, indices=c(1), fun=max, na.rm=T)
   }
 
-  if(is.character(chm)) {
-    isPath <- TRUE
-    folder <- dirname(chm)
-    name   <- strsplit(basename(chm), '\\.')[[1]][1]
-    chm    <- raster(chm)
-  } else isPath <- FALSE
+#   if(is.character(chm)) {
+#     isPath <- TRUE
+#     folder <- dirname(chm)
+#     name   <- strsplit(basename(chm), '\\.')[[1]][1]
+#     chm    <- raster(chm)
+#   } else isPath <- FALSE
 
   hts <- sort(unique(round(values(chm)[values(chm) >= 2 & !is.na(values(chm))])))
   rd1 <- ht2rad(hts)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
-  for(i in 1:length(rd3)) rd3[i] <- ifelse(rd3[i] %% 2 != 0, rd3[i], rd3[i] + 1)
+  rd4 <- integer(length(rd3))
+  for(i in 1:length(rd3)) rd4[i] <- ifelse(rd3[i] %% 2 != 0, rd3[i], rd3[i] + 1)
   if(length(rd3)==0) stop('Trees of no suitable height classes exist for the crown area moving window')
   message('Computing ', length(rd3), ' moving window(s)')
 
@@ -34,18 +35,18 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     htt <- hts[rd2==rad | rd2==rad-1]
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
-    fnc <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
+    fnc <- function(z) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
     wts <- focalWeight(x=x3, d=rad, type=type)
     res <- focal(x=chm, w=wts, fun=fnc, na.rm=F, pad=rad, padValue=NA, NAonly=F)
     return(res)
   }
 
-  if(length(rd3==1)) {
-    itc.out  <- run.focal(rad=rd3)
+  if(length(rd4==1)) {
+    itc.out  <- run.focal(rad=rd4)
   } else {
     itc.stk <- stack()
-    for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(rad=rd3[i])
+    for(i in 1:length(rd4)) {
+      itc.new  <- run.focal(rad=rd4[i])
       itc.stk  <- stack(itc.stk, itc.new)
     }
     itc.out  <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
@@ -58,7 +59,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   crown.area <- sum(values(itc.crowns)[!is.na(values(itc.crowns))]) / (length(chm[!is.na(chm)]) * res^2) * 100
 
   val <- seq(from=0, to=max(values(chm)[!is.na(values(chm))]), length.out=length(values(chm)))
-  bw  <- myColorRamp(colors=c('black','white'), values=val)
+  bw  <- myColorRamp(cols=c('black','white'), vals=val)
 
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_trees.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
