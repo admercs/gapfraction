@@ -52,10 +52,8 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   }
 
   itc.trees <- clump(itc.out, directions=8)
-  print(itc.out)
-  print(itc.trees)
-  ntrees    <- length(unique(itc.trees))
-  message('There are an estimated ',ntrees,' trees in the plot')
+  try(ntrees <- length(unique(itc.trees)))
+  try(message('There are an estimated ',ntrees,' trees in the plot'))
   itc.crowns <- ht2rad(chm) * itc.out
   crown.area <- sum(values(itc.crowns)[!is.na(values(itc.crowns))]) / (length(chm[!is.na(chm)]) * res^2) * 100
 
