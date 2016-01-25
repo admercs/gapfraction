@@ -52,7 +52,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   itc.crowns <- ht2rad(chm) * itc.out
   crown.area <- sum(raster::values(itc.crowns)[!is.na(raster::values(itc.crowns))]) / (length(raster::values(chm)[!is.na(raster::values(chm))]) * res^2) * 100
 
-  val <- seq(from=0, to=max(raster::values(chm)[!is.na(raster::values(chm))]), length.out=length(raster::values(chm)))
+  val <- seq(from=0, to=max(chm[!is.na(chm)]), length.out=length(chm))
   bw  <- myColorRamp(cols=c('black','white'), vals=val)
 
   if(plots==TRUE) {
