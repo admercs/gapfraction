@@ -60,11 +60,11 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_raw_breeaks.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
-    raster::plot(chm.brks, col=col, box=F)
+    raster::plotRGB(chm.brks, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_raw.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
-    raster::plot(chm, col=col, box=F)
+    raster::plotRGB(chm, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_raw_level.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
@@ -76,14 +76,14 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
       fname <- paste(LASname,'_rawchm.tiff',sep='')
       raster::writeRaster(x=chm, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
-    raster::plot(chm, col=col)
+    raster::plotRGB(chm, col=col)
     return(chm)
   } else if(stacked==TRUE) {
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_rawchm_stack.tiff',sep='')
       raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
-    raster::plot(chms, col=col)
+    raster::plotRGB(chms, col=col)
     return(chms)
   }
 }
