@@ -1,5 +1,7 @@
 pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
+  require(raster)
+
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
@@ -104,17 +106,17 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_chm_tin.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,3), pty='s', xpd=TRUE)
-    raster::plotRGB(ground,  col=col, box=F)
-    raster::plotRGB(tin.all, col=col, box=F)
-    raster::plotRGB(tins, col=col, box=F)
+    plot(ground,  col=col, box=F)
+    plot(tin.all, col=col, box=F)
+    plot(tins, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_pitfree.jpg',sep='')), width=16, height=16, units='in', res=300, quality=100)
     par(mfrow=c(2,2), pty='s', xpd=TRUE)
     plot(LAS, pch=19, cex=1, col=col)
-    raster::plotRGB(chm.all, col=col, box=F)
-    raster::plotRGB(tin.all, col=col, box=F)
-    raster::plotRGB(pitfree, col=col, box=F)
+    plot(chm.all, col=col, box=F)
+    plot(tin.all, col=col, box=F)
+    plot(pitfree, col=col, box=F)
     dev.off()
 
     jpeg(file.path(LASfolder, paste(LASname,'_chm_all_vis.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
@@ -133,14 +135,14 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
     dev.off()
   }
   if(stacked==FALSE) {
-    raster::plotRGB(pitfree, col=col)
+    plot(pitfree, col=col)
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_pfchm.tiff',sep='')
       raster::writeRaster(x=pitfree, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
     return(pitfree)
   } else if(stacked==TRUE) {
-    raster::plotRGB(chms,  col=col)
+    plot(chms,  col=col)
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_pfchm_stack.tiff',sep='')
       raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
