@@ -41,17 +41,19 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   message('Computing ', length(rd3), ' moving window(s)')
 
   if(length(rd3==1)) {
-    itc.out <<- run.focal(rad=rd3)
+    itc.out <- run.focal(rad=rd3)
   } else {
     itc.stk <- stack()
     for(i in 1:length(rd3)) {
       itc.new  <- run.focal(rad=rd3[i])
       itc.stk  <- stack(itc.stk, itc.new)
     }
-    itc.out <<- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
+    itc.out <- stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
   }
 
   itc.trees <- clump(itc.out, directions=8)
+  print(itc.out)
+  print(itc.trees)
   ntrees    <- length(unique(itc.trees))
   message('There are an estimated ',ntrees,' trees in the plot')
   itc.crowns <- ht2rad(chm) * itc.out
