@@ -17,7 +17,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     x3  <- x2 * chm
     fun <- function(z, ...) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
     wts <- focalWeight(x=x3, d=rd3, type=type)
-    itc <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
+    itc <- focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rd3, padValue=NA, NAonly=F)
     return(itc)
   }
 
