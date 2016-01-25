@@ -12,19 +12,19 @@ itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, type='circle', res=1, fun=m
 
   for(i in 2:(length(chm.unstk))) {
     layer.in  <- chm.unstk[[i]]
-    itc.out   <- itc.varwin(chm=layer.in, ht2rad=ht2rad, type=type, plots=plots, geoTIFF=geoTIFF, num=FALSE)
+    itc.out   <- itc.varwin(chm=layer.in, ht2rad=ht2rad, type=type, res=res, plots=plots, geoTIFF=geoTIFF, num=FALSE)
     layer.ext <- raster::extend(itc.out, c(1,1))
     itc.clump <- raster::clump(layer.ext, directions=8)
     f <- freq(itc.clump)
     f <- as.data.frame(f)
     exclude <- f$value[which(f$count > 1)]
-    itc.clump[itc.clump %in% exclude]  <- NA
+    itc.clump[itc.clump %in% exclude] <- NA
     itc.clump[!itc.clump %in% exclude] <- 1
     itc.layer[i] <- itc.clump
   }
 
-  itc.layer <- itc.layer[!sapply(itc.layer, is.null)]
-  itc.stack <- raster::stack(itc.layer)
+  itc.layrr <- itc.layer[!sapply(itc.layer, is.null)]
+  itc.stack <- raster::stack(itc.layrr)
   itc.out   <- raster::stackApply(itc.stack, indices=c(1), fun=fun, na.rm=T)
   raster::values(itc.out)[raster::values(itc.out)==0] <- NA
   itc.trees <- raster::clump(itc.out, directions=8)
