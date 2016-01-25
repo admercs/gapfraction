@@ -1,7 +1,5 @@
 pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  require(raster)
-
   if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
