@@ -1,6 +1,6 @@
-can2ret <- function(LASpath=NA, thresh.val=1.25, silent=FALSE) {
+can2ret <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
-  if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
+  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -8,7 +8,7 @@ can2ret <- function(LASpath=NA, thresh.val=1.25, silent=FALSE) {
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  LAS <- rLiDAR::readLAS(LASpath, short=FALSE)
+  LAS <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS <- LAS[order(LAS[,3], decreasing=FALSE), ]
 
   col     <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3])

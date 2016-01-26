@@ -1,6 +1,6 @@
-gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
+gapfraction <- function(las.path=NA, model='equidist', reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
 
-  if(is.na(LASpath)) stop('Please input a full file path to the LAS file')
+  if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -52,10 +52,10 @@ gapfraction <- function(LASpath=NA, model='equidist', reprojection=NA, col='heig
     return(out)
   }
 
-  LAS       <- rLiDAR::readLAS(LASpath, short=FALSE)
+  LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
-  LASfolder <- dirname(LASpath)
-  LASname   <- strsplit(basename(LASpath), '\\.')[[1]][1]
+  LASfolder <- dirname(las.path)
+  LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
 
   if(!is.na(reprojection)) {
     try(if(length(reprojection) != 2) stop('Please supply input and output CRS strings in the form: c(input,output)'))

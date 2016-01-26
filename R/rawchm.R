@@ -1,6 +1,6 @@
 rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), nx=100, ny=100, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  if (is.na(LASpath)) stop('Please input a full file path to the LAS file')
+  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
   chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
     centers <- spatstat::gridcentres(w, nx=nx, ny=ny)

@@ -1,4 +1,4 @@
-sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='', type='polar', lang='en', locale='English', ieqot=F, summert=0) {
+sun.path <- function(location='Burgauberg', phi=47.162, lambda=16.130, out='', type='polar', lang='en', locale='English', ieqot=F, summert=0) {
 
   if (lang=="de") {
     ltext=c("N","O","S","W","Nord","Ost","Sud","West","Azimuth","Hohenwinkel","MEZ","MESZ","Uhr","Sonnenstandsdiagramm","Zenit","Horizont")
@@ -150,7 +150,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
     }
   }
 
-  filename=paste("Sunchart-",type,"-",lang,"-",locationname,".",out,sep="")
+  filename=paste("Sunchart-",type,"-",lang,"-",location,".",out,sep="")
   if (out=="png") {
     Cairo::CairoPNG(file=filename,width=1850,height=690)
   } else if (out=="pdf") {
@@ -163,7 +163,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
   xlab=c(paste(ltext[1],sep=""),paste(ltext[1],ltext[1],ltext[2],sep=""),paste(ltext[1],ltext[2],sep=""),paste(ltext[2],ltext[1],ltext[2],sep=""),paste(ltext[2],sep=""),paste(ltext[2],ltext[3],ltext[2],sep=""),paste(ltext[3],ltext[2],sep=""),paste(ltext[3],ltext[3],ltext[2],sep=""),paste(ltext[3],sep=""),paste(ltext[3],ltext[3],ltext[4],sep=""),paste(ltext[3],ltext[4],sep=""),paste(ltext[4],ltext[3],ltext[4],sep=""),paste(ltext[4],sep=""),paste(ltext[4],ltext[1],ltext[4],sep=""),paste(ltext[1],ltext[4],sep=""),paste(ltext[1],ltext[1],ltext[4],sep=""),paste(ltext[1],sep="") )
   if (type=="cart") {
     plot(c(0,0),c(0,0),type="n",xlim=c(45,315),ylim=c(0,min(90-phi*180/pi+31,90)),xaxs="i",yaxs="i", axes=FALSE, main=ltext[14], cex.main=2.3, font.main=2, xlab=ltext[9], ylab=ltext[10], cex.lab=1.33)
-    legend(x=45,y=min(90-phi*180/pi+31,90),legend=location(lat=phi,long=lambda,name=locationname),box.col="white",bg="white",cex=1.7)
+    legend(x=45,y=min(90-phi*180/pi+31,90),legend=location(lat=phi,long=lambda,name=location),box.col="white",bg="white",cex=1.7)
     xticks=seq(par("usr")[1],par("usr")[2],by=22.5)
     yticks=seq(par("usr")[3],par("usr")[4],by=10)
     axis(1, at=xticks[1:length(xticks)], tick=F, cex.axis=1.33, labels=xlab[3:15],font=2)
@@ -176,7 +176,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
   } else if (type=="polar") {
     plotrix::polar.plot(length=NA,polar.pos=NA,rp.type="p",clockwise=TRUE,label.pos=seq(45,360+22.5,by=22.5),start=135,labels=xlab,radlab=F,radial.labels="",radial.lim=c(0,30,60,90),show.centroid=F, main=ltext[14], cex.main=2.3, font.main=2 )
     text(x=c(0,0,0,0), y=c(0,30,60,90), labels=c(ltext[15], "60 deg", "30 deg", ltext[16]), col="darkgrey")
-    legend("topleft", legend=location(lat=phi, long=lambda, name=locationname), box.col="white", bg="white", cex=1)
+    legend("topleft", legend=location(lat=phi, long=lambda, name=location), box.col="white", bg="white", cex=1)
   }
 
   jahr = c(113)/365*2*pi
