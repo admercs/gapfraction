@@ -1,4 +1,4 @@
-gapfraction <- function(las.path=NA, model='equidist', reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
+gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
 
   if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -51,6 +51,8 @@ gapfraction <- function(las.path=NA, model='equidist', reprojection=NA, col='hei
     out   <- matrix(c(xi,yi), nrow=nrows, ncol=2, dimnames=list(c(1:nrows),c('x','y')))
     return(out)
   }
+
+  deg2rad <- function(x) return(x*(pi/180))
 
   LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
@@ -110,6 +112,9 @@ gapfraction <- function(las.path=NA, model='equidist', reprojection=NA, col='hei
   mv     <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
   gf     <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$del.area )
 
+  pol.res <- deg2rad(pol.deg)
+  azi.res <- deg2rad(azi.deg)
+
   start      <- pi/2
   rp.type    <- 's'
   point.symbols <- 19
@@ -120,9 +125,9 @@ gapfraction <- function(las.path=NA, model='equidist', reprojection=NA, col='hei
   nsets      <- 1
   maxlength  <- diff(range(xy))/2
   radial.lim <- c(0, maxlength)
-  grid.pos   <- c(maxlength*(1/4), maxlength*(1/2), maxlength*(3/4), maxlength)
-  angles     <- seq(0, 1.96*pi, by=0.04*pi)
-  nlpos      <- 8
+  ngpos      <- (pi/2)/pol.res
+  grid.pos   <- seq(maxlength*(1/ngpos), maxlength, length.out=ngpos)
+  nlpos      <- (2*pi)/azi.res
   label.pos  <- seq(0, pi*(2-2/nlpos), length.out=nlpos)
   cvex       <- spatstat::convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
   clipp      <- cvex$bdry[[1]]
