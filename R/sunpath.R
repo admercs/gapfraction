@@ -175,7 +175,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
 
   } else if (type=="polar") {
     plotrix::polar.plot(length=NA,polar.pos=NA,rp.type="p",clockwise=TRUE,label.pos=seq(45,360+22.5,by=22.5),start=135,labels=xlab,radlab=F,radial.labels="",radial.lim=c(0,30,60,90),show.centroid=F, main=ltext[14], cex.main=2.3, font.main=2 )
-    text(x=c(0,0,0,0), y=c(0,30,60,90), labels=c(ltext[15], "60", 'deg', "30", 'deg', ltext[16]), col="darkgrey")
+    text(x=c(0,0,0,0), y=c(0,30,60,90), labels=c(ltext[15], "60 deg", "30 deg", ltext[16]), col="darkgrey")
     legend("topleft", legend=location(lat=phi, long=lambda, name=locationname), box.col="white", bg="white", cex=1)
   }
 
