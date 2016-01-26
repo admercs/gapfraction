@@ -79,7 +79,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
     if (lat <0) { latStr =ltext[7] } else { latStr=ltext[5] }
     lat1 = trunc(lat+0.00001)
     lat2 = 60*(lat-lat1)
-    latlon = paste(abs(lat1),expression(degree),abs(round(lat2,digits=1)),as.character("' "),latStr,", ",abs(lon1),expression(degree),abs(round(lon2,1)),as.character("' "),longStr,sep="")
+    latlon = paste(abs(lat1),'deg',abs(round(lat2,digits=1)),as.character("' "),latStr,", ",abs(lon1),'deg',abs(round(lon2,1)),as.character("' "),longStr,sep="")
     string = paste(name,latlon,sep=", ")
     return(string)
   }
@@ -167,7 +167,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
     xticks=seq(par("usr")[1],par("usr")[2],by=22.5)
     yticks=seq(par("usr")[3],par("usr")[4],by=10)
     axis(1, at=xticks[1:length(xticks)], tick=F, cex.axis=1.33, labels=xlab[3:15],font=2)
-    axis(2, at=yticks, tick=F, cex.axis=1.5, labels=paste(yticks,"?",sep=""))
+    axis(2, at=yticks, tick=F, cex.axis=1.5, labels=paste(yticks,"",sep=""))
     grid( nx=length(xticks)-1,ny=NA,col="gray75")
     abline( h=yticks, col="gray75", lty="dotted")
     abline( v=c(90,180,270), col="gray20",lty="dotted")
@@ -175,7 +175,7 @@ sun.path <- function(locationname='Burgauberg', phi=47.162, lambda=16.130, out='
 
   } else if (type=="polar") {
     plotrix::polar.plot(length=NA,polar.pos=NA,rp.type="p",clockwise=TRUE,label.pos=seq(45,360+22.5,by=22.5),start=135,labels=xlab,radlab=F,radial.labels="",radial.lim=c(0,30,60,90),show.centroid=F, main=ltext[14], cex.main=2.3, font.main=2 )
-    text(x=c(0,0,0,0), y=c(0,30,60,90), labels=c(ltext[15], paste("60",expression(degree),sep=''), paste("30",expression(degree),sep=''), ltext[16]), col="darkgrey")
+    text(x=c(0,0,0,0), y=c(0,30,60,90), labels=c(ltext[15], "60", 'deg', "30", 'deg', ltext[16]), col="darkgrey")
     legend("topleft", legend=location(lat=phi, long=lambda, name=locationname), box.col="white", bg="white", cex=1)
   }
 
