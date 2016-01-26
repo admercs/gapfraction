@@ -10,9 +10,9 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
     htt <- hts[rd2==rad | rd2==rad-1]
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
-    fun <- function(z) ifelse(z[length(z)/2 + 0.5]==max(z[!is.na(z)]), 1, NA)
+    fun <- function(z) ifelse(z[length(z)/2 + 0.5]==max(z), 1, NA)
     wts <- raster::focalWeight(x=x3, d=rad, type=type)
-    res <- raster::focal(x=chm, w=wts, fun=fun, na.rm=F, pad=rad, padValue=NA, NAonly=F)
+    res <- raster::focal(x=chm, w=wts, fun=fun, na.rm=T, pad=rad, padValue=NA, NAonly=F)
     return(res)
   }
 

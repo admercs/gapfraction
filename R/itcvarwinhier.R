@@ -18,8 +18,8 @@ itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, type='circle', res=1, fun=m
     f <- freq(itc.clump)
     f <- as.data.frame(f)
     exclude <- f$value[which(f$count > 1)]
-    itc.clump[itc.clump %in% exclude] <- NA
-    itc.clump[!itc.clump %in% exclude] <- 1
+    raster::values(itc.clump)[raster::values(itc.clump) %in% exclude] <- NA
+    raster::values(itc.clump)[!raster::values(itc.clump) %in% exclude] <- 1
     itc.layer[i] <- itc.clump
   }
 
