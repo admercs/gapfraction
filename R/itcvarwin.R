@@ -35,7 +35,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, silent
   if(length(rd3)==0) stop('Trees of no suitable height classes exist for the crown area moving window')
   message('Computing ', length(rd3), ' moving window(s)')
 
-  if(length(rd3==1)) {
+  if(length(rd3)==1) {
     itc.out <- run.focal(chm=chm, hts=hts, rd2=rd2, rad=rd3, type=type)
   } else {
     itc.stk <- raster::stack()
