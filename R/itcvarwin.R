@@ -1,4 +1,4 @@
-itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=FALSE, geoTIFF=FALSE) {
+itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -70,11 +70,12 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, plots=
   } else if(isPath==FALSE & geoTIFF==TRUE) {
     raster::writeRaster(x=itc.out, filename='itd.tiff', format='GTiff', overwrite=T)
   }
-  plot(chm, col=bw)
-  plot(itc.out, col='red', add=T, legend=F)
-  pts <- raster::rasterToPoints(itc.out)
-  points(pts, cex=chm[!is.na(itc.out)]/4, pch=10, lwd=1)
-
+  if(silent==FALSE) {
+    plot(chm, col=bw)
+    plot(itc.out, col='red', add=T, legend=F)
+    pts <- raster::rasterToPoints(itc.out)
+    points(pts, cex=chm[!is.na(itc.out)]/4, pch=10, lwd=1)
+  }
   if(num==TRUE) {
     return( c(trees=ntrees, crown.area=crown.area))
   } else return(itc.out)
