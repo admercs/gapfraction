@@ -7,7 +7,8 @@ radial.grid2 <- function (labels = NA, label.pos = NULL, radlab = FALSE, radial.
   if(model == "equidist")  r <- "theta"
   if(model == "equiangle") r <- "sin(theta/2)"
 
-  rho <- gsub("theta", "grid.pos[i]", r)
+  rho   <- gsub("theta", "grid.pos[i]", r)
+  r.phi <- gsub("theta", "(pi/2)", r)
 
   par(xpd = TRUE)
   if (is.null(label.pos))
@@ -28,15 +29,15 @@ radial.grid2 <- function (labels = NA, label.pos = NULL, radlab = FALSE, radial.
   }
   maxlength <- max(grid.pos) - radial.lim[1]
   if (show.radial.grid) {
-    xpos <- cos(label.pos) * maxlength
-    ypos <- sin(label.pos) * maxlength
+    xpos <- cos(label.pos) * eval(parse(text=r.phi)) #maxlength
+    ypos <- sin(label.pos) * eval(parse(text=r.phi)) #maxlength
     segments(0, 0, xpos, ypos, col = grid.col)
-    xpos <- cos(label.pos) * maxlength
-    ypos <- sin(label.pos) * maxlength
+    xpos <- cos(label.pos) * eval(parse(text=r.phi)) #maxlength
+    ypos <- sin(label.pos) * eval(parse(text=r.phi)) #maxlength
   }
   if (!is.null(labels)) {
-    xpos <- cos(label.pos) * maxlength * label.prop
-    ypos <- sin(label.pos) * maxlength * label.prop
+    xpos <- cos(label.pos) * label.prop * eval(parse(text=r.phi)) #maxlength
+    ypos <- sin(label.pos) * label.prop * eval(parse(text=r.phi)) #maxlength
     if (radlab) {
       for (label in 1:length(labels)) {
         if (radlab < 0)
