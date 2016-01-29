@@ -140,24 +140,24 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
-                grid.bg = 'transparent', show.radial.grid = TRUE)
+                grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
     geometry::trimesh(md, xy, add=TRUE)
-    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
-                grid.bg = 'transparent', show.radial.grid = TRUE)
+                grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
-    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
-                grid.bg = 'transparent', show.radial.grid = TRUE)
+                grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     dev.off()
   }
   if(silent==FALSE) {
@@ -166,24 +166,24 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
-                grid.bg = 'transparent', show.radial.grid = TRUE)
+                grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
     geometry::trimesh(md, xy, add=TRUE)
-    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
-                grid.bg = 'transparent', show.radial.grid = TRUE)
+                grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
-    plotrix::radial.grid(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
-                grid.bg = 'transparent', show.radial.grid = TRUE)
+                grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     par(mfrow=c(1,1))
   }
   return(gf)
