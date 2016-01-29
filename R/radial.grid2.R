@@ -45,7 +45,7 @@ radial.grid2 <- function (labels = NA, label.pos = NULL, radlab = FALSE, radial.
         text(xpos[label], ypos[label], labels[label], cex = par("cex.axis"), srt = labelsrt)
       }
     }
-    else boxed.labels(xpos, ypos, labels, ypad = 0.7, border = FALSE, cex = par("cex.axis"))
+    else plotrix::boxed.labels(xpos, ypos, labels, ypad = 0.7, border = FALSE, cex = par("cex.axis"))
   }
   par(xpd = FALSE)
 }
