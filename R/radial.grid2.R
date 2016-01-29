@@ -2,10 +2,10 @@ radial.grid2 <- function (labels = NA, label.pos = NULL, radlab = FALSE, radial.
                           clockwise = FALSE, label.prop = 1.1, grid.pos, grid.col = "gray",
                           grid.bg = "transparent", show.radial.grid = TRUE, model = NA, r = "theta")
 {
-  if(model == "stereo")    r <- "2*tan(theta/2)"
+  if(model == "stereo")    r <- "tan(theta/2)"
   if(model == "ortho")     r <- "sin(theta)"
   if(model == "equidist")  r <- "theta"
-  if(model == "equiangle") r <- "2*sin(theta/2)"
+  if(model == "equiangle") r <- "sin(theta/2)"
 
   rho <- gsub("theta", "grid.pos[i]", r)
 

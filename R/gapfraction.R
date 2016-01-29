@@ -126,7 +126,7 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
   maxlength  <- diff(range(xy))/2
   radial.lim <- c(0, maxlength)
   ngpos      <- (pi/2)/pol.res
-  grid.pos   <- seq(maxlength*(1/ngpos), maxlength, length.out=ngpos)
+  grid.pos   <- seq((pi/2)*(1/ngpos), pi/2, length.out=ngpos)
   nlpos      <- (2*pi)/azi.res
   label.pos  <- seq(0, pi*(2-2/nlpos), length.out=nlpos)
   cvex       <- spatstat::convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
