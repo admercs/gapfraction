@@ -63,9 +63,12 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   }
 
   LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
-  LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path),'\\.')[[1]][1]
+
+  LAS  <- LAS[order(-LAS[,3]),]
+  dupl <- !duplicated(data.frame(LAS[,1], LAS[,2]))
+  LAS  <- LAS[dupl,]
 
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
@@ -91,7 +94,8 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   tins    <- list()
 
   for(i in 1:length(breaks)) {
-    tin.break <- tin(las=LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],], nx=nx, ny=ny, k=ko, w=chull.all)
+    las       <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
+    tin.break <- try(tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all))
     tin.break <- raster::stack(tin.break, ground)
     tins[i]   <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
   }

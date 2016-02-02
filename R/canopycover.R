@@ -23,9 +23,17 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
 
+  LAS  <- LAS[order(-LAS[,3]),]
+
   x    <- (LAS[,1]-min(LAS[,1])) - (diff(range(LAS[,1]))/2)
   y    <- (LAS[,2]-min(LAS[,2])) - (diff(range(LAS[,2]))/2)
   z    <-  LAS[,3]
+
+  dupl <- !duplicated(data.frame(x, y))
+
+  x <- x[dupl]
+  y <- y[dupl]
+  z <- z[dupl]
 
   nrows <- length(x)
   col   <- rep(col,  nrows)
@@ -57,7 +65,7 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
                 ifelse(thresh.var == 'class',     LAS[,9],
                 z)))))))
 
-  canopy     <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, 1, 0)
+  canopy     <- ifelse(thresh.var >= thresh.val, 1, 0)
   mv         <- deldir::deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
   cancover <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$del.area )
 
