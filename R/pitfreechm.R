@@ -1,6 +1,6 @@
-pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
+pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), percent=T, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  if (is.na(las.path)) stop('Please input file path to the LAS file')
+  if(is.na(las.path)) stop('Please input file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -70,6 +70,14 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   dupl <- !duplicated(data.frame(LAS[,1], LAS[,2]))
   LAS  <- LAS[dupl,]
 
+  zmax <- max(LAS[,3])
+
+  if(percent==TRUE) {
+    for(i in 1:length(breaks)) {
+      breaks[i] <- zmax * breaks[i]
+    }
+  }
+
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
     CRSout <- las.reproj
@@ -95,9 +103,9 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
 
   for(i in 1:length(breaks)) {
     las       <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
-    tin.break <- try(tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all))
-    tin.break <- try(raster::stack(tin.break, ground))
-    tins[i]   <- try(raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T))
+    tin.break <- tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all)
+    tin.break <- raster::stack(tin.break, ground)
+    tins[i]   <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
   }
 
   tins <- raster::stack(tins)
