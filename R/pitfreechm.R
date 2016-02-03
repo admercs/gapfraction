@@ -1,6 +1,6 @@
 pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
+  if (is.na(las.path)) stop('Please input file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
