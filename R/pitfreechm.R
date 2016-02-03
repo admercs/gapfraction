@@ -96,8 +96,8 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   for(i in 1:length(breaks)) {
     las       <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
     tin.break <- try(tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all))
-    tin.break <- raster::stack(tin.break, ground)
-    tins[i]   <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
+    tin.break <- try(raster::stack(tin.break, ground))
+    tins[i]   <- try(raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T))
   }
 
   tins <- raster::stack(tins)
