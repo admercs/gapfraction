@@ -25,6 +25,13 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
 
+  zmax <- max(LAS[,3])
+  if(percent==TRUE) {
+    for(i in 1:length(breaks)) {
+      breaks[i] <- zmax * breaks[i]
+    }
+  }
+
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
     CRSout <- las.reproj
