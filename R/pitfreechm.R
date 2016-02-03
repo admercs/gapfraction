@@ -1,4 +1,4 @@
-pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
+pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   if(is.na(las.path)) stop('Please input full file path to the LAS file')
 
@@ -101,16 +101,17 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,
   tins    <- list()
 
   for(i in 1:length(breaks)) {
-    las       <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
+    las       <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[1],]
     tin.break <- try(tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all), silent=T)
     if(!missing(tin.break)) {
       tin.break <- raster::stack(tin.break, ground)
       tins[i]   <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
-    }
+    } else break
   }
 
-  tins <- raster::stack(tins)
-  chms <- raster::stack(ground, tins, tin.all)
+  tins  <- raster::stack(tins)
+  ntins <- raster::nlayers(tins)
+  chms  <- raster::stack(ground, breaks[1:(ntins-2)], tin.all)
   names(chms) <- c('Ground Returns',breaks,'All First Returns')
   pitfree <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
 
