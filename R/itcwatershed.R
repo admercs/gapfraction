@@ -1,4 +1,4 @@
-itc.watershed <- function(chm=NA, ht2rad=NA, tolerance=0.1, res=1, num=TRUE, silent=FALSE, ws.plot=FALSE) {
+itc.watershed <- function(chm=NA, ht2rad=NA, min.h=1, tolerance=0.1, res=1, num=TRUE, silent=FALSE, ws.plot=FALSE) {
 
   if (!'EBImage' %in% installed.packages()) {
     source('https://bioconductor.org/biocLite.R')
@@ -7,14 +7,14 @@ itc.watershed <- function(chm=NA, ht2rad=NA, tolerance=0.1, res=1, num=TRUE, sil
   require(EBImage)
 
   img <- EBImage::flip(EBImage::Image(data=values(chm), dim=c(ncol(chm),nrow(chm),1), colormode='Grayscale'))
-  wat <- EBImage::watershed(img, tolerance=0.1, ext=1)
+  wat <- EBImage::watershed(img, tolerance=tolerance, ext=1)
 
   wshed <- sort(unique(as.numeric(imageData(wat))))
   trees <- sapply(wshed, function(x) max(img[!is.na(img) & wat==x]))
 
   itc.trees <- img
   for(i in 1:length(wshed)) {
-    itc.trees[!is.na(itc.trees) & img!=0 & wat==wshed[i] & itc.trees==trees[i]] <- 9999
+    itc.trees[!is.na(itc.trees) & itc.trees != 0 & itc.trees > min.h & wat==wshed[i] & itc.trees==trees[i]] <- 9999
   }
   itc.trees[itc.trees != 9999] <- NA
   itc.trees[itc.trees == 9999] <- 1

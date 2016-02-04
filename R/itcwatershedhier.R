@@ -1,4 +1,4 @@
-itc.watershed.hier <- function(chm.stack=NA, ht2rad=NA, tolerance=0.1, fun=max, res=1, num=TRUE, stacked=FALSE, silent=FALSE, ws.plot=FALSE) {
+itc.watershed.hier <- function(chm.stack=NA, ht2rad=NA, min.h=1, tolerance=0.1, fun=max, res=1, num=TRUE, stacked=FALSE, silent=FALSE, ws.plot=FALSE) {
 
   if(nlayers(chm.stack)==1) stop('Only a single raster layer found; Please input a raster stack')
 
@@ -17,7 +17,7 @@ itc.watershed.hier <- function(chm.stack=NA, ht2rad=NA, tolerance=0.1, fun=max, 
 
   for(i in 2:(length(chm.unstk))) {
     chm.in  <- chm.unstk[[i]]
-    chm.wat <- itc.watershed(chm=chm.in, tolerance=tolerance, ht2rad=ht2rad, res=res, silent=silent, ws.plot=ws.plot, num=F)
+    chm.wat <- itc.watershed(chm=chm.in, tolerance=tolerance, ht2rad=ht2rad, min.h=min.h, res=res, silent=silent, ws.plot=ws.plot, num=F)
     itc.layer[i] <- chm.wat
   }
 

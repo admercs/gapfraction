@@ -9,7 +9,7 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
   }
 
   LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
-  LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
+  LAS       <- LAS[order(LAS[,3]),]
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
 
@@ -22,8 +22,6 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
     rpLAS  <- sp::coordinates(tmLAS)
     LAS    <- cbind(rpLAS, LAS[,c(4:12)])
   }
-
-  LAS  <- LAS[order(-LAS[,3]),]
 
   x    <- (LAS[,1]-min(LAS[,1])) - (diff(range(LAS[,1]))/2)
   y    <- (LAS[,2]-min(LAS[,2])) - (diff(range(LAS[,2]))/2)

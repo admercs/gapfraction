@@ -28,12 +28,16 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
 
     active.filt <- active[complete.cases(active[,c(1,2,3)]),]
     Xi.filt <- Xi[complete.cases(active[,c(1,2,3)]),]
-    tri <- geometry::tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi.filt[,1], yi=Xi.filt[,2], bary=T)
-    M <- Matrix::sparseMatrix(i=rep(1:nrow(Xi.filt),each=3), j=as.numeric(t(active.filt)), x=as.numeric(t(tri$p)), dims=c(nrow(Xi.filt), length(f)))
 
-    result <- as.numeric(M %*% f)
-    output <- matrix(c(Xi.filt, result), ncol=3)
-    colnames(output) <- c('x','y','z')
+    if(is.null(dim(Xi.filt))) {
+      output <- NULL
+    } else {
+      tri    <- geometry::tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi.filt[,1], yi=Xi.filt[,2], bary=T)
+      M      <- Matrix::sparseMatrix(i=rep(1:nrow(Xi.filt),each=3), j=as.numeric(t(active.filt)), x=as.numeric(t(tri$p)), dims=c(nrow(Xi.filt), length(f)))
+      result <- as.numeric(M %*% f)
+      output <- matrix(c(Xi.filt, result), ncol=3)
+      colnames(output) <- c('x','y','z')
+    }
     return(output)
   }
 
@@ -58,20 +62,20 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
     tin.ext <- raster::extent(grd.2d)
     tin.ras <- raster::raster(tin.ext, ncols=nx, nrows=ny, crs=r.crs)
     tin.las <- bary.2d(X=las[,1:2], f=las[,3], Xi=grd.2d, k=k)
-    chm.tin <- raster::rasterize(tin.las[,1:2], tin.ras, tin.las[,3], fun=max)
+    if(is.null(tin.las)) {
+      chm.tin <- NULL
+    } else chm.tin <- raster::rasterize(tin.las[,1:2], tin.ras, tin.las[,3], fun=max)
     return(chm.tin)
   }
 
   LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
+  LAS       <- LAS[order(LAS[,3]),]
+  LAS2      <- LAS[order(-LAS[,3]),]
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path),'\\.')[[1]][1]
 
-  LAS  <- LAS[order(-LAS[,3]),]
-  dupl <- !duplicated(data.frame(LAS[,1], LAS[,2]))
-  LAS  <- LAS[dupl,]
-
-  zmax <- max(LAS[,3])
   if(percent==TRUE) {
+    zmax <- max(LAS2[,3])
     for(i in 1:length(breaks)) {
       breaks[i] <- zmax * breaks[i]
     }
@@ -90,29 +94,35 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
     r.crs <- las.reproj
   } else r.crs <- las.proj
 
-  val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
-  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
-
   chull.all <- spatstat::convexhull.xy(x=LAS[,1], y=LAS[,2])
-
-  ground  <- tin(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, k=ku, w=chull.all)
-  tin.all <- tin(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, k=ko)
-  tin.all <- raster::stackApply(raster::stack(tin.all, ground), indices=c(1), fun=max, na.rm=T)
-  tins    <- list()
+  ground    <- tin(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, k=ku, w=chull.all)
+  tin.all   <- tin(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, k=ko)
+  tin.all   <- raster::stackApply(raster::stack(tin.all, ground), indices=c(1), fun=max, na.rm=T)
+  tins      <- list()
+  pos       <- c()
 
   for(i in 1:length(breaks)) {
-    las       <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[1],]
-    tin.break <- try(tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all), silent=T)
-    if(!missing(tin.break)) {
+    las.lay   <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
+    dupl      <- !duplicated(data.frame(las.lay[,1], las.lay[,2]))
+    las       <- las.lay[dupl,]
+    if(dim(las)[1] > 1) tin.break <- tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all)
+    if(is.null(tin.break)) {
+      next
+    } else {
       tin.break <- raster::stack(tin.break, ground)
-      tins[i]   <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
-    } else break
+      tins[i] <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
+    }
+    pos <- c(pos,i)
   }
 
+  tins    <- tins[!sapply(tins, is.null)]
   tins    <- raster::stack(tins)
-  ntins   <- raster::nlayers(tins)
-  chms    <- raster::stack(ground, breaks[1:(ntins-2)], tin.all)
+  chms    <- raster::stack(ground, tins, tin.all)
+  names(chms) <- c('ground', breaks[pos], 'all')
   pitfree <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
+
+  val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
+  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
 
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_chm_tin.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)

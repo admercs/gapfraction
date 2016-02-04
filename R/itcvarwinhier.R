@@ -1,4 +1,4 @@
-itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, type='circle', res=1, fun=max, num=TRUE, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, min.h=1, type='circle', res=1, fun=max, num=TRUE, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -12,7 +12,7 @@ itc.varwin.hier <- function(chm.stack=NA, ht2rad=NA, type='circle', res=1, fun=m
 
   for(i in 2:(length(chm.unstk))) {
     layer.in  <- chm.unstk[[i]]
-    itc.out   <- itc.varwin(chm=layer.in, ht2rad=ht2rad, type=type, res=res, silent=silent, plots=plots, geoTIFF=geoTIFF, num=FALSE)
+    itc.out   <- itc.varwin(chm=layer.in, ht2rad=ht2rad, min.h=min.h, type=type, res=res, silent=silent, plots=plots, geoTIFF=geoTIFF, num=FALSE)
     layer.ext <- raster::extend(itc.out, c(1,1))
     itc.clump <- raster::clump(layer.ext, directions=8)
     f <- freq(itc.clump)

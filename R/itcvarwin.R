@@ -1,4 +1,4 @@
-itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+itc.varwin <- function(chm=NA, ht2rad=NA, min.h=1, type='circle', res=1, num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -10,7 +10,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, silent
     htt <- hts[rd2==rad | rd2==rad-1]
     x2  <- chm > min(htt) & chm < max(htt)
     x3  <- x2 * chm
-    fun <- function(z) ifelse(z[length(z)/2 + 0.5]==suppressWarnings(max(z[!is.na(z)])), 1, NA)
+    fun <- function(z) ifelse(z[length(z)/2 + 0.5]==suppressWarnings(max(z[!is.na(z) & z > min.h])), 1, NA)
     wts <- raster::focalWeight(x=x3, d=rad, type=type)
     res <- raster::focal(x=chm, w=wts, fun=fun, na.rm=FALSE, pad=rad, padValue=NA, NAonly=FALSE)
     return(res)
@@ -27,7 +27,7 @@ itc.varwin <- function(chm=NA, ht2rad=NA, type='circle', res=1, num=TRUE, silent
     chm    <- raster::raster(chm)
   } else isPath <- FALSE
 
-  hts <- sort(unique(round(chm[chm >= 2 & !is.na(chm)])))
+  hts <- sort(unique(round(chm[!is.na(chm) & chm > min.h])))
   rd1 <- ht2rad(hts)
   rd2 <- round(rd1)
   rd3 <- sort(unique(rd2))
