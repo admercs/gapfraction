@@ -109,10 +109,9 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
     } else break
   }
 
-  tins  <- raster::stack(tins)
-  ntins <- raster::nlayers(tins)
-  chms  <- raster::stack(ground, breaks[1:(ntins-2)], tin.all)
-  names(chms) <- c('Ground Returns',breaks,'All First Returns')
+  tins    <- raster::stack(tins)
+  ntins   <- raster::nlayers(tins)
+  chms    <- raster::stack(ground, breaks[1:(ntins-2)], tin.all)
   pitfree <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
 
   if(plots==TRUE) {
