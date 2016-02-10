@@ -1,5 +1,7 @@
 itc.watershed <- function(chm=NA, ht2rad=NA, min.h=1, tolerance=0.1, res=1, num=TRUE, silent=FALSE, ws.plot=FALSE) {
 
+  if(max(raster::values(chm)[!is.na(raster::values(chm))]) <= min.h) return(c(trees=NA, crown.area=NA))
+
   if (!'EBImage' %in% installed.packages()) {
     source('https://bioconductor.org/biocLite.R')
     biocLite('EBImage')
@@ -16,12 +18,13 @@ itc.watershed <- function(chm=NA, ht2rad=NA, min.h=1, tolerance=0.1, res=1, num=
   for(i in 1:length(wshed)) {
     itc.trees[!is.na(itc.trees) & itc.trees != 0 & itc.trees > min.h & wat==wshed[i] & itc.trees==trees[i]] <- 9999
   }
+
   itc.trees[itc.trees != 9999] <- NA
   itc.trees[itc.trees == 9999] <- 1
-  ntrees <- length(itc.trees[!is.na(itc.trees) & itc.trees==1])
+  ntrees <- sum(itc.trees[!is.na(itc.trees)])
   message(ntrees,' trees counted at a tolerance of ',tolerance,' meters')
   itc.crowns <- ht2rad(img[itc.trees==1])
-  crown.area <- sum(itc.crowns[!is.na(itc.crowns)]) / (length(img[!is.na(img)]) * res^2) * 100
+  crown.area <- sum(itc.crowns[!is.na(itc.crowns)]) / (length(img[!is.na(img)]) * res)
 
   crown.ras <- raster::flip(raster(t(matrix(itc.trees, ncol=ncol(chm), nrow=nrow(chm))), crs=crs(chm)), direction=2)
   extent(crown.ras) <- raster::extent(chm)

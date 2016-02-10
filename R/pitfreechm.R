@@ -9,7 +9,8 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
   }
 
   bary.2d <- function(X=NA, f=NA, Xi=NA, k=NA) {
-    dn  <- geometry::delaunayn(X)
+
+    dn  <- geometry::delaunayn(X, options='QbB')
     tri <- geometry::tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi[,1], yi=Xi[,2], bary=T)
 
     active <- dn[tri$idx,]
@@ -27,18 +28,22 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
     active[tri.dist3 > k,] <- NA
 
     active.filt <- active[complete.cases(active[,c(1,2,3)]),]
-    Xi.filt <- Xi[complete.cases(active[,c(1,2,3)]),]
+    Xi.filt     <- Xi[complete.cases(active[,c(1,2,3)]),]
+    dims        <- c(nrow(Xi.filt), ncol(Xi.filt), length(f), length(X[,1]), length(X[,2]))
 
     if(is.null(dim(Xi.filt))) {
-      output <- NULL
+      return(NULL)
+    } else if(any(dims < 2)) {
+      return(NULL)
     } else {
-      tri    <- geometry::tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi.filt[,1], yi=Xi.filt[,2], bary=T)
-      M      <- Matrix::sparseMatrix(i=rep(1:nrow(Xi.filt),each=3), j=as.numeric(t(active.filt)), x=as.numeric(t(tri$p)), dims=c(nrow(Xi.filt), length(f)))
+      tri <- geometry::tsearch(x=X[,1], y=X[,2], t=dn, xi=Xi.filt[,1], yi=Xi.filt[,2], bary=T)
+      M   <- Matrix::sparseMatrix(i=rep(1:nrow(Xi.filt),each=3), j=as.numeric(t(active.filt)),
+                                     x=as.numeric(t(tri$p)), dims=c(nrow(Xi.filt), length(f)))
       result <- as.numeric(M %*% f)
       output <- matrix(c(Xi.filt, result), ncol=3)
       colnames(output) <- c('x','y','z')
+      return(output)
     }
-    return(output)
   }
 
   chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
@@ -102,10 +107,12 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
   pos       <- c()
 
   for(i in 1:length(breaks)) {
-    las.lay   <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
-    dupl      <- !duplicated(data.frame(las.lay[,1], las.lay[,2]))
-    las       <- las.lay[dupl,]
-    if(dim(las)[1] > 1) tin.break <- tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all)
+    las.lay <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
+    dupl    <- !duplicated.matrix(las.lay[,1:2])
+    las     <- las.lay[dupl,]
+    if(dim(las)[1] > 1) {
+      tin.break <- tin(las=las, nx=nx, ny=ny, k=ko, w=chull.all)
+    }
     if(is.null(tin.break)) {
       next
     } else {
@@ -115,9 +122,9 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
     pos <- c(pos,i)
   }
 
-  tins    <- tins[!sapply(tins, is.null)]
-  tins    <- raster::stack(tins)
-  chms    <- raster::stack(ground, tins, tin.all)
+  tins <- tins[!sapply(tins, is.null)]
+  tins <- raster::stack(tins)
+  chms <- raster::stack(ground, tins, tin.all)
   names(chms) <- c('ground', breaks[pos], 'all')
   pitfree <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
 

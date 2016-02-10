@@ -1,5 +1,7 @@
 itc.varwin <- function(chm=NA, ht2rad=NA, min.h=1, type='circle', res=1, num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
+  if(max(raster::values(chm)[!is.na(raster::values(chm))]) <= min.h) return(c(trees=NA, crown.area=NA))
+
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
     x <- colorRamp(colors)(v)
@@ -40,17 +42,17 @@ itc.varwin <- function(chm=NA, ht2rad=NA, min.h=1, type='circle', res=1, num=TRU
   } else {
     itc.stk <- raster::stack()
     for(i in 1:length(rd3)) {
-      itc.new  <- run.focal(chm=chm, hts=hts, rd2=rd2, rad=rd3[i], type=type)
-      itc.stk  <- raster::stack(itc.stk, itc.new)
+      itc.new <- run.focal(chm=chm, hts=hts, rd2=rd2, rad=rd3[i], type=type)
+      itc.stk <- raster::stack(itc.stk, itc.new)
     }
     itc.out <- raster::stackApply(itc.stk, indices=c(1), fun=max, na.rm=T)
   }
 
-  itc.trees <- raster::clump(itc.out, directions=8)
-  ntrees <- length(unique(raster::values(itc.trees)[!is.na(raster::values(itc.trees))]))
+  itc.trees  <- raster::clump(itc.out, directions=8)
+  ntrees     <- length(unique(raster::values(itc.trees)[!is.na(raster::values(itc.trees))]))
   message('There are an estimated ',ntrees,' trees in the plot')
   itc.crowns <- ht2rad(chm) * itc.out
-  crown.area <- sum(raster::values(itc.crowns)[!is.na(raster::values(itc.crowns))]) / (length(raster::values(chm)[!is.na(raster::values(chm))]) * res^2) * 100
+  crown.area <- sum(raster::values(itc.crowns)[!is.na(raster::values(itc.crowns))]) / (length(raster::values(chm)[!is.na(raster::values(chm))]) * res)
 
   val <- seq(from=0, to=max(raster::values(chm)[!is.na(raster::values(chm))]), length.out=length(raster::values(chm)))
   bw  <- myColorRamp(colors=c('black','white'), values=val)

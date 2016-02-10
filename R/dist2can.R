@@ -1,5 +1,7 @@
 dist2can <- function(chm=NA, thresh.val=1.25, degrees=FALSE, from=FALSE) {
 
+  if(max(raster::values(chm)[!is.na(raster::values(chm))]) < thresh.val) return(c(dist2can=NA, dir2can=NA))
+
   canopy <- chm
   raster::values(canopy)[raster::values(canopy) <  thresh.val] <- NA
   raster::values(canopy)[raster::values(canopy) >= thresh.val] <- 1
