@@ -1,4 +1,4 @@
-pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
+pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   if(is.na(las.path)) stop('Please input full file path to the LAS file')
 
@@ -79,6 +79,9 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path),'\\.')[[1]][1]
 
+  val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
+  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
+
   if(percent==TRUE) {
     zmax <- max(LAS2[,3])
     for(i in 1:length(breaks)) {
@@ -108,6 +111,7 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
 
   for(i in 1:length(breaks)) {
     las.lay <- LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],]
+    if(is.null(dim(las.lay))) next
     dupl    <- !duplicated.matrix(las.lay[,1:2])
     las     <- las.lay[dupl,]
     if(dim(las)[1] > 1) {
@@ -123,13 +127,13 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
   }
 
   tins <- tins[!sapply(tins, is.null)]
+  if(length(tins)==0 | is.null(tins)) {
+    if(silent==FALSE) plot(tin.all, col=col)
+    return(tin.all)
+  }
   tins <- raster::stack(tins)
   chms <- raster::stack(ground, tins, tin.all)
-  names(chms) <- c('ground', breaks[pos], 'all')
   pitfree <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
-
-  val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
-  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
 
   if(plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_chm_tin.jpg',sep='')), width=12, height=8, units='in', res=300, quality=100)
@@ -163,14 +167,14 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
     dev.off()
   }
   if(stacked==FALSE) {
-    plot(pitfree, col=col)
+    if(silent==FALSE) plot(pitfree, col=col)
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_pfchm.tiff',sep='')
       raster::writeRaster(x=pitfree, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
     return(pitfree)
   } else if(stacked==TRUE) {
-    plot(chms,  col=col)
+    if(silent==FALSE) plot(chms,  col=col)
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_pfchm_stack.tiff',sep='')
       raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)

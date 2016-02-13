@@ -1,6 +1,6 @@
 itc.watershed.hier <- function(chm.stack=NA, ht2rad=NA, min.h=1, tolerance=0.1, fun=max, res=1, num=TRUE, stacked=FALSE, silent=FALSE, ws.plot=FALSE) {
 
-  if(nlayers(chm.stack)==1) stop('Only a single raster layer found; Please input a raster stack')
+  if(!nlayers(chm.stack) > 1) return(c(trees=NULL, crown.area=NULL))
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))

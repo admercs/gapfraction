@@ -1,8 +1,9 @@
-rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15), percent=TRUE, nx=100, ny=100, stacked=FALSE, plots=FALSE, geoTIFF=FALSE) {
+rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
   chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
+    if(is.null(dim(las))) return(NULL)
     centers <- spatstat::gridcentres(w, nx=nx, ny=ny)
     in.win  <- spatstat::inside.owin(x=centers$x, y=centers$y, w=w)
     xo      <- centers$x[in.win]
@@ -25,6 +26,9 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
 
+  val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
+  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
+
   zmax <- max(LAS[,3])
   if(percent==TRUE) {
     for(i in 1:length(breaks)) {
@@ -45,22 +49,22 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
     r.crs <- las.reproj
   } else r.crs <- las.proj
 
-  val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
-  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
-
   chull.all <- spatstat::convexhull.xy(x=LAS[,1], y=LAS[,2])
-
-  ground   <- chm(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, w=chull.all)
-  chm.all  <- chm(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, w=chull.all)
-  chm.brks <- list()
+  ground    <- chm(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, w=chull.all)
+  chm.all   <- chm(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, w=chull.all)
+  chm.brks  <- list()
 
   for(i in 1:length(breaks)) {
     chm.brks[i] <- chm(las=LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],], nx=nx, ny=ny, w=chull.all)
   }
 
+  chm.brks <- chm.brks[!sapply(chm.brks, is.null)]
+  if(length(chm.brks)==0 | is.null(chm.brks)) {
+    if(silent==FALSE) plot(chm.all, col=col)
+    return(chm.all)
+  }
   chm.brks <- raster::stack(chm.brks)
   chms <- raster::stack(ground, chm.brks, chm.all)
-  names(chms) <- c('Ground Returns',breaks,'All First Returns')
   chm  <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
 
   if(plots==TRUE) {
@@ -83,14 +87,14 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(2,5,10,15),
       fname <- paste(LASname,'_rawchm.tiff',sep='')
       raster::writeRaster(x=chm, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
-    plot(chm, col=col)
+    if(silent==FALSE) plot(chm, col=col)
     return(chm)
   } else if(stacked==TRUE) {
     if(geoTIFF==TRUE) {
       fname <- paste(LASname,'_rawchm_stack.tiff',sep='')
       raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
     }
-    plot(chms, col=col)
+    if(silent==FALSE) plot(chms, col=col)
     return(chms)
   }
 }
