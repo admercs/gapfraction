@@ -70,18 +70,20 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
   cvex  <- spatstat::convexhull.xy(matrix(c(x=x,y=y),ncol=2))
   clipp <- cvex$bdry[[1]]
 
+  point.symbols <- 19
+
   if (plots == TRUE) {
 
     jpeg(file.path(LASfolder, paste(LASname,'_closure.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
-    plot(x, y, pch=10, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
-    plot(x, y, pch=10, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
-    plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
     geometry::trimesh(md, xy, add=TRUE)
 
-    plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                            showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
@@ -90,13 +92,13 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
   if(silent==FALSE) {
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
-    plot(x, y, pch=10, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
-    plot(x, y, pch=10, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col2, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
-    plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Delaunay Cartesian Nadir')
     geometry::trimesh(md, xy, add=TRUE)
 
-    plot(x, y, pch=10, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
+    plot(x, y, pch=point.symbols, col=col, bty='n', xlab='Latitude', ylab='Longitude', main='Voronoi Cartesian Nadir')
     fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)

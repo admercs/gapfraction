@@ -14,9 +14,11 @@ can2ret <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
   col     <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3])
   can2ret <- length(LAS[,3][LAS[,3] >= thresh.val & LAS[,9] != 2]) / length(LAS[,3])
 
+  point.symbols <- 19
+
   if(silent==FALSE) {
     par(mfrow=c(1,1), mar=c(2,2,3,2), pty='s', xpd=TRUE)
-    plot(LAS[,1], LAS[,2], pch=19, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir Canopy to Return Ratio')
+    plot(LAS[,1], LAS[,2], pch=point.symbols, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir Canopy to Return Ratio')
   }
   return(can2ret)
 }

@@ -136,7 +136,7 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
     jpeg(file.path(LASfolder, paste(LASname,'_closure.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
-    plot(LASord[,1],LASord[,2], pch=19, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(LASord[,1],LASord[,2], pch=point.symbols, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
@@ -162,7 +162,7 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
   }
   if(silent==FALSE) {
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
-    plot(LASord[,1],LASord[,2], pch=10, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+    plot(LASord[,1],LASord[,2], pch=point.symbols, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
