@@ -104,7 +104,7 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
 
   canopy <- ifelse(thresh.var >= thresh.val, 1, 0)
   mv     <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE)
-  gf     <- (sum(mv$summary$dir.area * mv$summary$z) / mv$del.area)
+  gf     <- (sum(mv$summary$dir.area * mv$summary$z) / mv$dir.area)
 
   pol.res <- deg2rad(pol.deg)
   azi.res <- deg2rad(azi.deg)

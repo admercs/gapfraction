@@ -1,6 +1,6 @@
 canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
 
-  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
+  if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -27,7 +27,7 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
   y    <- (LAS[,2]-min(LAS[,2])) - (diff(range(LAS[,2]))/2)
   z    <-  LAS[,3]
 
-  dupl <- !duplicated(data.frame(x, y))
+  dupl <- !deldir::duplicatedxy(x=x, y=y)
 
   x <- x[dupl]
   y <- y[dupl]
@@ -37,13 +37,13 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
   col   <- rep(col,  nrows)
   col2  <- rep(col2, nrows)
 
-  col <- ifelse(col == 'height',    myColorRamp(colors=c('blue','green','yellow','red'), values=z),
+  col <- ifelse(col == 'height',    myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3]),
          ifelse(col == 'intensity', myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,4]),
          ifelse(col == 'nreturn',   myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,5]),
          ifelse(col == 'class',     myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,9]),
          'forestgreen'))))
 
-  col2 <- ifelse(col2 == 'height',    myColorRamp(colors=c('black','green','yellow','red'), values=z),
+  col2 <- ifelse(col2 == 'height',    myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3]),
           ifelse(col2 == 'intensity', myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,4]),
           ifelse(col2 == 'nreturn',   myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,5]),
           ifelse(col2 == 'class',     myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,9]),
@@ -54,18 +54,15 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
 
   thresh.var <- rep(thresh.var, nrows)
 
-  thresh.var <- ifelse(thresh.var == 'height',    z,
-                ifelse(thresh.var == 'theta',     a[,1],
-                ifelse(thresh.var == 'phi',       a[,2],
-                ifelse(thresh.var == 'r',         a[,3],
+  thresh.var <- ifelse(thresh.var == 'height',    LAS[,3],
                 ifelse(thresh.var == 'intensity', LAS[,4],
                 ifelse(thresh.var == 'nreturn',   LAS[,5],
                 ifelse(thresh.var == 'class',     LAS[,9],
-                z)))))))
+                z))))
 
   canopy     <- ifelse(thresh.var >= thresh.val, 1, 0)
   mv         <- deldir::deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
-  cancover <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$del.area )
+  cancover   <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$dir.area )
 
   cvex  <- spatstat::convexhull.xy(matrix(c(x=x,y=y),ncol=2))
   clipp <- cvex$bdry[[1]]
