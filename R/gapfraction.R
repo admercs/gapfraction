@@ -77,15 +77,18 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
   m     <- matrix(c(x,y,z), nrow=nrows, ncol=3, dimnames=list(c(1:nrows),c('X','Y','Z')))
 
   col <- rep(col, nrows)
-
-  col <- ifelse(col == 'height',    myColorRamp(colors=c('blue','green','yellow','red'), values=z),
-         ifelse(col == 'theta',     myColorRamp(colors=c('blue','green','yellow','red'), values=a[,1]),
-         ifelse(col == 'phi',       myColorRamp(colors=c('blue','green','yellow','red'), values=a[,2]),
-         ifelse(col == 'r',         myColorRamp(colors=c('blue','green','yellow','red'), values=a[,3]),
+  col <- ifelse(col == 'height',    myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3]),
          ifelse(col == 'intensity', myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,4]),
          ifelse(col == 'nreturn',   myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,5]),
          ifelse(col == 'class',     myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,9]),
-        'forestgreen')))))))
+         'forestgreen'))))
+
+  thresh.var <- rep(thresh.var, nrows)
+  thresh.var <- ifelse(thresh.var == 'height',    LAS[,3],
+                ifelse(thresh.var == 'intensity', LAS[,4],
+                ifelse(thresh.var == 'nreturn',   LAS[,5],
+                ifelse(thresh.var == 'class',     LAS[,9],
+                z))))
 
   LASord <- LAS[order(LAS[,3], decreasing=FALSE),]
   LAScol <- myColorRamp(colors=c('blue','green','yellow','red'), values=LASord[,3])
@@ -95,22 +98,13 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
   if(model == 'equidist')  xy <- crt2eqd(m)
   if(model == 'equiangle') xy <- crt2esa(m)
 
-  md <- geometry::delaunayn(xy, full=F)
+  md    <- geometry::delaunayn(xy, full=F)
+  cvex  <- spatstat::convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
+  clipp <- cvex$bdry[[1]]
 
-  thresh.var <- rep(thresh.var, nrows)
-
-  thresh.var <- ifelse(thresh.var == 'height',    z,
-                ifelse(thresh.var == 'theta',     a[,1],
-                ifelse(thresh.var == 'phi',       a[,2],
-                ifelse(thresh.var == 'r',         a[,3],
-                ifelse(thresh.var == 'intensity', LAS[,4],
-                ifelse(thresh.var == 'nreturn',   LAS[,5],
-                ifelse(thresh.var == 'class',     LAS[,9],
-                z)))))))
-
-  canopy <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, 1, 0)
-  mv     <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
-  gf     <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$del.area )
+  canopy <- ifelse(thresh.var >= thresh.val, 1, 0)
+  mv     <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE)
+  gf     <- (sum(mv$summary$dir.area * mv$summary$z) / mv$del.area)
 
   pol.res <- deg2rad(pol.deg)
   azi.res <- deg2rad(azi.deg)
@@ -129,8 +123,6 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
   grid.pos   <- seq((pi/2)*(1/ngpos), pi/2, length.out=ngpos)
   nlpos      <- (2*pi)/azi.res
   label.pos  <- seq(0, pi*(2-2/nlpos), length.out=nlpos)
-  cvex       <- spatstat::convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
-  clipp      <- cvex$bdry[[1]]
 
   if (plots == TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_closure.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
