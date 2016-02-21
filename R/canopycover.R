@@ -62,7 +62,7 @@ canopycover <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thr
 
   canopy     <- ifelse(thresh.var >= thresh.val, 1, 0)
   mv         <- deldir::deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
-  cancover   <- ( sum(mv$summary$dir.area * mv$summary$z) / mv$dir.area )
+  cancover   <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
 
   cvex  <- spatstat::convexhull.xy(matrix(c(x=x,y=y),ncol=2))
   clipp <- cvex$bdry[[1]]
