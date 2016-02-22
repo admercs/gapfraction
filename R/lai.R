@@ -14,7 +14,18 @@ lai <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALS
     z     <- m[,3]
     r     <- sqrt(x^2 + y^2 + z^2)
     theta <- acos(z/r)
-    phi   <- atan2(y=y, x=x)
+    phi   <- c()
+    for(i in 1:nrow(m)) {
+      xi <- m[i,1]
+      yi <- m[i,2]
+      if(xi>0)         phi[i]  <- atan(yi/xi)
+      if(xi<0 & yi>=0) phi[i]  <- atan(yi/xi)+pi
+      if(xi<0 & yi<0)  phi[i]  <- atan(yi/xi)-pi
+      if(xi==0 & yi>0) phi[i]  <- pi/2
+      if(xi==0 & yi<0) phi[i]  <- -pi/2
+      if(xi==0 & yi==0) phi[i] <- NA
+      if(phi[i]<0)     phi[i]  <- phi[i]+2*pi
+    }
     nrows <- length(x)
     out   <- matrix(c(theta,phi,r), nrow=nrows, ncol=3, dimnames=list(c(1:nrows),c('theta','phi','r')))
     return(out)
@@ -60,21 +71,20 @@ lai <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALS
   n.win  <- n.pol * n.azi
 
   pol <- c(0, seq(from=pol.res, to=(pi/2), by=pol.res))
-  azi <- c(0, seq(from=azi.res, to=(pi*2), by=azi.res))
+  azi <- seq(from=-pi, to=pi, by=azi.res)
 
   pt.density <- n.pts / (pi*R^2)
-  gapfrac.n  <- matrix(nrow=n.pol, ncol=n.azi)
 
+  gapfrac.n  <- matrix(nrow=n.pol, ncol=n.azi)
   for(i in 1:(length(pol)-1)) {
     for(j in 1:(length(azi)-1)) {
-      gapfrac.n[i,j] <- (length(r[which(findInterval(theta,c(pol[i],pol[i+1]))==1 & findInterval(phi,c(azi[j],azi[j+1]))==1)]) / pt.density)
+      gapfrac.n[i,j] <- length(r[which(findInterval(theta,c(pol[i],pol[i+1]))==1 & findInterval(phi,c(azi[j],azi[j+1]))==1)]) / pt.density
     }
   }
   message('Estimated ground plane points: ',round((1-(sum(gapfrac.n)/(n.pts/pt.density)))*100,2),'%')
   message('Canopy-to-total-return ratio: ',round((sum(gapfrac.n)/(n.pts/pt.density))*100,2),'%')
 
   quad.area <- matrix(nrow=n.pol, ncol=n.azi)
-
   for(i in 1:(length(pol)-1)) {
     for(j in 1:(length(azi)-1)) {
       quad.area[i,j] <- ( (R^2) * (sin(pol[i+1])-sin(pol[i])) * (azi[j+1]-azi[j]) ) / ((4*pi*R^2)/2)
