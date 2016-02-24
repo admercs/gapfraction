@@ -63,52 +63,86 @@ lai <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALS
   pol <- c(0, seq(from=pol.res, to=(pi/2), by=pol.res))
   azi <- c(0, seq(from=azi.res, to=(pi*2), by=azi.res))
 
-  pt.density <- n.pts / (pi*R^2)
+  circ.area  <- pi*R*R
+  pt.density <- n.pts/circ.area
 
-  gapfrac.n  <- matrix(nrow=n.pol, ncol=n.azi)
+  # Calculate point-density normalized frequency for each spherical quadrangle interval on the hemisphere
+  n.returns <- matrix(nrow=n.pol, ncol=n.azi)
   for(i in 1:(length(pol)-1)) {
     for(j in 1:(length(azi)-1)) {
-      gapfrac.n[i,j] <- length(r[which(findInterval(theta,c(pol[i],pol[i+1]))==1 & findInterval(phi,c(azi[j],azi[j+1]))==1)]) / pt.density
+      n.returns[i,j] <- length(r[which(findInterval(theta,c(pol[i],pol[i+1]))==1 & findInterval(phi,c(azi[j],azi[j+1]))==1)])
     }
   }
-  message('Estimated ground plane points: ',round((1-(sum(gapfrac.n)/(n.pts/pt.density)))*100,2),'%')
-  message('Canopy-to-total-return ratio: ', round((sum(gapfrac.n)/(n.pts/pt.density))*100,2),'%')
+  message('Estimated ground plane points: ',round((1-(sum(n.returns)/n.pts))*100,2),'%')
+  message('Canopy-to-total-return ratio: ', round((sum(n.returns)/n.pts)*100,2),'%')
 
+  # Calculate area of sperical quadrangles for a hemisphere (non-negative latitudes in 5-degree steps)
+  #   spherical cap:  http://mathworld.wolfram.com/SphericalCap.html
+  #   spherical zone: http://mathworld.wolfram.com/Zone.html
+  #   lat = polar angle
+  #   lon = azimuth angle
+  #   A = (*R^2) * (sin(lat1)-sin(lat2)) * (lon1-lon2)
+  #   Modifed from: NOAA and http://mathforum.org/library/drmath/view/63767.html
+  #   I reversed (pi/180) to (180/pi) to calculate area based on degrees
+  #   Error-checked with: hemisphere.area <- (4*pi*R^2)/2; hemisphere.area == sum(quad.area)
+  #   The hemisphere radius (R) is derived from the empirical maximum radial distance (r)
+  #   hemisphere.area <- (4*pi*R^2)/2
+
+  # Calculate area of each spherical quadrangle as percentage of total hemisphere area
+  # Reverse to start from nadir
+  hemi.area <- (4*pi*R^2)/2
   quad.area <- matrix(nrow=n.pol, ncol=n.azi)
   for(i in 1:(length(pol)-1)) {
     for(j in 1:(length(azi)-1)) {
-      quad.area[i,j] <- ( (R^2) * (sin(pol[i+1])-sin(pol[i])) * (azi[j+1]-azi[j]) ) / ((4*pi*R^2)/2)
+      quad.area[i,j] <- ((R^2) * (sin(pol[i+1])-sin(pol[i])) * (azi[j+1]-azi[j]))
     }
   }
-  if(sum(quad.area) != 1) message('Caution: Quadrangles do not sum to calculated hemisphere area')
+  quad.area <- quad.area[nrow(quad.area):1,]
+  if(sum(quad.area) != hemi.area) message('Caution: Quadrangles do not sum to the hemisphere area')
 
-  gapfrac <- quad.area / gapfrac.n
-  gapfrac[!is.finite(gapfrac)] <- 0
-  message('Total gap fraction: ',round(sum(gapfrac)*100,2),'%')
+  # Calculate sphere volume for wedge quadrangles: http://mathworld.wolfram.com/SphericalWedge.html
+  hemi.volume <- (4/3)*pi*(R*R*R)/2
+  quad.prop   <- quad.area/hemi.area
+  quad.volume <- quad.prop*hemi.volume
+  if(sum(quad.volume) != hemi.volume) message('Caution: Wedge quadrangles do not sum to the hemisphere volume')
 
+  # Normalize point frequency by spherical quadrangle area to estimate the true gap fraction (canopy closure)
+  pt.density.vol <- n.pts/hemi.volume
+  gapfrac        <- 1-(n.returns/n.pts/pt.density.vol)
+  gapfrac.out    <- sum(gapfrac*quad.prop)
+  message('Density-normalized gap fraction: ',round(gapfrac.out,2),'%')
+
+  # LAI integrand for theta: lai <- -2*ln(gapfrac)*cos(theta)*sin(theta)
+  # Source: Miller (1967);  Ryu et al. (2010); Maltamo, Naesset, and Vauhkonen (2014)
   e.lai <- c()
   for(i in (1:length(pol)-1)[-1]) {
-    log.gap  <- log(sum(gapfrac[i,]))
-    e.lai[i] <- -2 * ifelse(is.finite(log.gap),log.gap,0) * cos(pol[i+1]) * sin(pol[i+1])
+    log.gap  <- -log(mean(gapfrac[i,]))
+    e.lai[i] <- ifelse(is.finite(log.gap),log.gap,0)*cos(pol[i+1])*(sin(pol[i+1])/sum(sin(pol)))
   }
-  message('Mean effective LAI: ',round(mean(e.lai),2))
+  e.lai.out <- 2*sum(e.lai)
+  message('Mean effective LAI: ',round(e.lai.out,2))
 
-  aci <- c()
+  # Calculate the apparent clumping index per Ryu et al. (2010)
+  aci   <- c()
+  aci.1 <- c()
+  aci.2 <- c()
   for(i in (1:length(pol)-1)[-1]) {
     mlog <- ifelse(is.finite(log(gapfrac[i,])), log(gapfrac[i,]), 0)
-    aci[i] <- 1-0.5*((var(gapfrac[i,])/mean(gapfrac[i,])^2)*cos(pol[i+1])*sin(pol[i+1]) /
-        (-mean(mlog)*cos(pol[i+1])*sin(pol[i+1])))
+    aci.1[i] <- var(gapfrac[i,])/(mean(gapfrac[i,])^2)*cos(pol[i+1])*sin(pol[i+1])
+    aci.2[i] <- -mean(mlog)*cos(pol[i+1])*sin(pol[i+1])
+    aci[i]   <- aci.1[i]/aci.2[i]
   }
   aci[!is.finite(aci)] <- 0
-  message('Mean ACI: ',round(mean(aci),2))
+  aci.out <- 1-0.5*(sum(aci.1)/sum(aci.2))
+  message('Mean ACI: ',round(aci.out,2))
 
-  pol.sum <- apply(gapfrac, 1, sum)
-  names(pol.sum) <- rad2deg(pol[-1])
+  pol.mean <- apply(gapfrac, 1, mean)
+  names(pol.mean) <- rad2deg(pol[-1])
 
-  azi.sum <- apply(gapfrac, 2, sum)
-  names(azi.sum) <- rad2deg(azi[-1])
+  azi.mean <- apply(gapfrac, 2, mean)
+  names(azi.mean) <- rad2deg(azi[-1])
 
-  result <- c(gapfraction=sum(gapfrac), e.lai=mean(e.lai), aci=mean(aci))
+  result <- c(gapfraction=gapfrac.out, e.lai=e.lai.out, aci=aci.out)
 
   if (plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_gf_lai_aci.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
@@ -130,17 +164,17 @@ lai <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALS
   if(silent==FALSE) {
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
-    plot(pol.sum, type='b', xaxt='n', xlab='Zenith Angle', ylab='Gap Fraction', lwd=2, main='Gap Fraction by Zenith Angle')
-    axis(1, at=1:length(pol.sum), labels=names(pol.sum))
+    plot(pol.mean, type='b', xaxt='n', xlab='Zenith Angle', ylab='Gap Fraction', lwd=2, main='Gap Fraction by Zenith Angle')
+    axis(1, at=1:length(pol.mean), labels=names(pol.mean))
 
-    plot(azi.sum, type='b', xaxt='n', xlab='Azimuth Angle', ylab='Gap Fraction', lwd=2, main='Gap Fraction by Azimuth Angle')
-    axis(1, at=1:length(azi.sum), labels=names(azi.sum))
+    plot(azi.mean, type='b', xaxt='n', xlab='Azimuth Angle', ylab='Gap Fraction', lwd=2, main='Gap Fraction by Azimuth Angle')
+    axis(1, at=1:length(azi.mean), labels=names(azi.mean))
 
     plot(e.lai, type='b', xaxt='n', xlab='Zenith Angle', ylab='Effective LAI', lwd=2, main='Effective LAI by Zenith Angle')
-    axis(1, at=1:length(pol.sum), labels=names(pol.sum))
+    axis(1, at=1:length(pol.mean), labels=names(pol.mean))
 
     plot(aci, type='b', xaxt='n', xlab='Zenith Angle', ylab='Apparent Clumping Index', lwd=2, main='Apparent Clumping Index by Zenith Angle')
-    axis(1, at=1:length(pol.sum), labels=names(pol.sum))
+    axis(1, at=1:length(pol.mean), labels=names(pol.mean))
     par(mfrow=c(1,1))
   }
   return(result)
