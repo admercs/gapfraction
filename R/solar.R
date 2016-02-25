@@ -1,4 +1,22 @@
-sun.path <- function(location.name='Burgauberg', phi=47.162, lambda=16.130, out='', type='polar', lang='en', locale='English', ieqot=F, summert=0) {
+#' Modified Verion of Solar Position Plots by Thomas Steiner, CC-by-SA 2.5: https://creativecommons.org/licenses/by-sa/2.5/
+#'
+#' This function detects individual tree crowns using watershed segmentation
+#' @param location.name Name of the plot location. Defaults to
+#' @param phi Latitude in degrees.
+#' @param lambda Longitude in degrees.
+#' @param out Output file type. Options include PNG, PDF, JPG, and SVG.
+#' @param type Type of plot. Options include polar and cart.
+#' @param lang Language to use. Options include de for German, en for English, it for Italian, and nl for Dutch.
+#' @param locale Set localization for month name generation. Options include German_Austria, English, Italian, and Dutch.
+#' @param ieqot Boolean switch for whether to take the equation of time into account.
+#' @param summert Boolean switch used to set to summertime normal time.
+#' @keywords sun position, solar position, sonnenstand
+#' @export
+#' @return The results of \code{sun.path}
+#' @examples
+#' sun.path(location.name='Jena', phi=50.9106, lambda=11.5672, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0)
+
+sun.path <- function(location.name='Jena', phi=50.9106, lambda=11.5672, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0) {
 
   if (lang=="de") {
     ltext=c("N","O","S","W","Nord","Ost","Sud","West","Azimuth","Hohenwinkel","MEZ","MESZ","Uhr","Sonnenstandsdiagramm","Zenit","Horizont")

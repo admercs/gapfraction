@@ -1,4 +1,23 @@
-gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
+#' Hemispherical-Voronoi Gap Fraction
+#'
+#' This function implements the hemispherical-Voronoi gap fraction algorithm.
+#' @param las.path Path of LAS file. Defaults to NA.
+#' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
+#' @param model Hemispherical lens geometry model to use. Options include equidist, equiangle, stereo, and ortho. Defaults to equidist.
+#' @param thresh.var Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.
+#' @param thresh.val Specifies the value to use for thresholding. Defaults to 1.25.
+#' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.
+#' @param pol.deg Specifies the polar resolution for the radial plot lines. Defaults to 5.
+#' @param azi.deg Specifies the azimuthal resolution for the radial plot lines. Defaults to 45.
+#' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @keywords gap fraction, voronoi, thiessen
+#' @export
+#' @return The results of \code{gapfraction}
+#' @examples
+#' gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)
+
+gf.hv <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
 
   if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -102,9 +121,9 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
   cvex  <- spatstat::convexhull.xy(matrix(c(x=xy[,1], y=xy[,2]), ncol=2))
   clipp <- cvex$bdry[[1]]
 
-  canopy <- ifelse(thresh.var >= thresh.val, 1, 0)
-  mv     <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE)
-  gf     <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
+  canopy  <- ifelse(thresh.var >= thresh.val, 1, 0)
+  mv      <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE)
+  gapfrac <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
 
   pol.res <- deg2rad(pol.deg)
   azi.res <- deg2rad(azi.deg)
@@ -132,14 +151,14 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
     geometry::trimesh(md, xy, add=TRUE)
-    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
@@ -147,7 +166,7 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
-    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     dev.off()
@@ -158,14 +177,14 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
-    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
     points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
     geometry::trimesh(md, xy, add=TRUE)
-    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
@@ -173,10 +192,10 @@ gapfraction <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, re
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
-    radial.grid2(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     par(mfrow=c(1,1))
   }
-  return(gf)
+  return(gapfrac)
 }

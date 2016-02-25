@@ -28,6 +28,9 @@ Imports:
     deldir,
     igraph
 Suggests:
+    parallel,
+    doSNOW,
+    foreach,
     Cairo,
     EBImage,
     animation

@@ -1,4 +1,19 @@
-lai <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE) {
+#' Volumentric-point-density-normalized Gap Fraction, Effective LAI, and ACI
+#'
+#' This function implements the volumentric-point-density-normalized gap fraction, effective LAI, and ACI algorithms
+#' @param las.path Path of LAS file. Defaults to NA.
+#' @param pol.deg Resolution of polar window in degrees. Defaults to 5.
+#' @param azi.deg Resolution of azimuthal window in degrees. Defaults to 45.
+#' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
+#' @param silent Boolean switch for the interactive display of plots. Defaults to TRUE.
+#' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @keywords gap fraction, lai, aci
+#' @export
+#' @return The results of \code{gfpdn.laie.aci} in the form c(gapfraction, e.lai, aci)
+#' @examples
+#' gf.laie.aci(las.path='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
+
+gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, silent=TRUE, plots=FALSE) {
 
   if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -88,8 +103,7 @@ lai <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=FALS
   #   The hemisphere radius (R) is derived from the empirical maximum radial distance (r)
   #   hemisphere.area <- (4*pi*R^2)/2
 
-  # Calculate area of each spherical quadrangle as percentage of total hemisphere area
-  # Reverse to start from nadir
+  # Calculate area of each spherical quadrangle as percentage of total hemisphere area, reverse to start from nadir
   hemi.area <- (4*pi*R^2)/2
   quad.area <- matrix(nrow=n.pol, ncol=n.azi)
   for(i in 1:(length(pol)-1)) {

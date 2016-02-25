@@ -1,4 +1,22 @@
-itc.varwin <- function(chm=NA, ht2rad=NA, min.h=1, type='circle', res=1, num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+#' Moving Window Individual Tree Crown Detection
+#'
+#' This function detects individual tree crowns using a moving window function with shape and size parameters
+#' @param chm Name of the CHM raster object output from a CHM function with stacked=FALSE. Defaults to NA.
+#' @param res Resolution of the input canopy height model in meters, used to adjust the ht2rad function. Defaults to 1.
+#' @param ht2rad Function used to convert tree height to crown radius. Defaults to NA.
+#' @param min.h Canopy minimum height. Defaults to 1.
+#' @param type Shape parameter for the moving window function. Options are circle, Gauss, and rectangle. Defaults to circle.
+#' @param num Boolean switch for the output of numeric values instead of a raster object. Defaults to TRUE.
+#' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @param plots Boolean switch for the display of plots. Defaults to FALSE.
+#' @param geoTIFF Boolean switch for saving GeoTIFF raster of tree positions to a folder, if the chm parameter is a folder. Defaults to FALSE.
+#' @keywords itc, moving window
+#' @export
+#' @return The results of \code{itc.mw}
+#' @examples
+#' itc.mw(chm=chm, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, type='circle', num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+
+itc.mw <- function(chm=NA, res=1, ht2rad=NA, min.h=1, type='circle', num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   if(max(raster::values(chm)[!is.na(raster::values(chm))]) <= min.h) return(c(trees=NA, crown.area=NA))
 

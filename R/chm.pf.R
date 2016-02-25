@@ -1,4 +1,26 @@
-pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+#' Efficient Pit-free Canopy Height Model
+#'
+#' This function implements a 2-D barycentric interpolation-based pit-free canopy height model algorithm
+#' @param las.path Path of LAS file. Defaults to NA.
+#' @param las.proj Proj4 projection string to use for projection. Defaults to NA.
+#' @param las.reproj Proj4 projection string to use for reprojection. Defaults to NA.
+#' @param breaks List of breaks to use for vertical stratification, either values or percentages of maximum height. Defaults to percentages: 0.10, 0.25, 0.50, 0.75.
+#' @param percent Boolean switch for the use of percentages. Defaults to TRUE.
+#' @param nx Number of pixels along the x-axis. For a 50m radius plot, nx=100 is 1m resolution. Defaults to 100.
+#' @param ny Number of pixels along the y-axis. For a 50m radius plot, ny=100 is 1m resolution. Defaults to 100.
+#' @param ko Barycentric triangle edge length filter for overstory layers. Defaults to 2.5.
+#' @param ku Barycentric triangle edge length filter for the understory layer. Defaults to 20.
+#' @param stacked Boolean switch for the output of a single raster or a raser stack. Defaults to FALSE.
+#' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @param geoTIFF Boolean switch for the saving of projected GeoTIFF files to the las.path folder. Defaults to FALSE.
+#' @keywords chm, canopy height model, pit-free chm, barycentric interpolation
+#' @export
+#' @return The results of \code{chm.pf}
+#' @examples
+#' chm.pf(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+
+chm.pf <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
   if(is.na(las.path)) stop('Please input full file path to the LAS file')
 
@@ -44,18 +66,6 @@ pitfreechm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.
       colnames(output) <- c('x','y','z')
       return(output)
     }
-  }
-
-  chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
-    centers <- spatstat::gridcentres(w, nx=nx, ny=ny)
-    in.win  <- spatstat::inside.owin(x=centers$x, y=centers$y, w=w)
-    xo      <- centers$x[in.win]
-    yo      <- centers$y[in.win]
-    grd.2d  <- matrix(c(xo,yo), nrow=length(xo), ncol=2)
-    las.ext <- raster::extent(grd.2d)
-    las.ras <- raster::raster(las.ext, ncols=nx, nrows=ny)
-    las.chm <- raster::rasterize(las[,1:2], las.ras, las[,3], fun=max)
-    return(las.chm)
   }
 
   tin <- function(las=NA, nx=nx, ny=ny, k=NA, w=chull.all) {

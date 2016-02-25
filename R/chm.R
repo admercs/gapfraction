@@ -1,8 +1,26 @@
-rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+#' Simple Canopy Height Model
+#'
+#' This function implements various return-ratio-based fractional cover metrics
+#' @param las.path Path of LAS file. Defaults to NA.
+#' @param las.proj Proj4 projection string to use for projection. Defaults to NA.
+#' @param las.reproj Proj4 projection string to use for reprojection. Defaults to NA.
+#' @param nx Number of pixels along the x-axis. For a 50m radius plot, nx=100 is 1m resolution. Defaults to 100.
+#' @param ny Number of pixels along the y-axis. For a 50m radius plot, ny=100 is 1m resolution. Defaults to 100.
+#' @param fun Function for the calculate of height values in each cell. Defaults to max.
+#' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @param geoTIFF Boolean switch for the saving of projected GeoTIFF files to the las.path folder. Defaults to FALSE.
+#' @keywords chm, canopy height model
+#' @export
+#' @return The results of \code{chm}
+#' @examples
+#' chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+#' chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 
+chm <- function(las.path=NA, las.proj=NA, las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
   if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
-  chm <- function(las=NA, nx=nx, ny=ny, w=chull.all) {
+  chm.grid <- function(las=NA, nx=nx, ny=ny, w=chull, fun=fun) {
     if(is.null(dim(las))) return(NULL)
     centers <- spatstat::gridcentres(w, nx=nx, ny=ny)
     in.win  <- spatstat::inside.owin(x=centers$x, y=centers$y, w=w)
@@ -11,7 +29,7 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0
     grd.2d  <- matrix(c(xo,yo), nrow=length(xo), ncol=2)
     las.ext <- raster::extent(grd.2d)
     las.ras <- raster::raster(las.ext, ncols=nx, nrows=ny)
-    las.chm <- raster::rasterize(las[,1:2], las.ras, las[,3], fun=max)
+    las.chm <- raster::rasterize(las[,1:2], las.ras, las[,3], fun=fun)
     return(las.chm)
   }
 
@@ -29,13 +47,6 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0
   val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
 
-  zmax <- max(LAS[,3])
-  if(percent==TRUE) {
-    for(i in 1:length(breaks)) {
-      breaks[i] <- zmax * breaks[i]
-    }
-  }
-
   if(!is.na(las.reproj)) {
     CRSin  <- las.proj
     CRSout <- las.reproj
@@ -49,23 +60,8 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0
     r.crs <- las.reproj
   } else r.crs <- las.proj
 
-  chull.all <- spatstat::convexhull.xy(x=LAS[,1], y=LAS[,2])
-  ground    <- chm(las=LAS[LAS[,3] == 0,], nx=nx, ny=ny, w=chull.all)
-  chm.all   <- chm(las=LAS[LAS[,5] == 1,], nx=nx, ny=ny, w=chull.all)
-  chm.brks  <- list()
-
-  for(i in 1:length(breaks)) {
-    chm.brks[i] <- chm(las=LAS[LAS[,5] == 1 & LAS[,3] >=  breaks[i],], nx=nx, ny=ny, w=chull.all)
-  }
-
-  chm.brks <- chm.brks[!sapply(chm.brks, is.null)]
-  if(length(chm.brks)==0 | is.null(chm.brks)) {
-    if(silent==FALSE) plot(chm.all, col=col)
-    return(chm.all)
-  }
-  chm.brks <- raster::stack(chm.brks)
-  chms <- raster::stack(ground, chm.brks, chm.all)
-  chm  <- raster::stackApply(chms, indices=c(1), fun=max, na.rm=T)
+  chull <- spatstat::convexhull.xy(x=LAS[,1], y=LAS[,2])
+  chm   <- chm.grid(las=LAS, nx=nx, ny=ny, w=chull, fun=fun)
 
   if(plots==TRUE) {
     par(mfrow=c(1,1), pty='s', xpd=TRUE)
@@ -82,19 +78,10 @@ rawchm <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0
     rasterVis::levelplot(chm, contour=T, col.regions=col)
     dev.off()
   }
-  if(stacked==FALSE) {
-    if(geoTIFF==TRUE) {
-      fname <- paste(LASname,'_rawchm.tiff',sep='')
-      raster::writeRaster(x=chm, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
-    }
-    if(silent==FALSE) plot(chm, col=col)
-    return(chm)
-  } else if(stacked==TRUE) {
-    if(geoTIFF==TRUE) {
-      fname <- paste(LASname,'_rawchm_stack.tiff',sep='')
-      raster::writeRaster(x=chms, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
-    }
-    if(silent==FALSE) plot(chms, col=col)
-    return(chms)
+  if(geoTIFF==TRUE) {
+    fname <- paste(LASname,'_rawchm.tiff',sep='')
+    raster::writeRaster(x=chm, filename=file.path(LASfolder,fname), format='GTiff', overwrite=T)
   }
+  if(silent==FALSE) plot(chm, col=col)
+  return(chm)
 }

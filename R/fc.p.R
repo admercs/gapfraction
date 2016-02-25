@@ -1,4 +1,16 @@
-can2pix <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
+#' Canopy-to-total-pixel Ratio
+#'
+#' This function calculates the ratio of canopy pixels to non-canopy pixels
+#' @param chm Name of the CHM raster object output from a CHM function with stacked=FALSE. Defaults to NA.
+#' @param thresh.val Threshold value used for minimum canopy height. Defaults to 1.
+#' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @keywords canopy, ratio, pixel
+#' @export
+#' @return The results of \code{fc.p}
+#' @examples
+#' fc.p(chm=chm, thresh.val=1.25, silent=FALSE)
+
+fc.p <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -6,7 +18,7 @@ can2pix <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  canopy    <- raster::values(chm)[raster::values(chm) > thresh.val]
+  canopy    <- raster::values(chm)[raster::values(chm) >= thresh.val]
   all.cells <- length(raster::values(chm)[!is.na(raster::values(chm))])
   can.cells <- length(canopy[!is.na(canopy)])
   output    <- can.cells/all.cells
