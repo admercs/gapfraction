@@ -1,10 +1,10 @@
 #' Parallel Hemispherical-Voronoi Gap Fraction
 #'
 #' This function allows you to run \code{gf.hv} on multiple plots in parallel using multi-core CPUs with \code{snow}
-#' @param las.files List of LAS files. Defaults to NA.
-#' @param models List of hemispherical lens models to use. Defaults to equidist.
-#' @param threshs List of height thresholds to use. Defaults to 2.
-#' @keywords gapfraction
+#' @param las.files String vector or list of LAS files. Defaults to NA.
+#' @param models String vector or list of hemispherical lens models to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.
+#' @param threshs String vector or list of height thresholds to use. Defaults to 2.
+#' @keywords gap fraction, parallel, hemispherical Voronoi, tesselation
 #' @export
 #' @return The results of \code{gf.hv.par}
 #' @examples

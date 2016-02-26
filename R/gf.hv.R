@@ -3,7 +3,7 @@
 #' This function implements Erickson's hemispherical-Voronoi gap fraction algorithm with four common lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
-#' @param model Hemispherical lens geometry model to use. Options include equidist, equiangle, stereo, and ortho. Defaults to equidist.
+#' @param model Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.
 #' @param thresh.var Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.
 #' @param thresh.val Specifies the value to use for thresholding. Defaults to 1.25.
 #' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.

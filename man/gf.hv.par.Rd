@@ -7,11 +7,11 @@
 gf.hv.par(las.files = NA, models = NA, threshs = NA)
 }
 \arguments{
-\item{las.files}{List of LAS files. Defaults to NA.}
+\item{las.files}{String vector or list of LAS files. Defaults to NA.}
 
-\item{models}{List of hemispherical lens models to use. Defaults to equidist.}
+\item{models}{String vector or list of hemispherical lens models to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.}
 
-\item{threshs}{List of height thresholds to use. Defaults to 2.}
+\item{threshs}{String vector or list of height thresholds to use. Defaults to 2.}
 }
 \value{
 The results of \code{gf.hv.par}
@@ -23,5 +23,10 @@ This function allows you to run \code{gf.hv} on multiple plots in parallel using
 gf.hv.par(las.files='C:/plot.las', models=c('equidist','stereo'), threshs=seq(1,3))
 gf.hv.par(las.files=las.list, models='equidist', threshs=2)
 }
-\keyword{gapfraction}
+\keyword{Voronoi,}
+\keyword{fraction,}
+\keyword{gap}
+\keyword{hemispherical}
+\keyword{parallel,}
+\keyword{tesselation}
 

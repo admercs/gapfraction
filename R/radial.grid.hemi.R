@@ -1,6 +1,6 @@
 #' Modified Radial Grid Function for Hemispherical Lens Geometries
 #'
-#' This function creates radial grid plots for four common hemispherical lens geometries: equi-distant, equi-angular, stereographic, and orthographic
+#' This function creates radial grid plots for four common hemispherical lens geometries: equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"})
 #' @param labels Parameter adopted from the radial.grid function of the plotrix package. Defaults to NA.
 #' @param label.pos Parameter adopted from the radial.grid function of the plotrix package. Defaults to NULL.
 #' @param radlab Parameter adopted from the radial.grid function of the plotrix package. Defaults to FALSE.
@@ -12,8 +12,8 @@
 #' @param grid.col Parameter adopted from the radial.grid function of the plotrix package. Defaults to gray.
 #' @param grid.bg Parameter adopted from the radial.grid function of the plotrix package. Defaults to transparent.
 #' @param show.radial.grid Parameter adopted from the radial.grid function of the plotrix package. Defaults to TRUE.
-#' @param model Hemispherical lens geometry model to use. Options include equi-distant (\code{equidist}), equi-angular (\code{equiangle}), stereographic (\code{stereo}), and orthographic (\code{ortho}). Defaults to NA.
-#' @param r Hemispherical lens geometry string to use if no \code{model} is specified. String functions for \code{r} must be of the form \code{r = "tan(theta/2)"}. Defaults to theta.
+#' @param model Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to NA.
+#' @param r Hemispherical lens geometry string to use if no \code{model} is specified. String functions for \code{r} must be of the form \code{r = "tan(theta/2)"}. Defaults to \code{"theta"}.
 #' @keywords radial, grid, hemispherical
 #' @export
 #' @return The results of \code{radial.grid.hemi}

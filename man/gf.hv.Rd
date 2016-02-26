@@ -11,7 +11,7 @@ gf.hv(las.path = NA, model = "equidist", pol.deg = 5, azi.deg = 45,
 \arguments{
 \item{las.path}{Path of LAS file. Defaults to NA.}
 
-\item{model}{Hemispherical lens geometry model to use. Options include equidist, equiangle, stereo, and ortho. Defaults to equidist.}
+\item{model}{Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.}
 
 \item{pol.deg}{Specifies the polar resolution for the radial plot lines. Defaults to 5.}
 
