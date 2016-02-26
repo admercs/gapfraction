@@ -6,7 +6,7 @@
 #' @param threshs List of height thresholds to use. Defaults to 2.
 #' @keywords gapfraction
 #' @export
-#' @return The results of \code{gapfraction}
+#' @return The results of \code{gf.hv.par}
 #' @examples
 #' gf.hv.par(las.files='C:/plot.las', models=c('equidist','stereo'), threshs=seq(1,3))
 #' gf.hv.par(las.files=las.list, models='equidist', threshs=2)
