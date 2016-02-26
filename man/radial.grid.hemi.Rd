@@ -32,9 +32,9 @@ radial.grid.hemi(labels = NA, label.pos = NULL, radlab = FALSE,
 
 \item{show.radial.grid}{Parameter adopted from the radial.grid function of the plotrix package. Defaults to TRUE.}
 
-\item{model}{Parameter adopted from the radial.grid function of the plotrix package. Defaults to NA.}
+\item{model}{Hemispherical lens geometry model to use. Options include equi-distant (\code{equidist}), equi-angular (\code{equiangle}), stereographic (\code{stereo}), and orthographic (\code{ortho}). Defaults to NA.}
 
-\item{r}{Parameter adopted from the radial.grid function of the plotrix package. Defaults to theta.}
+\item{r}{Hemispherical lens geometry string to use if no \code{model} is specified. String functions for \code{r} must be of the form \code{r = "tan(theta/2)"}. Defaults to theta.}
 }
 \value{
 The results of \code{radial.grid.hemi}
