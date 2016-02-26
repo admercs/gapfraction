@@ -1,6 +1,6 @@
 #' Hemispherical-Voronoi Gap Fraction
 #'
-#' This function implements the hemispherical-Voronoi gap fraction algorithm.
+#' This function implements Erickson's hemispherical-Voronoi gap fraction algorithm
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param model Hemispherical lens geometry model to use. Options include equidist, equiangle, stereo, and ortho. Defaults to equidist.

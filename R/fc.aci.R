@@ -1,6 +1,6 @@
-#' Above-height-threshold Cover Index of Fractional Cover
+#' Above-height Cover Index of Fractional Cover
 #'
-#' This function calculates fraction cover per the Above-height-threshold Cover Index
+#' This function calculates fraction cover per the Above-height Cover Index
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.

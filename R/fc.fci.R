@@ -1,6 +1,6 @@
 #' First-echo Cover Index of Fractional Cover
 #'
-#' This function calculates fractional cover per the first-echo cover index
+#' This function calculates fractional cover per the First-echo Cover Index
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.

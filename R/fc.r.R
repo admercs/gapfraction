@@ -1,6 +1,6 @@
 #' Canopy-to-total-return Ratio Fractional Cover
 #'
-#' This function calculates fractional cover as the canopy-to-total-return ratio
+#' This function calculates fractional cover per the canopy-to-total-return ratio
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.

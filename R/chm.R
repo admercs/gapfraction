@@ -1,6 +1,6 @@
 #' Simple Canopy Height Model
 #'
-#' This function implements various return-ratio-based fractional cover metrics
+#' This function implements a simple grid-based canopy height model
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param las.proj Proj4 projection string to use for projection. Defaults to NA.
 #' @param las.reproj Proj4 projection string to use for reprojection. Defaults to NA.

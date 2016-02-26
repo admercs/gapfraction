@@ -1,6 +1,6 @@
 #' Nearest Canopy Pixel Distance and Direction from Plot Center
 #'
-#' This function calculates the distance and direction to the nearest crown from the plot center
+#' This function calculates the distance and direction to the nearest canopy pixel from the plot center
 #' @param chm Name of the CHM raster object output from a CHM function with stacked=FALSE. Defaults to NA.
 #' @param thresh.val Threshold value used for minimum canopy height. Defaults to 1.
 #' @param degrees Boolean switch for the output of direction values in degrees rather than radians. Defaults to FALSE.

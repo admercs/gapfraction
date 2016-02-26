@@ -1,6 +1,6 @@
 #' Parallel Hemispherical-Voronoi Gap Fraction
 #'
-#' This function allows you to run gapfraction in parallel on multi-core CPUs
+#' This function allows you to run \code{gf.hv} on multiple plots in parallel using multi-core CPUs with \code{snow}
 #' @param las.files List of LAS files. Defaults to NA.
 #' @param models List of hemispherical lens models to use. Defaults to equidist.
 #' @param threshs List of height thresholds to use. Defaults to 2.

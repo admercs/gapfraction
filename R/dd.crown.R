@@ -1,6 +1,6 @@
 #' Nearest Crown Distance and Direction from Plot Center
 #'
-#' This function calculates the distance and direction to the nearest crown from the plot center
+#' This function calculates the distance and direction to the nearest crown pixel from the plot center
 #' @param crowns Raster object of tree crown positions. Defaults to NA.
 #' @param thresh.val Threshold value used for tree crown selection. Defaults to 1.
 #' @param degrees Boolean switch for the output of direction values in degrees rather than radians. Defaults to FALSE.

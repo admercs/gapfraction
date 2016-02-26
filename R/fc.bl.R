@@ -1,4 +1,4 @@
-#' Beer's Law-modified Intensity-return Ratio or Itensity Cover Index of Fractional Cover
+#' Beer's Law-modified Intensity-return Ratio of Fractional Cover
 #'
 #' This function calculates fractional cover per the Beer's Law-modified intensity-return ratio, also known as the Intensity Cover Index
 #' @param las.path Path of LAS file. Defaults to NA.
