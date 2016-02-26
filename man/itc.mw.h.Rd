@@ -35,7 +35,7 @@ itc.mw.h(chm.stack = NA, res = 1, ht2rad = NA, min.h = 1,
 The results of \code{itc.mw.h}
 }
 \description{
-This function detects individual tree crowns using a moving window function with shape and size parameters
+This function detects individual tree crowns using a moving window function with variable window diameters
 }
 \examples{
 itc.mw.h(chm.stack=chms, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, type='circle', fun=max, num=TRUE, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)

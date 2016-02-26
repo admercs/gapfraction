@@ -17,7 +17,7 @@ fc.fci(las.path = NA, thresh.val = 1.25, silent = FALSE)
 The results of \code{fc.fci}
 }
 \description{
-This function calculates fractional cover per the first-echo cover index
+This function calculates fractional cover per the First-echo Cover Index
 }
 \examples{
 fc.fci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)

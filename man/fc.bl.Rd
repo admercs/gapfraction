@@ -2,7 +2,7 @@
 % Please edit documentation in R/fc.bl.R
 \name{fc.bl}
 \alias{fc.bl}
-\title{Beer's Law-modified Intensity-return Ratio or Itensity Cover Index of Fractional Cover}
+\title{Beer's Law-modified Intensity-return Ratio of Fractional Cover}
 \usage{
 fc.bl(las.path = NA, thresh.val = 1.25, silent = FALSE)
 }

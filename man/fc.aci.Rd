@@ -2,7 +2,7 @@
 % Please edit documentation in R/fc.aci.R
 \name{fc.aci}
 \alias{fc.aci}
-\title{Above-height-threshold Cover Index of Fractional Cover}
+\title{Above-height Cover Index of Fractional Cover}
 \usage{
 fc.aci(las.path = NA, thresh.val = 1.25, silent = FALSE)
 }
@@ -17,7 +17,7 @@ fc.aci(las.path = NA, thresh.val = 1.25, silent = FALSE)
 The results of \code{fc.aci}
 }
 \description{
-This function calculates fraction cover per the Above-height-threshold Cover Index
+This function calculates fraction cover per the Above-height Cover Index
 }
 \examples{
 fc.aci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)

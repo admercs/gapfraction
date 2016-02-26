@@ -19,7 +19,7 @@ dd.canopy(chm = NA, thresh.val = 1.25, degrees = FALSE, from = FALSE)
 The results of \code{dd.canopy}
 }
 \description{
-This function calculates the distance and direction to the nearest crown from the plot center
+This function calculates the distance and direction to the nearest canopy pixel from the plot center
 }
 \examples{
 dd.canopy(chm=chm, thresh.val=1.25, degrees=FALSE, from=FALSE)

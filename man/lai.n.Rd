@@ -2,7 +2,7 @@
 % Please edit documentation in R/lai.n.R
 \name{lai.n}
 \alias{lai.n}
-\title{Contact Frequency and Fractional Cover-based LAI}
+\title{Contact Frequency and Fractional Cover-based LAI from Morsdorf (2006)}
 \usage{
 lai.n(las.path = NA, thresh.val = 1.25, silent = FALSE)
 }
@@ -17,7 +17,7 @@ lai.n(las.path = NA, thresh.val = 1.25, silent = FALSE)
 The results of \code{lai.n}
 }
 \description{
-This function calculates LAI as a function of the effective LAI and fractional cover per contact frequency
+This function calculates LAI as a function of the effective LAI and fractional cover per contact frequency from Morsdorf (2006)
 }
 \examples{
 lai.n(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)

@@ -30,7 +30,7 @@ chm(las.path = NA, las.proj = NA, las.reproj = NA, nx = 100, ny = 100,
 The results of \code{chm}
 }
 \description{
-This function implements various return-ratio-based fractional cover metrics
+This function implements a simple grid-based canopy height model
 }
 \examples{
 chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)

@@ -19,7 +19,7 @@ dd.crown(crowns = NA, thresh.val = 1, degrees = FALSE, from = FALSE)
 The results of \code{dd.crown}
 }
 \description{
-This function calculates the distance and direction to the nearest crown from the plot center
+This function calculates the distance and direction to the nearest crown pixel from the plot center
 }
 \examples{
 dd.crown(crowns=itc.crowns, thresh.val=1, degrees=FALSE, from=FALSE)

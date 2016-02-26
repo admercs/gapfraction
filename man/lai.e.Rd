@@ -2,7 +2,7 @@
 % Please edit documentation in R/lai.e.R
 \name{lai.e}
 \alias{lai.e}
-\title{Simple Effective LAI Estimation with Beer's Law and the Ground-to-total-returns Ratio}
+\title{Simple Effective LAI Estimation with Beer's Law, the Ground-to-total-returns Ratio, and a Spherical Leaf Angle Distribution from Richardson (2009)}
 \usage{
 lai.e(las.path = NA, k = 0.5, silent = FALSE)
 }
@@ -17,7 +17,7 @@ lai.e(las.path = NA, k = 0.5, silent = FALSE)
 The results of \code{lai.e}
 }
 \description{
-This function calculates effective LAI using Beer's Law with the ground-to-total-returns ratio and a spherical leaf angle distribution
+This function calculates effective LAI using Beer's Law with the ground-to-total-returns ratio and a spherical leaf angle distribution from Richardson (2009)
 }
 \examples{
 lai.e(las.path='C:/plot.las', k=0.5, silent=FALSE)

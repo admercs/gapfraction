@@ -17,7 +17,7 @@ gf.hv.par(las.files = NA, models = NA, threshs = NA)
 The results of \code{gf.hv.par}
 }
 \description{
-This function allows you to run gapfraction in parallel on multi-core CPUs
+This function allows you to run \code{gf.hv} on multiple plots in parallel using multi-core CPUs with \code{snow}
 }
 \examples{
 gf.hv.par(las.files='C:/plot.las', models=c('equidist','stereo'), threshs=seq(1,3))

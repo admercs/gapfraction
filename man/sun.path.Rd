@@ -2,7 +2,7 @@
 % Please edit documentation in R/sun.path.R
 \name{sun.path}
 \alias{sun.path}
-\title{Modified Verion of Solar Position Plots of Thomas Steiner}
+\title{Modified Version of Solar Position Plots by Thomas Steiner}
 \usage{
 sun.path(location.name = "Jena", phi = 50.9106, lambda = 11.5672,
   out = "", type = "polar", lang = "en", locale = "English",
@@ -31,7 +31,7 @@ sun.path(location.name = "Jena", phi = 50.9106, lambda = 11.5672,
 The results of \code{sun.path}
 }
 \description{
-This function creates Cartesian and polar sun path plots for specific locations. CC-by-SA 2.5: https://creativecommons.org/licenses/by-sa/2.5/
+This function creates Cartesian and polar sun path plots for specific locations, useful for estimating understory light. CC-by-SA 2.5: https://creativecommons.org/licenses/by-sa/2.5/
 }
 \examples{
 sun.path(location.name='Jena', phi=50.9106, lambda=11.5672, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0)

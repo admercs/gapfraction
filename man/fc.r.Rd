@@ -17,7 +17,7 @@ fc.r(las.path = NA, thresh.val = 1.25, silent = FALSE)
 The results of \code{fc.r}
 }
 \description{
-This function calculates fractional cover as the canopy-to-total-return ratio
+This function calculates fractional cover per the canopy-to-total-return ratio
 }
 \examples{
 fc.r(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
