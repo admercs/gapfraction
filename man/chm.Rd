@@ -5,7 +5,7 @@
 \title{Simple Canopy Height Model}
 \usage{
 chm(las.path = NA, las.proj = NA, las.reproj = NA, nx = 100, ny = 100,
-  fun = fun, silent = FALSE, plots = FALSE, geoTIFF = FALSE)
+  fun = max, silent = FALSE, plots = FALSE, geoTIFF = FALSE)
 }
 \arguments{
 \item{las.path}{Path of LAS file. Defaults to NA.}

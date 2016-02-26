@@ -14,7 +14,7 @@ gf.hv.par(las.files = NA, models = NA, threshs = NA)
 \item{threshs}{List of height thresholds to use. Defaults to 2.}
 }
 \value{
-The results of \code{gapfraction}
+The results of \code{gf.hv.par}
 }
 \description{
 This function allows you to run gapfraction in parallel on multi-core CPUs
