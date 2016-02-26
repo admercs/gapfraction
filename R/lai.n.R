@@ -1,16 +1,16 @@
-#' Intensity-return Ratio Fractional Cover
+#' Contact Frequency and Fractional Cover-based LAI
 #'
-#' This function calculates fractional cover per the intensity-return ratio
+#' This function calculates LAI as a function of the effective LAI and fractional cover per contact frequency
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
-#' @return The results of \code{fc.ir}
+#' @return The results of \code{lai.n}
 #' @examples
-#' fc.ir(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
+#' lai.n(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 
-fc.ir <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
+lai.n <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -24,9 +24,16 @@ fc.ir <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
   LAS <- LAS[order(LAS[,'Intensity'], decreasing=FALSE), ]
   col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
 
-  can.sum <- sum(LAS[LAS[,'Z'] >= thresh.val, 'Intensity'])
-  all.sum <- sum(LAS[,'Intensity'])
-  result  <- can.sum/all.sum
+  n.tot <- nrow(LAS)
+  n.veg <- nrow(LAS[LAS[,'Z'] >= thresh.val,])
+  fc    <- n.veg/n.tot
+
+  n.first  <- nrow(LAS[LAS[,'ReturnNumber']==1 & LAS[,'Z'] >= thresh.val, ])
+  n.last   <- nrow(LAS[LAS[,'ReturnNumber']==LAS[,'NumberOfReturns'] & LAS[,'Z'] >= thresh.val, ])
+  n.single <- nrow(LAS[LAS[,'ReturnNumber']==1 & LAS[,'NumberOfReturns']==1 & LAS[,'Z'] >= thresh.val, ])
+  lai      <- n.first/(n.last+n.single)
+
+  result <- lai*fc
 
   if(silent==FALSE) {
     par(mfrow=c(1,1), mar=c(2,2,3,2), pty='s', xpd=TRUE)

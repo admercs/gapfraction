@@ -1,10 +1,10 @@
-#' Beer's Law-modified Intensity-return Ratio Fractional Cover
+#' Beer's Law-modified Intensity-return Ratio or Itensity Cover Index of Fractional Cover
 #'
-#' This function calculates fractional cover per the Beer's Law-modified intensity-return ratio
+#' This function calculates fractional cover per the Beer's Law-modified intensity-return ratio, also known as the Intensity Cover Index
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
-#' @keywords gap fraction, voronoi, thiessen
+#' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
 #' @return The results of \code{fc.bl}
 #' @examples

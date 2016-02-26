@@ -1,16 +1,16 @@
-#' Canopy-to-total-return Ratio Fractional Cover
+#' Simple Effective LAI Estimation with Beer's Law and the Ground-to-total-returns Ratio
 #'
-#' This function calculates fractional cover as the canopy-to-total-return ratio
+#' This function calculates effective LAI using Beer's Law with the ground-to-total-returns ratio and a spherical leaf angle distribution
 #' @param las.path Path of LAS file. Defaults to NA.
-#' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
+#' @param k Specifies the leaf angle distribution to use. Defaults to 0.5 for spherical.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
-#' @return The results of \code{fc.r}
+#' @return The results of \code{lai.e}
 #' @examples
-#' fc.r(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
+#' lai.e(las.path='C:/plot.las', k=0.5, silent=FALSE)
 
-fc.r <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
+lai.e <- function(las.path=NA, k=0.5, silent=FALSE) {
 
   if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -22,9 +22,11 @@ fc.r <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   LAS <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS <- LAS[order(LAS[,'Classification'], decreasing=FALSE), ]
-  col <- myColorRamp(colors=c('blue','orange','yellow','green','red'), values=LAS[,'Classification'])
+  col <- myColorRamp(colors=c('blue','red','orange','green','purple'), values=LAS[,'Classification'])
 
-  result <- nrow(LAS[LAS[,'Z'] >= thresh.val,]) / nrow(LAS)
+  n.total  <- nrow(LAS)
+  n.ground <- nrow(LAS[LAS[,'Classification'] == 2,])
+  result   <- (-1/k)*log(n.ground/n.total)
 
   if(silent==FALSE) {
     par(mfrow=c(1,1), mar=c(2,2,3,2), pty='s', xpd=TRUE)
