@@ -7,11 +7,11 @@
 #' @param from Boolean switch for the output of direction values from nearest crowns rather than to nearest crowns. Defaults to FALSE.
 #' @keywords canopy, distance, direction
 #' @export
-#' @return The results of \code{canopy.dist.dir}
+#' @return The results of \code{dd.canopy}
 #' @examples
-#' canopy.dist.dir(chm=chm, thresh.val=1.25, degrees=FALSE, from=FALSE)
+#' dd.canopy(chm=chm, thresh.val=1.25, degrees=FALSE, from=FALSE)
 
-canopy.dist.dir <- function(chm=NA, thresh.val=1.25, degrees=FALSE, from=FALSE) {
+dd.canopy <- function(chm=NA, thresh.val=1.25, degrees=FALSE, from=FALSE) {
 
   if(max(raster::values(chm)[!is.na(raster::values(chm))]) < thresh.val) return(c(can.dist=NA, can.dir=NA))
 

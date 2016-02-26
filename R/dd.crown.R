@@ -7,11 +7,11 @@
 #' @param from Boolean switch for the output of direction values from nearest crowns rather than to nearest crowns. Defaults to FALSE.
 #' @keywords crown, distance, direction
 #' @export
-#' @return The results of \code{crown.dist.dir}
+#' @return The results of \code{dd.crown}
 #' @examples
-#' crown.dist.dir(crowns=itc.crowns, thresh.val=1, degrees=FALSE, from=FALSE)
+#' dd.crown(crowns=itc.crowns, thresh.val=1, degrees=FALSE, from=FALSE)
 
-crown.dist.dir <- function(crowns=NA, thresh.val=1, degrees=FALSE, from=FALSE) {
+dd.crown <- function(crowns=NA, thresh.val=1, degrees=FALSE, from=FALSE) {
 
   if(class(crowns)=='logical') return(c(c.dist=NA, c.dir=NA))
   if(length(raster::values(crowns)[!is.na(raster::values(crowns))]) < 1) return(c(c.dist=NA, c.dir=NA))
