@@ -123,7 +123,11 @@ gf.hv <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojec
 
   canopy  <- ifelse(thresh.var >= thresh.val, 1, 0)
   mv      <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE)
-  gapfrac <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
+  result  <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
+
+  if(is.null(result))    result <- 0
+  if(!is.finite(result)) result <- 0
+  if(!exists('result'))  result <- 0
 
   pol.res <- deg2rad(pol.deg)
   azi.res <- deg2rad(azi.deg)
@@ -197,5 +201,5 @@ gf.hv <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojec
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     par(mfrow=c(1,1))
   }
-  return(gapfrac)
+  return(result)
 }
