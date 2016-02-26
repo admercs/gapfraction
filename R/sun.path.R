@@ -1,6 +1,6 @@
-#' Modified Verion of Solar Position Plots by Thomas Steiner, CC-by-SA 2.5: https://creativecommons.org/licenses/by-sa/2.5/
+#' Modified Verion of Solar Position Plots of Thomas Steiner
 #'
-#' This function detects individual tree crowns using watershed segmentation
+#' This function creates Cartesian and polar sun path plots for specific locations. CC-by-SA 2.5: https://creativecommons.org/licenses/by-sa/2.5/
 #' @param location.name Name of the plot location. Defaults to
 #' @param phi Latitude in degrees.
 #' @param lambda Longitude in degrees.
