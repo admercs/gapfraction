@@ -1,6 +1,6 @@
 #' Cartesian-Voronoi Fractional Cover
 #'
-#' This function implements the Cartesian-Voronoi fraction canopy cover algorithm of 'Airborne laser scanner LiDAR proxies for understory light conditions'
+#' This function implements the Cartesian-Voronoi fraction canopy cover algorithm of Alexander (2013)
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.
@@ -10,6 +10,7 @@
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://www.sciencedirect.com/science/article/pii/S0034425713000771}
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
 #' @return The results of \code{fc.cv}

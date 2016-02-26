@@ -41,6 +41,9 @@ gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='hei
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+Forthcoming
+}
 \keyword{fraction,}
 \keyword{gap}
 \keyword{thiessen}

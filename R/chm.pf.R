@@ -15,6 +15,7 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @param geoTIFF Boolean switch for the saving of projected GeoTIFF files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf}
 #' @keywords chm, canopy height model, pit-free chm, barycentric interpolation
 #' @export
 #' @return The results of \code{chm.pf}

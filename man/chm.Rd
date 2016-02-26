@@ -39,6 +39,9 @@ chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, 
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+\url{http://link.springer.com/book/10.1007/978-94-017-8663-8}
+}
 \keyword{canopy}
 \keyword{chm,}
 \keyword{height}

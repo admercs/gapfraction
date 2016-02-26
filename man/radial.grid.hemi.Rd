@@ -48,6 +48,9 @@ radial.grid.hemi()
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\seealso{
+\code{\link{plotrix}}
+}
 \keyword{grid,}
 \keyword{hemispherical}
 \keyword{radial,}

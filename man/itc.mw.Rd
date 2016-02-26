@@ -2,7 +2,7 @@
 % Please edit documentation in R/itc.mw.R
 \name{itc.mw}
 \alias{itc.mw}
-\title{Moving Window Individual Tree Crown Detection}
+\title{Moving Window Individual Tree Crown Detection with Variable Window Size}
 \usage{
 itc.mw(chm = NA, res = 1, ht2rad = NA, min.h = 1, type = "circle",
   num = TRUE, silent = FALSE, plots = FALSE, geoTIFF = FALSE)
@@ -37,6 +37,9 @@ itc.mw(chm=chm, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, type='circle',
 }
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
+}
+\references{
+\url{http://www.mdpi.com/2072-4292/4/4/950/htm}
 }
 \keyword{itc,}
 \keyword{moving}

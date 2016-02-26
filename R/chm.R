@@ -11,6 +11,7 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @param geoTIFF Boolean switch for the saving of projected GeoTIFF files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://link.springer.com/book/10.1007/978-94-017-8663-8}
 #' @keywords chm, canopy height model
 #' @export
 #' @return The results of \code{chm}

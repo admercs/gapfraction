@@ -27,6 +27,9 @@ dd.canopy(chm=chm, thresh.val=1.25, degrees=FALSE, from=FALSE)
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+\url{http://www.sciencedirect.com/science/article/pii/S0168192315001173}
+}
 \keyword{canopy,}
 \keyword{direction}
 \keyword{distance,}

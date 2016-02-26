@@ -6,6 +6,7 @@
 #' @param degrees Boolean switch for the output of direction values in degrees rather than radians. Defaults to FALSE.
 #' @param from Boolean switch for the output of direction values from nearest crowns rather than to nearest crowns. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://www.sciencedirect.com/science/article/pii/S0168192315001173}
 #' @keywords canopy, distance, direction
 #' @export
 #' @return The results of \code{dd.canopy}

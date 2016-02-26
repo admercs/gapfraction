@@ -6,6 +6,7 @@
 #' @param threshs String vector or list of height thresholds to use. Defaults to 2.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords gap fraction, parallel, hemispherical Voronoi, tesselation
+#' @references Forthcoming
 #' @export
 #' @return The results of \code{gf.hv.par}
 #' @examples

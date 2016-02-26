@@ -1,4 +1,4 @@
-#' Moving Window Individual Tree Crown Detection
+#' Moving Window Individual Tree Crown Detection with Variable Window Size
 #'
 #' This function detects individual tree crowns using a moving window function with variable window sizes
 #' @param chm Name of the CHM raster object output from a \code{chm} function with \code{stacked=FALSE}. Defaults to NA.
@@ -11,6 +11,7 @@
 #' @param plots Boolean switch for the display of plots. Defaults to FALSE.
 #' @param geoTIFF Boolean switch for saving GeoTIFF raster of tree positions to a folder, if the chm parameter is a folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://www.mdpi.com/2072-4292/4/4/950/htm}
 #' @keywords itc, moving window
 #' @export
 #' @return The results of \code{itc.mw}

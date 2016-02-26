@@ -11,6 +11,7 @@
 #' @param ws.plot Boolean switch for the display of the watershed segmentation plot. Defaults to FALSE.
 #' @param geoTIFF Boolean switch for saving GeoTIFF raster of tree positions to a folder, if the chm parameter is a folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://www.mdpi.com/2072-4292/4/4/950/htm}
 #' @keywords itc, watershed segmentation
 #' @export
 #' @return The results of \code{itc.wat}

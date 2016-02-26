@@ -15,6 +15,7 @@
 #' @param model Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to NA.
 #' @param r Hemispherical lens geometry string to use if no \code{model} is specified. String functions for \code{r} must be of the form \code{r = "tan(theta/2)"}. Defaults to \code{"theta"}.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @seealso \code{\link{plotrix}}
 #' @keywords radial, grid, hemispherical
 #' @export
 #' @return The results of \code{radial.grid.hemi}

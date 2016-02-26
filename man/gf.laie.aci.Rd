@@ -32,6 +32,11 @@ gf.laie.aci(las.path='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, sil
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+Forthcoming
+
+\url{http://www.sciencedirect.com/science/article/pii/S0168192310000328}
+}
 \keyword{aci}
 \keyword{fraction,}
 \keyword{gap}

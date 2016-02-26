@@ -17,13 +17,18 @@ fc.sci(las.path = NA, thresh.val = 1.25, silent = FALSE)
 The results of \code{fc.sci}
 }
 \description{
-This function calculates fraction cover per Solberg's Cover Index
+This function calculates fraction cover per Solberg's Cover Index from Solberg (2009)
 }
 \examples{
 fc.sci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
+}
+\references{
+\url{http://www.sciencedirect.com/science/article/pii/S0034425709001862}
+
+\url{http://link.springer.com/chapter/10.1007\%2F978-94-017-8663-8_20}
 }
 \keyword{canopy}
 \keyword{cover}

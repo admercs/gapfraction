@@ -48,6 +48,9 @@ chm.pf(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, break
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+\url{http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf}
+}
 \keyword{barycentric}
 \keyword{canopy}
 \keyword{chm,}

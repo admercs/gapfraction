@@ -43,6 +43,9 @@ itc.mw.h(chm.stack=chms, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, type=
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+\url{http://www.mdpi.com/2072-4292/4/4/950/htm}
+}
 \keyword{itc,}
 \keyword{moving}
 \keyword{window}

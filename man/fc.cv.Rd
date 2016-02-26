@@ -29,13 +29,16 @@ fc.cv(las.path = NA, reprojection = NA, col = "height", col2 = NA,
 The results of \code{fc.cv}
 }
 \description{
-This function implements the Cartesian-Voronoi fraction canopy cover algorithm of 'Airborne laser scanner LiDAR proxies for understory light conditions'
+This function implements the Cartesian-Voronoi fraction canopy cover algorithm of Alexander (2013)
 }
 \examples{
 fc.cv(las.path='C:/plot.las', reprojection=NA, col='height', col2='intensity', thresh.var='height', thresh.val=1.25, silent=FALSE, plots=FALSE)
 }
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
+}
+\references{
+\url{http://www.sciencedirect.com/science/article/pii/S0034425713000771}
 }
 \keyword{canopy}
 \keyword{cover}

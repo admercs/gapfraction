@@ -5,6 +5,7 @@
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://link.springer.com/chapter/10.1007\%2F978-94-017-8663-8_20}
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
 #' @return The results of \code{fc.r}

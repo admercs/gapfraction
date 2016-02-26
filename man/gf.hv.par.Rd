@@ -26,6 +26,9 @@ gf.hv.par(las.files=las.list, models='equidist', threshs=2)
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}
 }
+\references{
+Forthcoming
+}
 \keyword{Voronoi,}
 \keyword{fraction,}
 \keyword{gap}
