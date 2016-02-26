@@ -6,11 +6,11 @@
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
-#' @return The results of \code{lai.aci}
+#' @return The results of \code{fc.aci}
 #' @examples
-#' lai.aci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
+#' fc.aci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 
-lai.aci <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
+fc.aci <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
