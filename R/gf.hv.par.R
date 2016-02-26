@@ -12,6 +12,9 @@
 #' gf.hv.par(las.files=las.list, models='equidist', threshs=2)
 
 gf.hv.par <- function(las.files=NA, models=NA, threshs=NA) {
+
+  require(foreach)
+
   ncores <- parallel::detectCores()-1
   clust  <- snow::makeCluster(ncores, type='SOCK')
   doSNOW::registerDoSNOW(clust)
