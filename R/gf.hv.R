@@ -124,7 +124,7 @@ gf.hv <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojec
   clipp <- cvex$bdry[[1]]
 
   canopy  <- ifelse(thresh.var >= thresh.val, 1, 0)
-  mv      <- deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE)
+  mv      <- try(deldir::deldir(x=xy[,1], y=xy[,2], z=canopy, rw=NULL, eps=1e-09, digits=6, plotit=FALSE, suppressMsge=TRUE))
   result  <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
 
   if(is.null(result))    result <- 0
