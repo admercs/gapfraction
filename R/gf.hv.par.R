@@ -29,7 +29,7 @@ gf.hv.par <- function(las.files=NA, models=NA, threshs=NA) {
     foreach::foreach(j = threshs,  .combine='rbind') %:%
     foreach::foreach(k = las.files,.combine='cbind', .options.snow=opts) %dopar% {
       Sys.sleep(0.1)
-      gapfraction(las.path=k, model=i, thresh.val=j, thresh.var='height', silent=TRUE, plots=FALSE)
+      gf.hv(las.path=k, model=i, thresh.val=j, thresh.var='height', silent=TRUE, plots=FALSE)
     }
   snow::stopCluster(clust)
   results <- t(results)
