@@ -2,7 +2,7 @@
 % Please edit documentation in R/fc.p.R
 \name{fc.p}
 \alias{fc.p}
-\title{Canopy-to-total-pixel Ratio}
+\title{Canopy-to-total-pixel Ratio Fractional Cover}
 \usage{
 fc.p(chm = NA, thresh.val = 1.25, silent = FALSE)
 }
@@ -17,12 +17,13 @@ fc.p(chm = NA, thresh.val = 1.25, silent = FALSE)
 The results of \code{fc.p}
 }
 \description{
-This function calculates the ratio of canopy pixels to non-canopy pixels
+This function calculates fractional cover as the ratio of canopy pixels to non-canopy pixels
 }
 \examples{
 fc.p(chm=chm, thresh.val=1.25, silent=FALSE)
 }
-\keyword{canopy,}
-\keyword{pixel}
-\keyword{ratio,}
+\keyword{canopy}
+\keyword{cover}
+\keyword{cover,}
+\keyword{fractional}
 
