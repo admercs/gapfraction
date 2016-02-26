@@ -77,9 +77,9 @@ fc.cv <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thresh.va
                 ifelse(thresh.var == 'class',     LAS[,9],
                 z))))
 
-  canopy     <- ifelse(thresh.var >= thresh.val, 1, 0)
-  mv         <- deldir::deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
-  cancover   <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
+  canopy <- ifelse(thresh.var >= thresh.val, 1, 0)
+  mv     <- deldir::deldir(x=x, y=y, z=canopy, rw=NULL, eps=1e-09, plotit=FALSE, suppressMsge=TRUE)
+  result <- sum(mv$summary$dir.area*mv$summary$z) / mv$dir.area
 
   cvex  <- spatstat::convexhull.xy(matrix(c(x=x,y=y),ncol=2))
   clipp <- cvex$bdry[[1]]
@@ -119,5 +119,5 @@ fc.cv <- function(las.path=NA, reprojection=NA, col='height', col2=NA, thresh.va
 
     par(mfrow=c(1,1))
   }
-  return(cancover)
+  return(result)
 }

@@ -1,6 +1,6 @@
-#' Canopy-to-total-pixel Ratio
+#' Canopy-to-total-pixel Ratio Fractional Cover
 #'
-#' This function calculates the ratio of canopy pixels to non-canopy pixels
+#' This function calculates fractional cover as the ratio of canopy pixels to non-canopy pixels
 #' @param chm Name of the CHM raster object output from a CHM function with stacked=FALSE. Defaults to NA.
 #' @param thresh.val Threshold value used for minimum canopy height. Defaults to 1.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
@@ -21,7 +21,7 @@ fc.p <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
   canopy    <- raster::values(chm)[raster::values(chm) >= thresh.val]
   all.cells <- length(raster::values(chm)[!is.na(raster::values(chm))])
   can.cells <- length(canopy[!is.na(canopy)])
-  output    <- can.cells/all.cells
+  result    <- can.cells/all.cells
 
   val <- seq(from=0, to=max(raster::values(chm)[!is.na(raster::values(chm))]), length.out=length(raster::values(chm)[!is.na(raster::values(chm))]))
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
@@ -30,5 +30,5 @@ fc.p <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
     par(mfrow=c(1,1), mar=c(2,2,3,2), pty='s', xpd=TRUE)
     plot(chm, col=col,  bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir Canopy Ratio')
   }
-  return(output)
+  return(result)
 }

@@ -1,16 +1,16 @@
-#' Canopy-to-total-return Ratio Fractional Cover
+#' Canopy-to-first-return Ratio Fractional Cover
 #'
-#' This function calculates fractional cover as the canopy-to-total-return ratio
+#' This function calculates fractional cover as the canopy-to-first-return ratio
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @keywords gap fraction, voronoi, thiessen
 #' @export
-#' @return The results of \code{fc.r}
+#' @return The results of \code{fc.fr}
 #' @examples
-#' fc.r(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
+#' fc.fr(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 
-fc.r <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
+fc.fr <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   if (is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -21,10 +21,10 @@ fc.r <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
   }
 
   LAS <- rLiDAR::readLAS(las.path, short=FALSE)
-  LAS <- LAS[order(LAS[,'Classification'], decreasing=FALSE), ]
-  col <- myColorRamp(colors=c('blue','orange','yellow','green','red'), values=LAS[,'Classification'])
+  LAS <- LAS[order(LAS[,'ReturnNumber'], decreasing=FALSE), ]
+  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,'ReturnNumber'])
 
-  result <- nrow(LAS[LAS[,'Z'] >= thresh.val,]) / nrow(LAS)
+  result <- nrow(LAS[LAS[,'Z'] >= thresh.val & LAS[,'ReturnNumber'] == 1,]) / nrow(LAS[LAS[,'ReturnNumber'] == 1,])
 
   if(silent==FALSE) {
     par(mfrow=c(1,1), mar=c(2,2,3,2), pty='s', xpd=TRUE)
