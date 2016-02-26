@@ -26,11 +26,11 @@ Imports:
     geometry,
     Matrix,
     deldir,
-    igraph
+    igraph,
+    foreach
 Suggests:
     parallel,
     doSNOW,
-    foreach,
     Cairo,
     EBImage,
     animation
