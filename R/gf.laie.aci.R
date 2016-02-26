@@ -9,7 +9,7 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @keywords gap fraction, lai, aci
 #' @export
-#' @return The results of \code{gfpdn.laie.aci} in the form c(gapfraction, e.lai, aci)
+#' @return The results of \code{gf.laie.aci} in the form c(gf, e.lai, aci)
 #' @examples
 #' gf.laie.aci(las.path='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
 
@@ -156,7 +156,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   azi.mean <- apply(gapfrac, 2, mean)
   names(azi.mean) <- rad2deg(azi[-1])
 
-  result <- c(gapfraction=gapfrac.out, e.lai=e.lai.out, aci=aci.out)
+  result <- c(gf=gapfrac.out, e.lai=e.lai.out, aci=aci.out)
 
   if (plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_gf_lai_aci.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)

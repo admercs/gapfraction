@@ -40,7 +40,7 @@ radial.grid.hemi(labels = NA, label.pos = NULL, radlab = FALSE,
 The results of \code{radial.grid.hemi}
 }
 \description{
-This function creates radial grid plots for four common hemispherical lens geometries
+This function creates radial grid plots for four common hemispherical lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 }
 \examples{
 radial.grid.hemi()

@@ -1,6 +1,6 @@
 #' Modified Radial Grid Function for Hemispherical Lens Geometries
 #'
-#' This function creates radial grid plots for four common hemispherical lens geometries
+#' This function creates radial grid plots for four common hemispherical lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 #' @param labels Parameter adopted from the radial.grid function of the plotrix package. Defaults to NA.
 #' @param label.pos Parameter adopted from the radial.grid function of the plotrix package. Defaults to NULL.
 #' @param radlab Parameter adopted from the radial.grid function of the plotrix package. Defaults to FALSE.

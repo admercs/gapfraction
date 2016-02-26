@@ -1,10 +1,10 @@
-#' Contact Frequency and Fractional Cover-based LAI from Morsdorf (2006)
+#' Contact Frequency and Fractional Cover-based LAI, from Morsdorf (2006)
 #'
-#' This function calculates LAI as a function of the effective LAI and fractional cover per contact frequency from Morsdorf (2006)
+#' This function calculates LAI as a function of the effective LAI and fractional cover per contact frequency, from Morsdorf (2006)
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
-#' @keywords fractional canopy cover, fractional cover, canopy cover
+#' @keywords effective LAI, LAI, leaf area index
 #' @export
 #' @return The results of \code{lai.n}
 #' @examples

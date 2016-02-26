@@ -1,10 +1,10 @@
-#' Simple Effective LAI Estimation with Beer's Law, the Ground-to-total-returns Ratio, and a Spherical Leaf Angle Distribution from Richardson (2009)
+#' Simple Effective LAI Estimation with Beer's Law, the Ground-to-total-returns Ratio, and a Spherical Leaf Angle Distribution, from Richardson (2009)
 #'
-#' This function calculates effective LAI using Beer's Law with the ground-to-total-returns ratio and a spherical leaf angle distribution from Richardson (2009)
+#' This function calculates effective LAI using Beer's Law with the ground-to-total-returns ratio and a spherical leaf angle distribution, from Richardson (2009)
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param k Specifies the leaf angle distribution to use. Defaults to 0.5 for spherical.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
-#' @keywords fractional canopy cover, fractional cover, canopy cover
+#' @keywords effective LAI, LAI, leaf area index
 #' @export
 #' @return The results of \code{lai.e}
 #' @examples

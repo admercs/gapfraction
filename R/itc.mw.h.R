@@ -1,7 +1,7 @@
 #' Hierarchical Moving Window Individual Tree Crown Detection
 #'
 #' This function detects individual tree crowns using a moving window function with variable window diameters
-#' @param chm.stack Name of the CHM raster stack output from a CHM function with stacked=TRUE. Defaults to NA.
+#' @param chm.stack Name of the CHM raster stack output from a \code{chm} function with \code{stacked=TRUE}. Defaults to NA.
 #' @param res Resolution of the input canopy height model in meters, used to adjust the ht2rad function. Defaults to 1.
 #' @param ht2rad Function used to convert tree height to crown radius. Defaults to NA.
 #' @param min.h Canopy minimum height. Defaults to 1.

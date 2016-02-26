@@ -9,7 +9,7 @@ itc.mw.h(chm.stack = NA, res = 1, ht2rad = NA, min.h = 1,
   silent = FALSE, plots = FALSE, geoTIFF = FALSE)
 }
 \arguments{
-\item{chm.stack}{Name of the CHM raster stack output from a CHM function with stacked=TRUE. Defaults to NA.}
+\item{chm.stack}{Name of the CHM raster stack output from a \code{chm} function with \code{stacked=TRUE}. Defaults to NA.}
 
 \item{res}{Resolution of the input canopy height model in meters, used to adjust the ht2rad function. Defaults to 1.}
 

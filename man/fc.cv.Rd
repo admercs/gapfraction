@@ -26,7 +26,7 @@ fc.cv(las.path = NA, reprojection = NA, col = "height", col2 = NA,
 \item{plots}{Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.}
 }
 \value{
-The results of \code{canopycover}
+The results of \code{fc.cv}
 }
 \description{
 This function implements the Cartesian-Voronoi fraction canopy cover algorithm of 'Airborne laser scanner LiDAR proxies for understory light conditions'

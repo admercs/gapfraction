@@ -1,6 +1,6 @@
 #' Hemispherical-Voronoi Gap Fraction
 #'
-#' This function implements Erickson's hemispherical-Voronoi gap fraction algorithm
+#' This function implements Erickson's hemispherical-Voronoi gap fraction algorithm with four common lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param model Hemispherical lens geometry model to use. Options include equidist, equiangle, stereo, and ortho. Defaults to equidist.
@@ -13,7 +13,7 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @keywords gap fraction, voronoi, thiessen
 #' @export
-#' @return The results of \code{gapfraction}
+#' @return The results of \code{gf.hv}
 #' @examples
 #' gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)
 

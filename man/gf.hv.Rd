@@ -30,10 +30,10 @@ gf.hv(las.path = NA, model = "equidist", pol.deg = 5, azi.deg = 45,
 \item{plots}{Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.}
 }
 \value{
-The results of \code{gapfraction}
+The results of \code{gf.hv}
 }
 \description{
-This function implements Erickson's hemispherical-Voronoi gap fraction algorithm
+This function implements Erickson's hemispherical-Voronoi gap fraction algorithm with four common lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 }
 \examples{
 gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)

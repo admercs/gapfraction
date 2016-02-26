@@ -11,7 +11,7 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
-#' @return The results of \code{canopycover}
+#' @return The results of \code{fc.cv}
 #' @examples
 #' fc.cv(las.path='C:/plot.las', reprojection=NA, col='height', col2='intensity', thresh.var='height', thresh.val=1.25, silent=FALSE, plots=FALSE)
 

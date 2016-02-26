@@ -21,7 +21,7 @@ gf.laie.aci(las.path = NA, pol.deg = 15, azi.deg = 45,
 \item{plots}{Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.}
 }
 \value{
-The results of \code{gfpdn.laie.aci} in the form c(gapfraction, e.lai, aci)
+The results of \code{gf.laie.aci} in the form c(gf, e.lai, aci)
 }
 \description{
 This function implements the volumentric-point-density-normalized gap fraction, effective LAI, and ACI algorithms
