@@ -22,6 +22,9 @@ This function calculates LAI as a function of the effective LAI and fractional c
 \examples{
 lai.n(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{LAI,}
 \keyword{area}
 \keyword{effective}

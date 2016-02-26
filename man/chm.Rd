@@ -36,6 +36,9 @@ This function implements a simple grid-based canopy height model
 chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy}
 \keyword{chm,}
 \keyword{height}

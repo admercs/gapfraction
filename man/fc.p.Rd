@@ -22,6 +22,9 @@ This function calculates fractional cover as the ratio of canopy pixels to non-c
 \examples{
 fc.p(chm=chm, thresh.val=1.25, silent=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}

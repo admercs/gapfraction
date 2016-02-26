@@ -4,6 +4,7 @@
 #' @param las.path Path of LAS file. Defaults to NA.
 #' @param k Specifies the leaf angle distribution to use. Defaults to 0.5 for spherical.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords effective LAI, LAI, leaf area index
 #' @export
 #' @return The results of \code{lai.e}

@@ -5,6 +5,7 @@
 #' @param thresh.val Threshold value used for tree crown selection. Defaults to 1.
 #' @param degrees Boolean switch for the output of direction values in degrees rather than radians. Defaults to FALSE.
 #' @param from Boolean switch for the output of direction values from nearest crowns rather than to nearest crowns. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords crown, distance, direction
 #' @export
 #' @return The results of \code{dd.crown}

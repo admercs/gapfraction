@@ -4,6 +4,7 @@
 #' @param chm Name of the CHM raster object output from a CHM function with stacked=FALSE. Defaults to NA.
 #' @param thresh.val Threshold value used for minimum canopy height. Defaults to 1.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords fractional canopy cover, fractional cover, canopy cover
 #' @export
 #' @return The results of \code{fc.p}

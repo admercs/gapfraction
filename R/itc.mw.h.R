@@ -12,6 +12,7 @@
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @param plots Boolean switch for the display of plots. Defaults to FALSE.
 #' @param geoTIFF Boolean switch for saving GeoTIFF raster of tree positions to a folder, if the chm parameter is a folder. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords itc, moving window
 #' @export
 #' @return The results of \code{itc.mw.h}

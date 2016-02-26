@@ -22,6 +22,9 @@ This function calculates fractional cover per the Beer's Law-modified intensity-
 \examples{
 fc.bl(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}

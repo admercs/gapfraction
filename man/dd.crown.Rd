@@ -24,6 +24,9 @@ This function calculates the distance and direction to the nearest crown pixel f
 \examples{
 dd.crown(crowns=itc.crowns, thresh.val=1, degrees=FALSE, from=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{crown,}
 \keyword{direction}
 \keyword{distance,}

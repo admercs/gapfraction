@@ -29,6 +29,9 @@ This function implements the volumentric-point-density-normalized gap fraction, 
 \examples{
 gf.laie.aci(las.path='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{aci}
 \keyword{fraction,}
 \keyword{gap}

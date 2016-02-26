@@ -45,6 +45,9 @@ This function implements a 2-D barycentric interpolation-based pit-free canopy h
 \examples{
 chm.pf(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{barycentric}
 \keyword{canopy}
 \keyword{chm,}

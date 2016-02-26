@@ -4,6 +4,7 @@
 #' @param las.files String vector or list of LAS files. Defaults to NA.
 #' @param models String vector or list of hemispherical lens models to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.
 #' @param threshs String vector or list of height thresholds to use. Defaults to 2.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords gap fraction, parallel, hemispherical Voronoi, tesselation
 #' @export
 #' @return The results of \code{gf.hv.par}

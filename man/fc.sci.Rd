@@ -22,6 +22,9 @@ This function calculates fraction cover per Solberg's Cover Index
 \examples{
 fc.sci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}

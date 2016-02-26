@@ -23,6 +23,9 @@ This function allows you to run \code{gf.hv} on multiple plots in parallel using
 gf.hv.par(las.files='C:/plot.las', models=c('equidist','stereo'), threshs=seq(1,3))
 gf.hv.par(las.files=las.list, models='equidist', threshs=2)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{Voronoi,}
 \keyword{fraction,}
 \keyword{gap}

@@ -35,6 +35,9 @@ This function detects individual tree crowns using watershed segmentation
 \examples{
 itc.wat(chm=chm, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, tolerance=0.1, num=TRUE, silent=FALSE, ws.plot=FALSE, geoTIFF=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{itc,}
 \keyword{segmentation}
 \keyword{watershed}

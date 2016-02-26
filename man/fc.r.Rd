@@ -22,6 +22,9 @@ This function calculates fractional cover per the canopy-to-total-return ratio
 \examples{
 fc.r(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}

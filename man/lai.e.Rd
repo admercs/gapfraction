@@ -22,6 +22,9 @@ This function calculates effective LAI using Beer's Law with the ground-to-total
 \examples{
 lai.e(las.path='C:/plot.las', k=0.5, silent=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{LAI,}
 \keyword{area}
 \keyword{effective}

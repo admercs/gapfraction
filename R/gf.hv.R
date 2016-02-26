@@ -11,6 +11,7 @@
 #' @param azi.deg Specifies the azimuthal resolution for the radial plot lines. Defaults to 45.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords gap fraction, voronoi, thiessen
 #' @export
 #' @return The results of \code{gf.hv}

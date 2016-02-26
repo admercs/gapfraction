@@ -35,6 +35,9 @@ This function detects individual tree crowns using a moving window function with
 \examples{
 itc.mw(chm=chm, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, type='circle', num=TRUE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{itc,}
 \keyword{moving}
 \keyword{window}

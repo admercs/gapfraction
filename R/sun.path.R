@@ -10,6 +10,8 @@
 #' @param locale Set localization for month name generation. Options include German_Austria, English, Italian, and Dutch.
 #' @param ieqot Boolean switch for whether to take the equation of time into account.
 #' @param summert Boolean switch used to set to summertime normal time.
+#' @author Thomas Steiner
+#' @references \url{https://commons.wikimedia.org/wiki/File:Sonnenstand.png}
 #' @keywords sun position, solar position, sonnenstand
 #' @export
 #' @return The results of \code{sun.path}

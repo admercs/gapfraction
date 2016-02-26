@@ -7,6 +7,7 @@
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to TRUE.
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords gap fraction, lai, aci
 #' @export
 #' @return The results of \code{gf.laie.aci} in the form c(gf, e.lai, aci)

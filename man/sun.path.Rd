@@ -36,6 +36,12 @@ This function creates Cartesian and polar sun path plots for specific locations,
 \examples{
 sun.path(location.name='Jena', phi=50.9106, lambda=11.5672, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0)
 }
+\author{
+Thomas Steiner
+}
+\references{
+\url{https://commons.wikimedia.org/wiki/File:Sonnenstand.png}
+}
 \keyword{position,}
 \keyword{solar}
 \keyword{sonnenstand}

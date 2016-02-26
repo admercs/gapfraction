@@ -38,6 +38,9 @@ This function implements Erickson's hemispherical-Voronoi gap fraction algorithm
 \examples{
 gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{fraction,}
 \keyword{gap}
 \keyword{thiessen}

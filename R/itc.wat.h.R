@@ -11,6 +11,7 @@
 #' @param stacked Boolean switch for the output of a raster stack. Defaults to FALSE.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @param ws.plot Boolean switch for the display of the watershed segmentation plot. Defaults to FALSE.
+#' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @keywords itc, watershed segmentation
 #' @export
 #' @return The results of \code{itc.wat.h}

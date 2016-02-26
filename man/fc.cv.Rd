@@ -34,6 +34,9 @@ This function implements the Cartesian-Voronoi fraction canopy cover algorithm o
 \examples{
 fc.cv(las.path='C:/plot.las', reprojection=NA, col='height', col2='intensity', thresh.var='height', thresh.val=1.25, silent=FALSE, plots=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}

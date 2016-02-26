@@ -24,6 +24,9 @@ This function calculates the distance and direction to the nearest canopy pixel 
 \examples{
 dd.canopy(chm=chm, thresh.val=1.25, degrees=FALSE, from=FALSE)
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{canopy,}
 \keyword{direction}
 \keyword{distance,}
