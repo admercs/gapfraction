@@ -19,7 +19,7 @@
 #' @examples
 #' gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)
 
-gf.hv <- function(las.path=NA, model='equidist', pol.deg=5, azi.deg=45, reprojection=NA, col='height', thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
+gf.hv <- function(las.path=NA, model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE) {
 
   if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
