@@ -23,10 +23,10 @@ gf.hv.par <- function(las.files=NA, models='all', thresh.vals=seq(1,4,0.5), thre
 
   require(foreach)
 
-  if(length(models)==1 & models=='all') models <- c('equidist','equiangle','ortho','stereo')
+  if(any(models=='all')) models <- c('equidist','equiangle','ortho','stereo')
 
-  ncores <- parallel::detectCores()-1
-  clust  <- snow::makeCluster(ncores, type='SOCK')
+  ncores   <- parallel::detectCores()-1
+  clust    <- snow::makeCluster(ncores, type='SOCK')
   doSNOW::registerDoSNOW(clust)
 
   ntasks   <- (length(las.files)*length(models)*length(thresh.vals))
@@ -34,7 +34,7 @@ gf.hv.par <- function(las.files=NA, models='all', thresh.vals=seq(1,4,0.5), thre
   progress <- function(n) utils::setTxtProgressBar(pb, n)
   opts     <- list(progress=progress)
 
-  results <-
+  results  <-
     foreach::foreach(i = models,     .combine='rbind', .packages=c('gapfraction')) %:%
     foreach::foreach(j = thresh.vals,.combine='rbind', .packages=c('gapfraction')) %:%
     foreach::foreach(k = las.files,  .combine='cbind', .packages=c('gapfraction'), .options.snow=opts) %dopar% {
