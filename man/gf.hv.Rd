@@ -4,26 +4,26 @@
 \alias{gf.hv}
 \title{Hemispherical-Voronoi Gap Fraction}
 \usage{
-gf.hv(las.path = NA, model = "equidist", pol.deg = 5, azi.deg = 45,
-  reprojection = NA, col = "height", thresh.var = "height",
-  thresh.val = 1.25, silent = TRUE, plots = FALSE)
+gf.hv(las.path = NA, model = "equidist", thresh.val = 1.25,
+  thresh.var = "height", reprojection = NA, pol.deg = 5, azi.deg = 45,
+  col = "height", silent = TRUE, plots = FALSE)
 }
 \arguments{
 \item{las.path}{Path of LAS file. Defaults to NA.}
 
 \item{model}{Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.}
 
+\item{thresh.val}{Specifies the value to use for thresholding. Defaults to 1.25.}
+
+\item{thresh.var}{Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.}
+
+\item{reprojection}{Proj4 projection string to use for reprojection. Defaults to NA.}
+
 \item{pol.deg}{Specifies the polar resolution for the radial plot lines. Defaults to 5.}
 
 \item{azi.deg}{Specifies the azimuthal resolution for the radial plot lines. Defaults to 45.}
 
-\item{reprojection}{Proj4 projection string to use for reprojection. Defaults to NA.}
-
 \item{col}{Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.}
-
-\item{thresh.var}{Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.}
-
-\item{thresh.val}{Specifies the value to use for thresholding. Defaults to 1.25.}
 
 \item{silent}{Boolean switch for the interactive display of plots. Defaults to FALSE.}
 
@@ -36,7 +36,7 @@ The results of \code{gf.hv}
 This function implements Erickson's hemispherical-Voronoi gap fraction algorithm with four common lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 }
 \examples{
-gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)
+gf.hv(las.path='C:/plot.las', model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE)
 }
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}

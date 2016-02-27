@@ -2,13 +2,13 @@
 #'
 #' This function implements Erickson's hemispherical-Voronoi gap fraction algorithm with four common lens geometries: equi-distant, equi-angular, stereographic, and orthographic
 #' @param las.path Path of LAS file. Defaults to NA.
-#' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param model Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.
-#' @param thresh.var Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.
 #' @param thresh.val Specifies the value to use for thresholding. Defaults to 1.25.
-#' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.
+#' @param thresh.var Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.
+#' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param pol.deg Specifies the polar resolution for the radial plot lines. Defaults to 5.
 #' @param azi.deg Specifies the azimuthal resolution for the radial plot lines. Defaults to 45.
+#' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
@@ -17,7 +17,7 @@
 #' @export
 #' @return The results of \code{gf.hv}
 #' @examples
-#' gf.hv(las.path='C:/plot.las', reprojection=NA, model='equidist', thresh.var='height', thresh.val=1.25, col='height', pol.deg=5, azi.deg=45, silent=FALSE, plots=FALSE)
+#' gf.hv(las.path='C:/plot.las', model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE)
 
 gf.hv <- function(las.path=NA, model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE) {
 
