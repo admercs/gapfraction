@@ -23,7 +23,7 @@ gf.hv.par <- function(las.files=NA, models='all', thresh.vals=seq(1,4,0.5), thre
 
   require(foreach)
 
-  if(models=='all') models <- c('equidist','equiangle','ortho','stereo')
+  if(length(models)==1 & models=='all') models <- c('equidist','equiangle','ortho','stereo')
 
   ncores <- parallel::detectCores()-1
   clust  <- snow::makeCluster(ncores, type='SOCK')
