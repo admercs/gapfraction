@@ -35,13 +35,12 @@ gf.hv.par <- function(las.files=NA, models='all', thresh.vals=seq(1,4,0.5), thre
   opts     <- list(progress=progress)
 
   results  <-
-    foreach::foreach(i = models,     .combine='rbind', .packages=c('gapfraction'), .errorhandling='pass') %:%
-    foreach::foreach(j = thresh.vals,.combine='rbind', .packages=c('gapfraction'), .errorhandling='pass') %:%
-    foreach::foreach(k = las.files,  .combine='cbind', .packages=c('gapfraction'), .errorhandling='pass', .options.snow=opts) %dopar% {
-      Sys.sleep(1)
-      gf.hv(las.path=k, model=i, thresh.val=j, thresh.var=thresh.var, reprojection=reprojection, pol.deg=pol.deg, azi.deg=azi.deg, col=col, silent=silent, plots=plots)
+    foreach::foreach(i = models,     .combine='cbind') %:%
+    foreach::foreach(j = thresh.vals,.combine='cbind') %:%
+    foreach::foreach(k = las.files,  .combine='rbind', .packages=c('gapfraction'), .errorhandling='pass', .options.snow=opts) %dopar% {
+      Sys.sleep(0.1)
+      return(gf.hv(las.path=k, model=i, thresh.val=j, thresh.var=thresh.var, reprojection=reprojection, pol.deg=pol.deg, azi.deg=azi.deg, col=col, silent=silent, plots=plots))
     }
   snow::stopCluster(clust)
-  results <- t(results)
   return(results)
 }
