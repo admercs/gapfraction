@@ -43,6 +43,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
   LASfolder <- dirname(las.path)
   LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
+  LAS       <- LAS[LAS[,'ReturnNumber']==1,]
 
   if(!is.na(reprojection)) {
     try(if(length(reprojection) != 2) stop('Please supply input and output CRS strings in the form: c(input,output)'))
@@ -68,15 +69,15 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   pol.res <- deg2rad(pol.deg)
   azi.res <- deg2rad(azi.deg)
 
-  theta <- a[,1]
-  phi   <- a[,2]
-  r     <- a[,3]
+  theta  <- a[,1]
+  phi    <- a[,2]
+  r      <- a[,3]
 
   R      <- max(r)
-  n.pts  <- length(a[,1])
+  n.pts  <- nrow(LAS)
   n.pol  <- (pi/2)/pol.res
   n.azi  <- (pi*2)/azi.res
-  n.win  <- n.pol * n.azi
+  n.win  <- n.pol*n.azi
 
   pol <- c(0, seq(from=pol.res, to=(pi/2), by=pol.res))
   azi <- c(0, seq(from=azi.res, to=(pi*2), by=azi.res))
@@ -84,7 +85,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   circ.area  <- pi*R*R
   pt.density <- n.pts/circ.area
 
-  # Calculate point-density normalized frequency for each spherical quadrangle interval on the hemisphere
+  # Calculate returns for each spherical quadrangle interval on the hemisphere
   n.returns <- matrix(nrow=n.pol, ncol=n.azi)
   for(i in 1:(length(pol)-1)) {
     for(j in 1:(length(azi)-1)) {
@@ -106,8 +107,8 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   #   The hemisphere radius (R) is derived from the empirical maximum radial distance (r)
   #   hemisphere.area <- (4*pi*R^2)/2
 
-  # Calculate area of each spherical quadrangle as percentage of total hemisphere area, reverse to start from nadir
-  hemi.area <- (4*pi*R^2)/2
+  # Calculate area of each spherical quadrangle, reverse to start from nadir
+  hemi.area <- (4*pi*R*R)/2
   quad.area <- matrix(nrow=n.pol, ncol=n.azi)
   for(i in 1:(length(pol)-1)) {
     for(j in 1:(length(azi)-1)) {
@@ -121,12 +122,11 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   hemi.volume <- (4/3)*pi*(R*R*R)/2
   quad.prop   <- quad.area/hemi.area
   quad.volume <- quad.prop*hemi.volume
-  if(sum(quad.volume) != hemi.volume) message('Caution: Wedge quadrangles do not sum to the hemisphere volume')
+  #if(sum(quad.volume) != hemi.volume) message('Caution: Wedge quadrangles do not sum to the hemisphere volume')
 
   # Normalize point frequency by spherical quadrangle area to estimate the true gap fraction (canopy closure)
-  pt.density.vol <- n.pts/hemi.volume
-  gapfrac        <- 1-(n.returns/n.pts/pt.density.vol)
-  gapfrac.out    <- sum(gapfrac*quad.prop)
+  gf.pd.area  <- 1-(n.returns/pt.density/quad.area)
+  gapfrac.out <- sum(gf.pd.area*quad.prop)
   message('Density-normalized gap fraction: ',round(gapfrac.out,2),'%')
 
   # LAI integrand for theta: lai <- -2*ln(gapfrac)*cos(theta)*sin(theta)
