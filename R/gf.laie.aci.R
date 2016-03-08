@@ -125,16 +125,17 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   #if(sum(quad.volume) != hemi.volume) message('Caution: Wedge quadrangles do not sum to the hemisphere volume')
 
   # Normalize point frequency by spherical quadrangle area to estimate the true gap fraction (canopy closure)
-  gf.pd.area  <- 1-(n.returns/pt.density/quad.area)
-  gapfrac.out <- sum(gf.pd.area*quad.prop)
-  message('Density-normalized gap fraction: ',round(gapfrac.out,2),'%')
+  gf1     <- 1-(n.returns/pt.density/quad.area)
+  gf1.out <- sum(gf1*quad.prop)
+  message('Density-normalized gap fraction: ',round(gf1.out,2),'%')
 
-  # LAI integrand for theta: lai <- -2*ln(gapfrac)*cos(theta)*sin(theta)
+  # LAI integrand for theta: lai <- -2*ln(gf1)*cos(theta)*sin(theta)
   # Source: Miller (1967);  Ryu et al. (2010); Maltamo, Naesset, and Vauhkonen (2014)
   e.lai <- c()
   for(i in (1:length(pol)-1)[-1]) {
-    log.gap  <- -log(mean(gapfrac[i,]))
-    e.lai[i] <- ifelse(is.finite(log.gap),log.gap,0)*cos(pol[i+1])*(sin(pol[i+1])/sum(sin(pol)))
+    log.gap1 <- -log(mean(gf1[i,]))
+    log.gap2 <- ifelse(is.finite(log.gap1), log.gap1, 0)
+    e.lai[i] <- log.gap2*cos(pol[i+1])*(sin(pol[i+1])/sum(sin(pol)))
   }
   e.lai.out <- 2*sum(e.lai)
   message('Mean effective LAI: ',round(e.lai.out,2))
@@ -144,8 +145,8 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   aci.1 <- c()
   aci.2 <- c()
   for(i in (1:length(pol)-1)[-1]) {
-    mlog <- ifelse(is.finite(log(gapfrac[i,])), log(gapfrac[i,]), 0)
-    aci.1[i] <- var(gapfrac[i,])/(mean(gapfrac[i,])^2)*cos(pol[i+1])*sin(pol[i+1])
+    mlog <- ifelse(is.finite(log(gf1[i,])), log(gf1[i,]), 0)
+    aci.1[i] <- var(gf1[i,])/(mean(gf1[i,])^2)*cos(pol[i+1])*sin(pol[i+1])
     aci.2[i] <- -mean(mlog)*cos(pol[i+1])*sin(pol[i+1])
     aci[i]   <- aci.1[i]/aci.2[i]
   }
@@ -153,13 +154,21 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   aci.out <- 1-0.5*(sum(aci.1)/sum(aci.2))
   message('Mean ACI: ',round(aci.out,2))
 
-  pol.mean <- apply(gapfrac, 1, mean)
+  gf2 <- c()
+  pol.prop <- c()
+  for(i in (1:length(pol)-1)[-1]) {
+    gf2[i] <- exp((-e.lai.out*0.5)/cos(pol[i+1]))
+    pol.prop[i] <- sin(pol[i+1])/sum(sin(pol))
+  }
+  gf2.out <- sum(gf2*pol.prop)
+
+  pol.mean <- apply(gf1, 1, mean)
   names(pol.mean) <- rad2deg(pol[-1])
 
-  azi.mean <- apply(gapfrac, 2, mean)
+  azi.mean <- apply(gf1, 2, mean)
   names(azi.mean) <- rad2deg(azi[-1])
 
-  result <- c(gf=gapfrac.out, e.lai=e.lai.out, aci=aci.out)
+  result <- c(gf1=gf1.out, gf2=gf2.out, e.lai=e.lai.out, aci=aci.out)
 
   if (plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_gf_lai_aci.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
