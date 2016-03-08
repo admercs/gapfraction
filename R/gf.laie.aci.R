@@ -100,7 +100,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   #   spherical zone: http://mathworld.wolfram.com/Zone.html
   #   lat = polar angle
   #   lon = azimuth angle
-  #   A = (*R^2) * (sin(lat1)-sin(lat2)) * (lon1-lon2)
+  #   A = (R^2) * (sin(lat1)-sin(lat2)) * (lon1-lon2)
   #   Modifed from: NOAA and http://mathforum.org/library/drmath/view/63767.html
   #   I reversed (pi/180) to (180/pi) to calculate area based on degrees
   #   Error-checked with: hemisphere.area <- (4*pi*R^2)/2; hemisphere.area == sum(quad.area)
@@ -131,6 +131,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
 
   # LAI integrand for theta: lai <- -2*ln(gf1)*cos(theta)*sin(theta)
   # Source: Miller (1967);  Ryu et al. (2010); Maltamo, Naesset, and Vauhkonen (2014)
+  # Final Source: Korhonen & Morsdorf (2014)
   e.lai <- c()
   for(i in (1:length(pol)-1)[-1]) {
     log.gap1 <- -log(mean(gf1[i,]))
@@ -140,19 +141,17 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   e.lai.out <- 2*sum(e.lai)
   message('Mean effective LAI: ',round(e.lai.out,2))
 
-  # Calculate the apparent clumping index per Ryu et al. (2010)
-  aci   <- c()
-  aci.1 <- c()
-  aci.2 <- c()
+  # Calculate the apparent clumping index
+  # Source: Ryu et al. (2010)
+  e.lai2 <- c()
   for(i in (1:length(pol)-1)[-1]) {
-    mlog <- ifelse(is.finite(log(gf1[i,])), log(gf1[i,]), 0)
-    aci.1[i] <- var(gf1[i,])/(mean(gf1[i,])^2)*cos(pol[i+1])*sin(pol[i+1])
-    aci.2[i] <- -mean(mlog)*cos(pol[i+1])*sin(pol[i+1])
-    aci[i]   <- aci.1[i]/aci.2[i]
+    log.gap1 <- -mean(log(gf1[i,]))
+    log.gap2 <- ifelse(is.finite(log.gap1), log.gap1, 0)
+    e.lai2[i] <- log.gap2*cos(pol[i+1])*(sin(pol[i+1])/sum(sin(pol)))
   }
-  aci[!is.finite(aci)] <- 0
-  aci.out <- 1-0.5*(sum(aci.1)/sum(aci.2))
-  message('Mean ACI: ',round(aci.out,2))
+  e.lai2.out <- 2*sum(e.lai2)
+  aci <-e.lai.out/e.lai2.out
+  message('ACI: ',round(aci,2))
 
   gf2 <- c()
   pol.prop <- c()
@@ -168,7 +167,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   azi.mean <- apply(gf1, 2, mean)
   names(azi.mean) <- rad2deg(azi[-1])
 
-  result <- c(gf1=gf1.out, gf2=gf2.out, e.lai=e.lai.out, aci=aci.out)
+  result <- c(gf1=gf1.out, gf2=gf2.out, e.lai=e.lai.out, aci=aci)
 
   if (plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_gf_lai_aci.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
