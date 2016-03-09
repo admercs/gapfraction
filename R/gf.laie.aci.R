@@ -16,7 +16,7 @@
 #' @examples
 #' gf.laie.aci(las.path='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
 
-gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, silent=TRUE, plots=FALSE) {
+gf.laie.aci <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=TRUE, plots=FALSE) {
 
   if(is.na(las.path)) stop('Please input a full file path to the LAS file')
 
@@ -134,7 +134,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   # Final Source: Korhonen & Morsdorf (2014)
   e.lai <- c()
   for(i in (1:length(pol)-1)[-1]) {
-    log.gap1 <- -log(mean(gf1[i,]))
+    log.gap1 <- suppressWarnings(-log(mean(gf1[i,])))
     log.gap2 <- ifelse(is.finite(log.gap1), log.gap1, 0)
     e.lai[i] <- log.gap2*cos(pol[i+1])*(sin(pol[i+1])/sum(sin(pol)))
   }
@@ -145,7 +145,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
   # Source: Ryu et al. (2010)
   e.lai2 <- c()
   for(i in (1:length(pol)-1)[-1]) {
-    log.gap1 <- -mean(log(gf1[i,]))
+    log.gap1 <- suppressWarnings(-mean(log(gf1[i,])))
     log.gap2 <- ifelse(is.finite(log.gap1), log.gap1, 0)
     e.lai2[i] <- log.gap2*cos(pol[i+1])*(sin(pol[i+1])/sum(sin(pol)))
   }
@@ -198,7 +198,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=15, azi.deg=45, reprojection=NA, si
     plot(e.lai, type='b', xaxt='n', xlab='Zenith Angle', ylab='Effective LAI', lwd=2, main='Effective LAI by Zenith Angle')
     axis(1, at=1:length(pol.mean), labels=names(pol.mean))
 
-    plot(aci, type='b', xaxt='n', xlab='Zenith Angle', ylab='Apparent Clumping Index', lwd=2, main='Apparent Clumping Index by Zenith Angle')
+    plot(gf2, type='b', xaxt='n', xlab='Zenith Angle', ylab='Gap Fraction', lwd=2, main='Beer-Lambert Law Gap Fraction by Zenith Angle')
     axis(1, at=1:length(pol.mean), labels=names(pol.mean))
     par(mfrow=c(1,1))
   }
