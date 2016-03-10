@@ -167,7 +167,7 @@ gf.laie.aci <- function(las.path=NA, pol.deg=5, azi.deg=45, reprojection=NA, sil
   azi.mean <- apply(gf1, 2, mean)
   names(azi.mean) <- rad2deg(azi[-1])
 
-  result <- c(gf1=gf1.out, gf2=gf2.out, e.lai=e.lai.out, aci=aci)
+  result <- c(P.pdn=gf1.out, P.bl=gf2.out, lai.e.miller=e.lai.out, aci=aci)
 
   if (plots==TRUE) {
     jpeg(file.path(LASfolder, paste(LASname,'_gf_lai_aci.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
