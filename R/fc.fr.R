@@ -19,7 +19,7 @@ fc.fr <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
-    if(any(v == -Inf | is.na(v) | is.null(v) | v < 0)) return('blue')
+    if(any(v == -Inf | is.na(v)==T | is.null(v)==T | v < 0)) return('blue')
     x <- colorRamp(colors)(v)
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
