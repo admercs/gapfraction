@@ -19,17 +19,14 @@ fc.ir <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
-    if(any(v == -Inf)) return('brown')
+    if(any(v == -Inf | is.na(v) | is.null(v) | v < 0)) return('brown')
     x <- colorRamp(colors)(v)
-    if(any(is.na(x))) return('brown')
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
   LAS <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS <- LAS[order(LAS[,'Intensity'], decreasing=FALSE), ]
-  if (length(unique(LAS[,'ReturnNumber'])) < 2) {
-    col <- 'brown'
-  } else col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
+  col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
 
   if (length(LAS[LAS[,'Z'] >= thresh.val]) < 1) { return(0) }
 
