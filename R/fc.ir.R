@@ -25,7 +25,12 @@ fc.ir <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   LAS <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS <- LAS[order(LAS[,'Intensity'], decreasing=FALSE), ]
-  col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
+  if (length(unique(LAS[,'ReturnNumber'])) < 2) {
+    col <- 'brown'
+  else col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
+  }
+
+  if (length(LAS[LAS[,'Z'] >= thresh.val]) < 1) { return(0) }
 
   can.sum <- sum(LAS[LAS[,'Z'] >= thresh.val, 'Intensity'])
   all.sum <- sum(LAS[,'Intensity'])

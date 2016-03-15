@@ -25,7 +25,12 @@ fc.fr <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
 
   LAS <- rLiDAR::readLAS(las.path, short=FALSE)
   LAS <- LAS[order(LAS[,'ReturnNumber'], decreasing=FALSE), ]
-  col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,'ReturnNumber'])
+  if (length(unique(LAS[,'ReturnNumber'])) < 2) {
+    col <- 'blue'
+  else col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,'ReturnNumber'])
+  }
+
+  if (length(LAS[LAS[,'Z'] >= thresh.val]) < 1) { return(0) }
 
   result <- nrow(LAS[LAS[,'Z'] >= thresh.val & LAS[,'ReturnNumber'] == 1,]) / nrow(LAS[LAS[,'ReturnNumber'] == 1,])
 
