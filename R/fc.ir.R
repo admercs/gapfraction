@@ -27,8 +27,7 @@ fc.ir <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
   LAS <- LAS[order(LAS[,'Intensity'], decreasing=FALSE), ]
   if (length(unique(LAS[,'ReturnNumber'])) < 2) {
     col <- 'brown'
-  else col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
-  }
+  } else col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
 
   if (length(LAS[LAS[,'Z'] >= thresh.val]) < 1) { return(0) }
 

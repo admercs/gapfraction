@@ -29,6 +29,8 @@ fc.fci <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
     col <- 'brown'
   } else col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'ReturnNumber'])
 
+  if (length(LAS[LAS[,'Z'] >= thresh.val]) < 1) { return(0) }
+
   all.first  <- nrow(LAS[LAS[,'ReturnNumber']==1, ])
   all.single <- nrow(LAS[LAS[,'ReturnNumber']==1 & LAS[,'NumberOfReturns']==1, ])
   can.first  <- nrow(LAS[LAS[,'ReturnNumber']==1 & LAS[,'Z'] >= thresh.val, ])
