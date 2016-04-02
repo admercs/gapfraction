@@ -38,36 +38,36 @@ for (i in 1:length(files)) {
   while (!file.exists(htnorm)) { Sys.sleep(1) }
 }
 ```
-What this `for` loop does is read in each LAS file path, extract the name of the file without extension, create the filenames of the ground and height-normalized outputs, execute `lasground`, wait for the output, execute `lasheight` using the ground file as the input, waits for the output, then proceeds to the next iteration. The code would be simple to parallelize using the `foreach` package to speed the operation.
+What this `for` loop does is read in each LAS file path, extract the name of the file without extension, create the filenames of the ground and height-normalized outputs, execute `lasground`, wait for the output, execute `lasheight` using the ground file as the input, wait for the output, then proceed to the next iteration. The code should be simple to parallelize using the `foreach` package, with each fork running in a new Command Prompt or Bash window.
 
 ## Functions Included
 
 The `gapfraction` package implements my new fast-pit-free canopy height model (CHM) algorithm based on Khosravipour et al. (2013)^[Khosravipour et al. (2013) Development of an algorithm to generate a LiDAR pit-free canopy height model. http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf], two new LiDAR metrics of canopy gap fraction ($P_o$) and angular canopy closure ($ACC$), several recent individual tree crown (ITC) detection methods, canopy distance and direction metrics, effective leaf area index ($L_e$) and apparent clumping index ($ACI$) estimation methods, as well as four mathematical fisheye (hemispherical) lens models: equi-angular, equi-distant, stereographic, and orthographic. An alphabetical list of functions in the `gapfraction` package is provided below.
 
-- `chm` Simple canopy height model
-- `chm.pf` Fast-pit-free canopy height model
-- `dd.canopy` Euclidean distance and direction to nearest canopy pixel from plot center
-- `dd.crown` Euclidean distance and direction to nearest tree crown from plot centers
-- `fc.aci` Above-height cover index of fractional canopy cover
-- `fc.bl` Beer-Lambert-Law-modified intensity-return ratio of fractional canopy cover
-- `fc.cv` 2-D Cartesian Voronoi fractional canopy cover
-- `fc.fci` First-echo cover index of fractional canopy cover
-- `fc.fr` Canopy-to-first-return ration of fractional canopy cover
-- `fc.ir` Intesity-return ratio of fractional canopy cover
-- `fc.p` Canopy-to-total-pixel ratio of fractional canopy cover
-- `fc.r` Canopy-to-total-return ratio of fractional canopy cover
-- `fc.sci` Solberg's cover index of fractional canopy cover
-- `gf.hv` Hemipsherical Voronoi canopy gap fraction
-- `gf.hv.par` Parallel hemispherical Voronoi canopy gap fraction with SOCKS
-- `gf.laie.aci` Point-density-normalized canopy gap fraction, effective LAI, and ACI
-- `itc.mw` Variable-window individual tree crown detection
-- `itc.mw.h` Hierarchical variable-window individual tree crown detection
-- `itc.wat` Watershed segmentation individual tree crown detection
-- `itc.wat.h` Hierarchical watershed segmentation individual tree crown detection
-- `lai.e` Ground-to-total-return ratio with a spherical leaf angle distribution
-- `lai.n` Contact frequency and fractional canopy cover-based effective LAI
-- `radial.grid.hemi` Modified radial.grid function supporting hemispherical lens geometries
-- `sun.path` Modified solar position plots of Thomas Steiner
+- `chm` - Simple canopy height model
+- `chm.pf` - Fast-pit-free canopy height model
+- `dd.canopy` - Euclidean distance and direction to nearest canopy pixel from plot center
+- `dd.crown` - Euclidean distance and direction to nearest tree crown from plot centers
+- `fc.aci` - Above-height cover index of fractional canopy cover
+- `fc.bl` - Beer-Lambert-Law-modified intensity-return ratio of fractional canopy cover
+- `fc.cv` - 2-D Cartesian Voronoi fractional canopy cover
+- `fc.fci` - First-echo cover index of fractional canopy cover
+- `fc.fr` - Canopy-to-first-return ration of fractional canopy cover
+- `fc.ir` - Intesity-return ratio of fractional canopy cover
+- `fc.p` - Canopy-to-total-pixel ratio of fractional canopy cover
+- `fc.r` - Canopy-to-total-return ratio of fractional canopy cover
+- `fc.sci` - Solberg's cover index of fractional canopy cover
+- `gf.hv` - Hemipsherical Voronoi canopy gap fraction
+- `gf.hv.par` - Parallel hemispherical Voronoi canopy gap fraction with SOCKS
+- `gf.laie.aci` - Point-density-normalized canopy gap fraction, effective LAI, and ACI
+- `itc.mw` - Variable-window individual tree crown detection
+- `itc.mw.h` - Hierarchical variable-window individual tree crown detection
+- `itc.wat` - Watershed segmentation individual tree crown detection
+- `itc.wat.h` - Hierarchical watershed segmentation individual tree crown detection
+- `lai.e` - Ground-to-total-return ratio with a spherical leaf angle distribution
+- `lai.n` - Contact frequency and fractional canopy cover-based effective LAI
+- `radial.grid.hemi` - Modified radial.grid function supporting hemispherical lens geometries
+- `sun.path` - Modified solar position plots of Thomas Steiner
 
 ## Vignette Info
 
