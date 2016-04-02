@@ -1,10 +1,10 @@
 ---
-title: "gapfraction: functions for processing LiDAR scans of forests"
+title: "gapfraction: airborne laser scanning LiDAR functions for forests"
 author: "Adam Erickson"
 date: "April 1, 2016"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"gapfraction: functions for processing LiDAR scans of forests"}
+  %\VignetteIndexEntry{"gapfraction: airborne laser scanning LiDAR functions for forests"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -86,8 +86,10 @@ The `html_vignette` template includes a basic CSS theme. To override this theme 
 The figure sizes have been customised so that you can easily put two images side-by-side. 
 
 ```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+library(gapfraction)
+data(las)
+chm(las)
+chm.pf(las)
 ```
 
 You can enable figure captions by `fig_caption: yes` in YAML:
