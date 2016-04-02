@@ -1,10 +1,10 @@
 ---
-title: "gapfraction: airborne laser scanning LiDAR functions for forests"
+title: "gapfraction: functions for processing airborne LiDAR scans of forests"
 author: "Adam Erickson"
 date: "April 1, 2016"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"gapfraction: airborne laser scanning LiDAR functions for forests"}
+  %\VignetteIndexEntry{"gapfraction: functions for processing airborne LiDAR scans of forests"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
