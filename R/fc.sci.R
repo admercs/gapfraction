@@ -13,9 +13,9 @@
 #' @examples
 #' fc.sci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
 
-fc.sci <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
+fc.sci <- function(las=NA, thresh.val=1.25, silent=FALSE) {
 
-  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
+  if (is.na(las)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -23,7 +23,12 @@ fc.sci <- function(las.path=NA, thresh.val=1.25, silent=FALSE) {
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  LAS <- rLiDAR::readLAS(las.path, short=FALSE)
+  if(!exists("las")) {
+    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LASfolder <- dirname(las)
+    LASname   <- strsplit(basename(las),'\\.')[[1]][1]
+  } else LAS  <- las
+
   LAS <- LAS[order(LAS[,'Intensity'], decreasing=FALSE), ]
   col <- myColorRamp(colors=c('brown','red','orange','yellow'), values=LAS[,'Intensity'])
 

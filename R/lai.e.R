@@ -12,9 +12,9 @@
 #' @examples
 #' lai.e(las.path='C:/plot.las', k=0.5, silent=FALSE)
 
-lai.e <- function(las.path=NA, k=0.5, silent=FALSE) {
+lai.e <- function(las=NA, k=0.5, silent=FALSE) {
 
-  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
+  if (is.na(las)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -22,7 +22,12 @@ lai.e <- function(las.path=NA, k=0.5, silent=FALSE) {
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  LAS <- rLiDAR::readLAS(las.path, short=FALSE)
+  if(!exists("las")) {
+    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LASfolder <- dirname(las)
+    LASname   <- strsplit(basename(las),'\\.')[[1]][1]
+  } else LAS  <- las
+
   LAS <- LAS[order(LAS[,'Classification'], decreasing=FALSE), ]
   col <- myColorRamp(colors=c('blue','red','orange','green','purple'), values=LAS[,'Classification'])
 

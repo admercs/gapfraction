@@ -19,8 +19,9 @@
 #' chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 #' chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 
-chm <- function(las.path=NA, las.proj=NA, las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
-  if (is.na(las.path)) stop('Please input a full file path to the LAS file')
+chm <- function(las=NA, las.proj=NA, las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+
+  if (is.na(las)) stop('Please input a full file path to the LAS file')
 
   chm.grid <- function(las=NA, nx=nx, ny=ny, w=chull, fun=fun) {
     if(is.null(dim(las))) return(NULL)
@@ -41,10 +42,12 @@ chm <- function(las.path=NA, las.proj=NA, las.reproj=NA, nx=100, ny=100, fun=max
     rgb(x[,1], x[,2], x[,3], maxColorValue=255)
   }
 
-  LAS <- rLiDAR::readLAS(las.path, short=FALSE)
-  LAS <- LAS[order(LAS[,3], decreasing=FALSE), ]
-  LASfolder <- dirname(las.path)
-  LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
+  if(!exists("las")) {
+    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LASfolder <- dirname(las)
+    LASname   <- strsplit(basename(las),'\\.')[[1]][1]
+  } else LAS  <- las
+  LAS  <- LAS[order(LAS[,3], decreasing=FALSE),]
 
   val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)

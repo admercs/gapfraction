@@ -19,9 +19,9 @@
 #' @examples
 #' gf.hv(las.path='C:/plot.las', model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE)
 
-gf.hv <- function(las.path=NA, model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE) {
+gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE) {
 
-  if(is.na(las.path)) stop('Please input a full file path to the LAS file')
+  if(is.na(las)) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -75,10 +75,12 @@ gf.hv <- function(las.path=NA, model='equidist', thresh.val=1.25, thresh.var='he
 
   deg2rad <- function(x) return(x*(pi/180))
 
-  LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
-  LAS       <- LAS[order(LAS[,3], decreasing=FALSE), ]
-  LASfolder <- dirname(las.path)
-  LASname   <- strsplit(basename(las.path), '\\.')[[1]][1]
+  if(!exists("las")) {
+    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LASfolder <- dirname(las)
+    LASname   <- strsplit(basename(las),'\\.')[[1]][1]
+  } else LAS  <- las
+  LAS  <- LAS[order(LAS[,3], decreasing=FALSE),]
 
   if(!is.na(reprojection)) {
     try(if(length(reprojection) != 2) stop('Please supply input and output CRS strings in the form: c(input,output)'))

@@ -22,9 +22,9 @@
 #' @examples
 #' chm.pf(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 
-chm.pf <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+chm.pf <- function(las=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  if(is.na(las.path)) stop('Please input full file path to the LAS file')
+  if(is.na(las)) stop('Please input full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -85,11 +85,12 @@ chm.pf <- function(las.path=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0
     return(chm.tin)
   }
 
-  LAS       <- rLiDAR::readLAS(las.path, short=FALSE)
-  LAS       <- LAS[order(LAS[,3]),]
-  LAS2      <- LAS[order(-LAS[,3]),]
-  LASfolder <- dirname(las.path)
-  LASname   <- strsplit(basename(las.path),'\\.')[[1]][1]
+  if(!exists("las")) {
+    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LASfolder <- dirname(las)
+    LASname   <- strsplit(basename(las),'\\.')[[1]][1]
+  } else LAS  <- las
+  LAS  <- LAS[order(LAS[,3], decreasing=FALSE),]
 
   val <- seq(from=0, to=max(LAS[,3]), length.out=length(LAS[,3]))
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
