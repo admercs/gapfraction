@@ -110,8 +110,8 @@ The figure sizes have been customised so that you can easily put two images side
 ```{r, fig.show='hold'}
 require(gapfraction)
 data(las)
-#(las)
-#chm.pf(las)
+chm(las)
+chm.pf(las)
 ```
 
 You can enable figure captions by `fig_caption: yes` in YAML:

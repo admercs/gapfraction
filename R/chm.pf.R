@@ -96,7 +96,7 @@ chm.pf <- function(las=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0
   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=val)
 
   if(percent==TRUE) {
-    zmax <- max(LAS2[,3])
+    zmax <- max(LAS[,3])
     for(i in 1:length(breaks)) {
       breaks[i] <- zmax * breaks[i]
     }
