@@ -1,5 +1,5 @@
 Package: gapfraction
-Title: Airborne Laser Scanning LiDAR Functions for Forests
+Title: Functions for processing airborne LiDAR scans of forests
 Version: 1.0.0
 Authors@R: person("Adam", "Erickson", email = "adam.erickson@ubc.ca", role = c("aut", "cre"))
 Description: This package is designed for forestry applications. It includes
