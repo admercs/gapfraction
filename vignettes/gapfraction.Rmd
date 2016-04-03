@@ -9,11 +9,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The `gapfraction` package is designed for processing airborne laser scanning (ALS) light-detection-and-ranging (LiDAR) data of forests. A version of the package was implemented in the final chapter of my doctoral dissertation at University of British Columbia^[Erickson, A. (2016) Forecasting Brown Bear (*Ursus Arctos*) Habitat Through the Integration of Remote Sensing, a Process-based Tree Establishment Model, and a Forest Landscape Model. University of British Columbia.]. The package is designed to be used with LiDAR data pre-processed with LAStools^[LAStools: http://rapidlasso.com/lastools/] or USDA Fusion^[USDA Fusion: http://forsys.cfr.washington.edu/fusion/fusionlatest.html]. The main input to functions in the `gapfraction` package are LAS format height-normalized point clouds, typically LiDAR plots corresponding to field plots. The compressed LAZ format is not yet supported, as I rely on the `rLiDAR` `readLAS` function for importing data^[Silva, Crookston, Hudak, and Vierling (2015). rLiDAR: LiDAR Data Processing and Visualization. R package version 0.1. https://CRAN.R-project.org/package=rLiDAR].
+The **gapfraction** package is designed for processing airborne laser scanning (ALS) light-detection-and-ranging (LiDAR) data of forests. A version of the package was implemented in the final chapter of my doctoral dissertation at University of British Columbia^[Erickson, A. (2016) Forecasting Brown Bear (*Ursus Arctos*) Habitat Through the Integration of Remote Sensing, a Process-based Tree Establishment Model, and a Forest Landscape Model. University of British Columbia.]. The package is designed to be used with LiDAR data pre-processed with LAStools^[LAStools: http://rapidlasso.com/lastools/] or USDA Fusion^[USDA Fusion: http://forsys.cfr.washington.edu/fusion/fusionlatest.html]. The main input to functions in the **gapfraction** package are LAS format height-normalized point clouds, typically LiDAR plots corresponding to field plots. The compressed LAZ format is not yet supported, as I rely on the **rLiDAR** `readLAS` function for importing data^[Silva, Crookston, Hudak, and Vierling (2015). rLiDAR: LiDAR Data Processing and Visualization. R package version 0.1. https://CRAN.R-project.org/package=rLiDAR].
 
 ## Functions Included
 
-The `gapfraction` package implements my new fast-pit-free canopy height model (CHM) algorithm based on Khosravipour et al. (2013)^[Khosravipour et al. (2013) Development of an algorithm to generate a LiDAR pit-free canopy height model. http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf], two new LiDAR metrics of canopy gap fraction ($P_o$) and angular canopy closure ($ACC$), several recent individual tree crown (ITC) detection methods, canopy distance and direction metrics, effective leaf area index ($L_e$) and apparent clumping index ($ACI$) estimation methods, as well as four mathematical fisheye (hemispherical) lens models: equi-angular, equi-distant, stereographic, and orthographic. An alphabetical list of functions in the `gapfraction` package is provided below.
+The **gapfraction** package implements my new fast-pit-free canopy height model (CHM) algorithm based on Khosravipour et al. (2013)^[Khosravipour et al. (2013) Development of an algorithm to generate a LiDAR pit-free canopy height model. http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf], two new LiDAR metrics of canopy gap fraction ($P_o$) and angular canopy closure ($ACC$), several recent individual tree crown (ITC) detection methods, canopy distance and direction metrics, effective leaf area index ($L_e$) and apparent clumping index ($ACI$) estimation methods, as well as four mathematical fisheye (hemispherical) lens models: equi-angular, equi-distant, stereographic, and orthographic. An alphabetical list of functions in the **gapfraction** package is provided below.
 
 - `chm` - Simple canopy height model
 - `chm.pf` - Fast-pit-free canopy height model
@@ -63,7 +63,7 @@ lasground -i lidar.las -o lidar_g.las
 lasheight -i lidar_g.las -o lidar_n.las -replace_z 
 ```
 
-In order to run these functions, you need to istall LAStools. For Windows, don't forget to add the LAStools `bin` directory to your system path^[http://www.computerhope.com/issues/ch000549.htm]. For a single LiDAR plot, this is simple to run without leaving your R session. You can call these functions using the `system` function included in base R, as shown below.
+In order to run these functions, you need to istall **LAStools**. For Windows, don't forget to add the LAStools `bin` directory to your system path^[http://www.computerhope.com/issues/ch000549.htm]. For a single LiDAR plot, this is simple to run without leaving your R session. You can call these functions using the `system` function included in base R, as shown below.
 
 ```
 setwd('C:/lidar')
@@ -95,7 +95,11 @@ What this `for` loop does is read in each LAS file path, extract the name of the
 
 After loading the gapfraction package with the `library` function, the example data can be loaded by calling `data(las)`. The included data consists of $X,Y,Z$ coordinates in UTM 11N and meters, along with 8-bit unsigned interger values for intensity and return number. The data represents a 100-meter diameter LiDAR plot in the foothills of western Alberta, Canada, where I conducted my PhD research. Based on previous research, I recommend using plots minimally of this size for comparison to ground data (e.g., hemispherical photography) to capture edge effects.
 
-```{r, echo=FALSE, results='asis'}
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=6, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r lastable, echo=FALSE, results='asis'}
 require(gapfraction)
 data(las)
 knitr::kable(head(las,10))
@@ -105,27 +109,34 @@ Once the data is loaded, you can proceed to call functions from the `gapfraction
 
 ## Example Usage
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
+Comparison of canopy height model (CHM) algorithms.
 
-```{r, echo=3:4, results='hide', messages=FALSE, warnings=FALSE, fig.show='hold'}
+```{r chmplots, echo=3:4, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
 require(gapfraction)
 data(las)
 chm(las)
 chm.pf(las)
 ```
 
-```{r, echo=3:4, results='hide', messages=FALSE, warnings=FALSE, fig.show='animate'}
+Creating a pit-free CHM and performing individual tree crown (ITC) detection with the standard variable-window and watershed algorithms.
+
+```{r stditc, echo=4:5, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
 require(gapfraction)
 data(las)
-chm <- chm.pf(las, stacked=TRUE, silent=TRUE)
-itc.mw.h(chm, ht2rad=function(x) 0.15746*x)
+chm  <- chm.pf(las, silent=TRUE)
+mw   <- itc.mw(chm, ht2rad=function(x) 0.15746*x)
+wat  <- itc.wat(chm, ht2rad=function(x) 0.15746*x)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+Creating a stacked pit-free CHM and performing individual tree crown (ITC) detection with the hierarchical variable-window and watershed algorithms.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+```{r hieritc, echo=4:5, messages=FALSE, warnings=FALSE, verbose=FALSE}
+require(gapfraction)
+data(las)
+chm  <- chm.pf(las, stacked=TRUE, silent=TRUE)
+mw   <- itc.mw.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
+wat  <- itc.wat.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
+```
 
 Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
 
