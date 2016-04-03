@@ -107,11 +107,18 @@ Once the data is loaded, you can proceed to call functions from the `gapfraction
 
 The figure sizes have been customised so that you can easily put two images side-by-side. 
 
-```{r, fig.show='hold'}
+```{r, echo=3:4, results='hide', messages=FALSE, warnings=FALSE, fig.show='hold'}
 require(gapfraction)
 data(las)
 chm(las)
 chm.pf(las)
+```
+
+```{r, echo=3:4, results='hide', messages=FALSE, warnings=FALSE, fig.show='animate'}
+require(gapfraction)
+data(las)
+chm <- chm.pf(las, stacked=TRUE, silent=TRUE)
+itc.mw.h(chm, ht2rad=function(x) 0.15746*x)
 ```
 
 You can enable figure captions by `fig_caption: yes` in YAML:
