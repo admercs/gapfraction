@@ -1,20 +1,20 @@
 #' Simple Effective LAI Estimation with Beer's Law, the Ground-to-total-returns Ratio, and a Spherical Leaf Angle Distribution
 #'
 #' This function calculates effective LAI using Beer's Law with the ground-to-total-returns ratio and a spherical leaf angle distribution
-#' @param las.path Path of LAS file. Defaults to NA.
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param k Specifies the leaf angle distribution to use. Defaults to 0.5 for spherical.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @references \url{http://www.sciencedirect.com/science/article/pii/S0168192309000409}
-#' @keywords effective LAI, LAI, leaf area index
+#' @keywords effective LAI, LAI, Le, leaf area index
 #' @export
-#' @return The results of \code{lai.e}
+#' @return The results of \code{Le.bl}
 #' @examples
-#' lai.e(las.path='C:/plot.las', k=0.5, silent=FALSE)
+#' Le.bl(las='C:/plot.las', k=0.5, silent=FALSE)
 
-lai.e <- function(las=NA, k=0.5, silent=FALSE) {
+Le.bl <- function(las=NA, k=0.5, silent=FALSE) {
 
-  if (is.na(las)) stop('Please input a full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))

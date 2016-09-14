@@ -2,7 +2,7 @@
 % Please edit documentation in R/sun.path.R
 \name{sun.path}
 \alias{sun.path}
-\title{Modified Version of Solar Position Plots by Thomas Steiner}
+\title{Modified Version of the Solar Position Plots of Thomas Steiner}
 \usage{
 sun.path(location.name = "Jena", phi = 50.9106, lambda = 11.5672,
   out = "", type = "polar", lang = "en", locale = "English",

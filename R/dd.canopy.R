@@ -15,6 +15,7 @@
 
 dd.canopy <- function(chm=NA, thresh.val=1.25, degrees=FALSE, from=FALSE) {
 
+  if(length(chm)==1 & any(is.na(eval(chm)))) stop('Please input a CHM')
   if(max(raster::values(chm)[!is.na(raster::values(chm))]) < thresh.val) return(c(can.dist=NA, can.dir=NA))
 
   canopy <- chm

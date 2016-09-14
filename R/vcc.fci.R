@@ -1,21 +1,21 @@
-#' First-echo Cover Index of Fractional Cover
+#' First-echo Cover Index of Vertical Canopy Cover
 #'
 #' This function calculates fractional cover per the First-echo Cover Index
-#' @param las.path Path of LAS file. Defaults to NA.
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param thresh.val Specifies the value to use for canopy height thresholding. Defaults to 1.25.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @references \url{http://geography.swan.ac.uk/silvilaser/papers/oral_papers/Forestry\%20Applications\%20\%26\%20Inventory/Holmgren.pdf}
 #' @references \url{http://link.springer.com/chapter/10.1007\%2F978-94-017-8663-8_20}
-#' @keywords fractional canopy cover, fractional cover, canopy cover
+#' @keywords vertical canopy cover, fractional canopy cover, canopy cover
 #' @export
-#' @return The results of \code{fc.fci}
+#' @return The results of \code{vcc.fci}
 #' @examples
-#' fc.fci(las.path='C:/plot.las', thresh.val=1.25, silent=FALSE)
+#' vcc.fci(las='C:/plot.las', thresh.val=1.25, silent=FALSE)
 
-fc.fci <- function(las=NA, thresh.val=1.25, silent=FALSE) {
+vcc.fci <- function(las=NA, thresh.val=1.25, silent=FALSE) {
 
-  if (is.na(las)) stop('Please input a full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))

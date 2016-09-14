@@ -1,7 +1,7 @@
-#' Efficient Pit-free Canopy Height Model
+#' Barycentric interpolation-based Spike-free Canopy Height Model
 #'
-#' This function implements a 2-D barycentric interpolation-based pit-free canopy height model algorithm
-#' @param las.path Path of LAS file. Defaults to NA.
+#' This function implements a 2-D barycentric interpolation-based spike-free canopy height model algorithm
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param las.proj Proj4 projection string to use for projection. Defaults to NA.
 #' @param las.reproj Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param breaks List of breaks to use for vertical stratification, either values or percentages of maximum height. Defaults to percentages: 0.10, 0.25, 0.50, 0.75.
@@ -15,16 +15,17 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @param geoTIFF Boolean switch for the saving of projected GeoTIFF files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
+#' @references \url{http://www.sciencedirect.com/science/article/pii/S0303243416300873}
 #' @references \url{http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf}
-#' @keywords chm, canopy height model, pit-free chm, barycentric interpolation
+#' @keywords chm, canopy height model, spike-free chm, barycentric interpolation
 #' @export
-#' @return The results of \code{chm.pf}
+#' @return The results of \code{chm.sf}
 #' @examples
-#' chm.pf(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+#' chm.sf(las='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 
-chm.pf <- function(las=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
+chm.sf <- function(las=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0.75), percent=TRUE, nx=100, ny=100, ko=2.5, ku=20, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  if(is.na(las)) stop('Please input full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -134,7 +135,7 @@ chm.pf <- function(las=NA, las.proj=NA, las.reproj=NA, breaks=c(0.10,0.25,0.50,0
       next
     } else {
       tin.break <- raster::stack(tin.break, ground)
-      tins[i] <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
+      tins[[i]] <- raster::stackApply(tin.break, indices=c(1), fun=max, na.rm=T)
     }
     pos <- c(pos,i)
   }

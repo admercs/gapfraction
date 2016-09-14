@@ -1,7 +1,7 @@
 #' Simple Canopy Height Model
 #'
 #' This function implements a simple grid-based canopy height model
-#' @param las.path Path of LAS file. Defaults to NA.
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param las.proj Proj4 projection string to use for projection. Defaults to NA.
 #' @param las.reproj Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param nx Number of pixels along the x-axis. For a 50m radius plot, nx=100 is 1m resolution. Defaults to 100.
@@ -16,12 +16,12 @@
 #' @export
 #' @return The results of \code{chm}
 #' @examples
-#' chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
-#' chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+#' chm(las='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+#' chm(las='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 
 chm <- function(las=NA, las.proj=NA, las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE) {
 
-  if (is.na(las)) stop('Please input a full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a full file path to the LAS file')
 
   chm.grid <- function(las=NA, nx=nx, ny=ny, w=chull, fun=fun) {
     if(is.null(dim(las))) return(NULL)

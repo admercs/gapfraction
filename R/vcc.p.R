@@ -1,17 +1,21 @@
-#' Canopy-to-total-pixel Ratio Fractional Cover
+#' Canopy-to-total-pixel Ratio Vertical Canopy Cover
 #'
-#' This function calculates fractional cover as the ratio of canopy pixels to non-canopy pixels
+#' This function calculates canopy cover as the ratio of canopy pixels to non-canopy pixels
 #' @param chm Name of the CHM raster object output from a CHM function with stacked=FALSE. Defaults to NA.
 #' @param thresh.val Threshold value used for minimum canopy height. Defaults to 1.
 #' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
-#' @keywords fractional canopy cover, fractional cover, canopy cover
+#' @references \url{http://www.sciencedirect.com/science/article/pii/S0924271614001646}
+#' @references \url{http://treephys.oxfordjournals.org/content/early/2009/06/24/treephys.tpp042.full}
+#' @keywords vertical canopy cover, fractional canopy cover, canopy cover
 #' @export
-#' @return The results of \code{fc.p}
+#' @return The results of \code{vcc.p}
 #' @examples
-#' fc.p(chm=chm, thresh.val=1.25, silent=FALSE)
+#' vcc.p(chm=chm, thresh.val=1.25, silent=FALSE)
 
-fc.p <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
+vcc.p <- function(chm=NA, thresh.val=1.25, silent=FALSE) {
+
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a CHM')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))

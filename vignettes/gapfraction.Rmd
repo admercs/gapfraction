@@ -16,27 +16,27 @@ The **gapfraction** package for **R** is designed for processing airborne laser 
 The **gapfraction** package implements my new fast-pit-free canopy height model (CHM) algorithm based on Khosravipour et al. (2013)^[Khosravipour et al. (2013) Development of an algorithm to generate a LiDAR pit-free canopy height model. http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf], two new LiDAR metrics of canopy gap fraction ($P_o$) and angular canopy closure ($ACC$), several recent individual tree crown (ITC) detection methods, canopy distance and direction metrics, effective leaf area index ($L_e$) and apparent clumping index ($ACI$) estimation methods, as well as four mathematical fisheye (hemispherical) lens models: equi-angular, equi-distant, stereographic, and orthographic. An alphabetical list of functions in the gapfraction package is provided below.
 
 - `chm` - Simple canopy height model
-- `chm.pf` - Fast-pit-free canopy height model
+- `chm.sf` - Barycentric interpolation spike-free canopy height model
 - `dd.canopy` - Euclidean distance and direction to nearest canopy pixel from plot center
 - `dd.crown` - Euclidean distance and direction to nearest tree crown from plot centers
-- `fc.aci` - Above-height cover index of fractional canopy cover
-- `fc.bl` - Beer-Lambert-Law-modified intensity-return ratio of fractional canopy cover
-- `fc.cv` - 2-D Cartesian Voronoi fractional canopy cover
-- `fc.fci` - First-echo cover index of fractional canopy cover
-- `fc.fr` - Canopy-to-first-return ration of fractional canopy cover
-- `fc.ir` - Intesity-return ratio of fractional canopy cover
-- `fc.p` - Canopy-to-total-pixel ratio of fractional canopy cover
-- `fc.r` - Canopy-to-total-return ratio of fractional canopy cover
-- `fc.sci` - Solberg's cover index of fractional canopy cover
-- `gf.hv` - Hemipsherical Voronoi canopy gap fraction
-- `gf.hv.par` - Parallel hemispherical Voronoi canopy gap fraction with SOCKS
-- `gf.laie.aci` - Point-density-normalized canopy gap fraction, effective LAI, and ACI
+- `vcc.aci` - Above-height cover index of vertical canopy cover
+- `vcc.bl` - Beer-Lambert-Law-modified intensity-return ratio of vertical canopy cover
+- `vcc.cv` - 2-D Cartesian Voronoi vertical canopy cover
+- `vcc.fci` - First-echo cover index of vertical canopy cover
+- `vcc.fr` - Canopy-to-first-return ration of vertical canopy cover
+- `vcc.ir` - Intesity-return ratio of vertical canopy cover
+- `vcc.p` - Canopy-to-total-pixel ratio of vertical canopy cover
+- `vcc.r` - Canopy-to-total-return ratio of vertical canopy cover
+- `vcc.sci` - Solberg's cover index of vertical canopy cover
+- `P.hv` - Hemipsherical Voronoi canopy gap fraction
+- `P.hv.par` - Parallel hemispherical Voronoi canopy gap fraction with SOCKS
+- `P.pdn` - Point-density-normalized canopy gap fraction, effective LAI (Le), and ACI
 - `itc.mw` - Variable-window individual tree crown detection
 - `itc.mw.h` - Hierarchical variable-window individual tree crown detection
 - `itc.wat` - Watershed segmentation individual tree crown detection
 - `itc.wat.h` - Hierarchical watershed segmentation individual tree crown detection
-- `lai.e` - Ground-to-total-return ratio with a spherical leaf angle distribution
-- `lai.n` - Contact frequency and fractional canopy cover-based effective LAI
+- `Le.bl` - Ground-to-total-return ratio with a spherical leaf angle distribution
+- `Le.n` - Contact frequency and vertical canopy cover-based effective LAI
 - `radial.grid.hemi` - Modified radial.grid function supporting hemispherical lens geometries
 - `sun.path` - Modified solar position plots of Thomas Steiner
 
@@ -109,13 +109,22 @@ Once the data is loaded, you can proceed to call functions from the `gapfraction
 
 ## Example Usage
 
+Computing hemispherical Voronoi gap fraction.
+
+```{r Phv, echo=3:4, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
+require(gapfraction)
+data(las)
+P.hv(las=las, model="equidist", thresh.val=1.25, thresh.var="height", reprojection=NA,
+     pol.deg=5, azi.deg=45, col="height", plots=T, plots.each=T, plots.save=F)
+```
+
 Comparison of canopy height model (CHM) algorithms.
 
 ```{r chmplots, echo=3:4, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
 require(gapfraction)
 data(las)
 chm(las)
-chm.pf(las)
+chm.sf(las)
 ```
 
 Creating a pit-free CHM and performing individual tree crown (ITC) detection with the standard variable-window and watershed algorithms.
@@ -123,7 +132,7 @@ Creating a pit-free CHM and performing individual tree crown (ITC) detection wit
 ```{r stditc, echo=4:5, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
 require(gapfraction)
 data(las)
-chm  <- chm.pf(las, silent=TRUE)
+chm  <- chm.sf(las, silent=TRUE)
 mw   <- itc.mw(chm, ht2rad=function(x) 0.15746*x)
 wat  <- itc.wat(chm, ht2rad=function(x) 0.15746*x)
 ```
@@ -133,7 +142,7 @@ Creating a stacked pit-free CHM and performing individual tree crown (ITC) detec
 ```{r hieritc, echo=4:5, messages=FALSE, warnings=FALSE, verbose=FALSE}
 require(gapfraction)
 data(las)
-chm  <- chm.pf(las, stacked=TRUE, silent=TRUE)
+chm  <- chm.sf(las, stacked=TRUE, silent=TRUE)
 mw   <- itc.mw.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
 wat  <- itc.wat.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
 ```

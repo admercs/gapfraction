@@ -1,7 +1,7 @@
-#' Volumentric-point-density-normalized Gap Fraction, Effective LAI, and ACI
+#' Point-density-normalized Gap Fraction, Effective LAI, and ACI
 #'
-#' This function implements the volumentric-point-density-normalized gap fraction, effective LAI, and ACI algorithms
-#' @param las.path Path of LAS file. Defaults to NA.
+#' This function implements Erickson's point-density-normalized gap fraction along with effective LAI and ACI algorithms
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param pol.deg Resolution of polar window in degrees. Defaults to 5.
 #' @param azi.deg Resolution of azimuthal window in degrees. Defaults to 45.
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
@@ -12,13 +12,13 @@
 #' @references \url{http://www.sciencedirect.com/science/article/pii/S0168192310000328}
 #' @keywords gap fraction, lai, aci
 #' @export
-#' @return The results of \code{gf.laie.aci} in the form c(gf, e.lai, aci)
+#' @return The results of \code{P.pdn} in the form c(Ppdn, Le, ACI)
 #' @examples
-#' gf.laie.aci(las.path='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
+#' P.pdn(las='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
 
-gf.laie.aci <- function(las=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=TRUE, plots=FALSE) {
+P.pdn <- function(las=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=TRUE, plots=FALSE) {
 
-  if(is.na(las)) stop('Please input a full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))

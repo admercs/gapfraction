@@ -4,11 +4,11 @@
 \alias{chm}
 \title{Simple Canopy Height Model}
 \usage{
-chm(las.path = NA, las.proj = NA, las.reproj = NA, nx = 100, ny = 100,
+chm(las = NA, las.proj = NA, las.reproj = NA, nx = 100, ny = 100,
   fun = max, silent = FALSE, plots = FALSE, geoTIFF = FALSE)
 }
 \arguments{
-\item{las.path}{Path of LAS file. Defaults to NA.}
+\item{las}{Path or name of LAS file. Defaults to NA.}
 
 \item{las.proj}{Proj4 projection string to use for projection. Defaults to NA.}
 
@@ -33,8 +33,8 @@ The results of \code{chm}
 This function implements a simple grid-based canopy height model
 }
 \examples{
-chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
-chm(las.path='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+chm(las='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=max, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
+chm(las='C:/plot.las', las.proj='+init=epsg:26911', las.reproj=NA, nx=100, ny=100, fun=function(x) quantile(x, 0.95), silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 }
 \author{
 Adam Erickson, \email{adam.erickson@ubc.ca}

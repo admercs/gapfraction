@@ -1,7 +1,7 @@
 #' Hemispherical-Voronoi Gap Fraction
 #'
 #' This function implements Erickson's hemispherical-Voronoi gap fraction algorithm with four common lens geometries: equi-distant, equi-angular, stereographic, and orthographic
-#' @param las.path Path of LAS file. Defaults to NA.
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param model Hemispherical lens geometry model to use. Options include equi-distant (\code{"equidist"}), equi-angular (\code{"equiangle"}), stereographic (\code{"stereo"}), and orthographic (\code{"ortho"}). Defaults to \code{"equidist"}.
 #' @param thresh.val Specifies the value to use for thresholding. Defaults to 1.25.
 #' @param thresh.var Specifies the LiDAR metric to use for thresholding canopy points. Options include height, intensity, nreturn, and class. Defaults to height.
@@ -9,19 +9,20 @@
 #' @param pol.deg Specifies the polar resolution for the radial plot lines. Defaults to 5.
 #' @param azi.deg Specifies the azimuthal resolution for the radial plot lines. Defaults to 45.
 #' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.
-#' @param silent Boolean switch for the interactive display of plots. Defaults to FALSE.
-#' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
+#' @param plots Boolean switch for the interactive display of plots. Defaults to FALSE.
+#' @param plots.each Boolean switch for displaying individual of plots. Defaults to FALSE.
+#' @param plots.save Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @references Forthcoming
 #' @keywords gap fraction, voronoi, thiessen
 #' @export
-#' @return The results of \code{gf.hv}
+#' @return The results of \code{P.hv}
 #' @examples
-#' gf.hv(las.path='C:/plot.las', model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE)
+#' P.hv(las='C:/plot.las', model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', plots=TRUE, plots.each=FALSE, plots.save=FALSE)
 
-gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', silent=TRUE, plots=FALSE) {
+P.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', plots=TRUE, plots.each=FALSE, plots.save=FALSE) {
 
-  if(is.na(las)) stop('Please input a full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
@@ -100,18 +101,18 @@ gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height'
   m     <- matrix(c(x,y,z), nrow=nrows, ncol=3, dimnames=list(c(1:nrows),c('X','Y','Z')))
 
   col <- rep(col, nrows)
-  col <- ifelse(col == 'height',    myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3]),
-         ifelse(col == 'intensity', myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,4]),
-         ifelse(col == 'nreturn',   myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,5]),
-         ifelse(col == 'class',     myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,9]),
-         'forestgreen'))))
+  if(!any(col %in% c('height','intensity','nreturn','class'))) col <- 'forestgreen'
+  if(any(col == 'height'))    col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,3])
+  if(any(col == 'intensity')) col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,4])
+  if(any(col == 'nreturn'))   col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,5])
+  if(any(col == 'class'))     col <- myColorRamp(colors=c('blue','green','yellow','red'), values=LAS[,9])
 
   thresh.var <- rep(thresh.var, nrows)
-  thresh.var <- ifelse(thresh.var == 'height',    LAS[,3],
-                ifelse(thresh.var == 'intensity', LAS[,4],
-                ifelse(thresh.var == 'nreturn',   LAS[,5],
-                ifelse(thresh.var == 'class',     LAS[,9],
-                z))))
+  if(!any(thresh.var %in% c('height','intensity','nreturn','class'))) thresh.var <- z
+  if(any(thresh.var == 'height'))    thresh.var <- LAS[,3]
+  if(any(thresh.var == 'intensity')) thresh.var <- LAS[,4]
+  if(any(thresh.var == 'nreturn'))   thresh.var <- LAS[,5]
+  if(any(thresh.var == 'class'))     thresh.var <- LAS[,9]
 
   LASord <- LAS[order(LAS[,3], decreasing=FALSE),]
   LAScol <- myColorRamp(colors=c('blue','green','yellow','red'), values=LASord[,3])
@@ -149,8 +150,9 @@ gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height'
   nlpos      <- (2*pi)/azi.res
   label.pos  <- seq(0, pi*(2-2/nlpos), length.out=nlpos)
 
-  if (plots == TRUE) {
-    jpeg(file.path(LASfolder, paste(LASname,'_closure.jpg',sep='')), width=8, height=8, units='in', res=300, quality=100)
+  if (plots.save == TRUE) {
+    if(!exists("LASfolder")) stop("You can only save plots when a LAS file path is used")
+    pdf(file.path(LASfolder, paste(LASname,'_closure.pdf',sep='')), width=8, height=8, units='in', res=300)
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
 
     plot(LASord[,1],LASord[,2], pch=point.symbols, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
@@ -168,7 +170,7 @@ gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height'
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
-    fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
+    fillcol <- ifelse(thresh.var >= thresh.val, col, NA)
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
@@ -177,7 +179,8 @@ gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height'
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     dev.off()
   }
-  if(silent==FALSE) {
+
+  if(plots == TRUE & plots.each == FALSE) {
     par(mfrow=c(2,2), mar=c(2,2,3,2), pty='s', xpd=TRUE)
     plot(LASord[,1],LASord[,2], pch=point.symbols, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
 
@@ -194,7 +197,7 @@ gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height'
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
 
-    fillcol <- ifelse(thresh.var >= thresh.val & LAS[,9] != 2, col, NA)
+    fillcol <- ifelse(thresh.var >= thresh.val, col, NA)
     plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
     deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
                    showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
@@ -202,6 +205,32 @@ gf.hv <- function(las=NA, model='equidist', thresh.val=1.25, thresh.var='height'
                 clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
                 grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
     par(mfrow=c(1,1))
+  }
+
+  if(plots == TRUE & plots.each == TRUE) {
+    par(mfrow=c(1,1))
+    plot(LASord[,1],LASord[,2], pch=point.symbols, col=LAScol, bty='n', xlab='Latitude', ylab='Longitude', main='Cartesian Nadir')
+
+    plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar')
+    points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+                     clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
+                     grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
+
+    plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Delaunay')
+    points(xy[,1], xy[,2], pch=point.symbols, col=point.col)
+    geometry::trimesh(md, xy, add=TRUE)
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+                     clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
+                     grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
+
+    fillcol <- ifelse(thresh.var >= thresh.val, col, NA)
+    plot(c(-maxlength, maxlength), c(-maxlength, maxlength), type='n', axes=FALSE, xlab=NA, ylab=NA, main='Polar Voronoi')
+    deldir::plot.tile.list(deldir::tile.list(mv), verbose=FALSE, close=TRUE, pch=NA, fillcol=fillcol, col.pts=NA, border='white',
+                           showpoints=FALSE, add=TRUE, asp=1, clipp=clipp, alpha=0.5)
+    radial.grid.hemi(labels = NA, label.pos = label.pos, radlab = FALSE, radial.lim = radial.lim, start = start,
+                     clockwise = clockwise, label.prop = 1.1, grid.pos = grid.pos, grid.col = 'gray',
+                     grid.bg = 'transparent', show.radial.grid = TRUE, model=model, r = NA)
   }
   return(result)
 }

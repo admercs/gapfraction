@@ -15,6 +15,7 @@
 
 dd.crown <- function(crowns=NA, thresh.val=1, degrees=FALSE, from=FALSE) {
 
+  if(length(crowns)==1 & any(is.na(eval(crowns)))) stop("Please input a tree crowns raster")
   if(class(crowns)=='logical') return(c(c.dist=NA, c.dir=NA))
   if(length(raster::values(crowns)[!is.na(raster::values(crowns))]) < 1) return(c(c.dist=NA, c.dir=NA))
 

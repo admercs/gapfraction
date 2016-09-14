@@ -1,7 +1,7 @@
-#' Cartesian-Voronoi Fractional Cover
+#' Cartesian-Voronoi Vertical Canopy Cover
 #'
-#' This function implements the Cartesian-Voronoi fraction canopy cover algorithm of Alexander (2013)
-#' @param las.path Path of LAS file. Defaults to NA.
+#' This function implements the Cartesian-Voronoi vertical canopy cover algorithm of Alexander (2013)
+#' @param las Path or name of LAS file. Defaults to NA.
 #' @param reprojection Proj4 projection string to use for reprojection. Defaults to NA.
 #' @param col Specifies the LiDAR metric to use to color points of first plot in display. Options include height, intensity, nreturn, and class. Defaults to height.
 #' @param col2 Specifies the LiDAR metric to use to color points of second plot in display. Defaults to NA.
@@ -11,15 +11,15 @@
 #' @param plots Boolean switch for the saving of plot files to the las.path folder. Defaults to FALSE.
 #' @author Adam Erickson, \email{adam.erickson@@ubc.ca}
 #' @references \url{http://www.sciencedirect.com/science/article/pii/S0034425713000771}
-#' @keywords fractional canopy cover, fractional cover, canopy cover
+#' @keywords vertical canopy cover, fractional canopy cover, canopy cover
 #' @export
-#' @return The results of \code{fc.cv}
+#' @return The results of \code{vcc.cv}
 #' @examples
-#' fc.cv(las.path='C:/plot.las', reprojection=NA, col='height', col2='intensity', thresh.var='height', thresh.val=1.25, silent=FALSE, plots=FALSE)
+#' vcc.cv(las='C:/plot.las', reprojection=NA, col='height', col2='intensity', thresh.var='height', thresh.val=1.25, silent=FALSE, plots=FALSE)
 
-fc.cv <- function(las=NA, reprojection=NA, col='height', col2=NA, thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
+vcc.cv <- function(las=NA, reprojection=NA, col='height', col2=NA, thresh.var='height', thresh.val=1.25, silent=TRUE, plots=FALSE) {
 
-  if(is.na(las)) stop('Please input a full file path to the LAS file')
+  if(length(las)==1 & any(is.na(eval(las)))) stop('Please input a full file path to the LAS file')
 
   myColorRamp <- function(colors, values) {
     v <- (values - min(values))/diff(range(values))
