@@ -15,7 +15,7 @@ Depends:
     sp,
     raster
 Imports:
-    rLiDAR,
+    lidR,
     spatstat,
     rgdal,
     rasterVis,
