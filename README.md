@@ -1,6 +1,6 @@
 # gapfraction
 
-This package includes functions for airborne laser scanning metrics of canopy light transmission in forests. Please view the project website for more information: http://adam-erickson.github.io/gapfraction/
+This package includes R functions for airborne laser scanning metrics of canopy light transmission in forests. Please view the project website for more information: http://adam-erickson.github.io/gapfraction/
 
 Adam Erickson  
 PhD Candidate  
