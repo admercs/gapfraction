@@ -36,7 +36,7 @@ itc.mw.h <- function(chm.stack=NA, res=1, ht2rad=NA, min.h=1, type='circle', fun
   for(i in 2:(length(chm.unstk))) {
     chm <- chm.unstk[[i]]
     if(max(raster::values(chm)[!is.na(raster::values(chm))]) <= min.h) next
-    itc.layer[i] <- itc.mw(chm=chm, ht2rad=ht2rad, min.h=min.h, type=type, res=res, silent=silent, plots=plots, geoTIFF=geoTIFF, num=FALSE)
+    itc.layer[[i]] <- itc.mw(chm=chm, ht2rad=ht2rad, min.h=min.h, type=type, res=res, silent=silent, plots=plots, geoTIFF=geoTIFF, num=FALSE)
   }
 
   itc.layrr <- itc.layer[!sapply(itc.layer, is.null)]

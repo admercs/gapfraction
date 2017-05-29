@@ -34,15 +34,14 @@ This function implements the Cartesian-Voronoi vertical canopy cover algorithm o
 \examples{
 vcc.cv(las='C:/plot.las', reprojection=NA, col='height', col2='intensity', thresh.var='height', thresh.val=1.25, silent=FALSE, plots=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.sciencedirect.com/science/article/pii/S0034425713000771}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}
 \keyword{fractional}
 \keyword{vertical}
-

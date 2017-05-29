@@ -22,11 +22,11 @@ This function calculates effective LAI using Beer's Law with the ground-to-total
 \examples{
 Le.bl(las='C:/plot.las', k=0.5, silent=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.sciencedirect.com/science/article/pii/S0168192309000409}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{LAI,}
 \keyword{Le,}
@@ -34,4 +34,3 @@ Adam Erickson, \email{adam.erickson@ubc.ca}
 \keyword{effective}
 \keyword{index}
 \keyword{leaf}
-

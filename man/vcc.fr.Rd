@@ -22,13 +22,13 @@ This function calculates canopy cover as the Canopy-to-first-return Ratio
 \examples{
 vcc.fr(las='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.sciencedirect.com/science/article/pii/S0034425708003106}
 
 \url{http://link.springer.com/chapter/10.1007\%2F978-94-017-8663-8_20}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{canopy}
 \keyword{canpopy}
@@ -36,4 +36,3 @@ Adam Erickson, \email{adam.erickson@ubc.ca}
 \keyword{cover,}
 \keyword{fractional}
 \keyword{vertical}
-

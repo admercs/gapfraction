@@ -1,19 +1,33 @@
 ---
-title: "gapfraction: R functions for processing airborne LiDAR scans of forests"
-author: "Adam Erickson"
-date: "September 14, 2016"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{"gapfraction: R functions for processing airborne LiDAR scans of forests"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "gapfraction: R functions for airborne laser scanning data of forests"
+author:
+  name: "Adam Erickson, PhD Candidate, University of British Columbia"
+  email: "adam.erickson@ubc.ca"
+date: "Updated: May 28, 2017"
+header-includes:
+  \usepackage{amsmath}
+output:
+  html_document:
+    theme: yeti
+    highlight: default
 ---
 
-The **gapfraction** package for **R** is designed for processing airborne laser scanning (ALS) light-detection-and-ranging (LiDAR) data of forests. A version of the package was implemented in the final chapter of my doctoral dissertation at University of British Columbia^[Erickson, A. (2016) Fusion of ecophysiological, hybrid, and physical process-based models for dynamic simulation of past-century understory solar irradiation trajectories. University of British Columbia.]. The package is designed to be used with LiDAR data pre-processed with **LAStools**^[LAStools: http://rapidlasso.com/lastools/] or **USDA Fusion**^[USDA Fusion: http://forsys.cfr.washington.edu/fusion/fusionlatest.html]. The main input to functions in the gapfraction package are LAS format height-normalized point clouds, typically LiDAR plots corresponding to field plots. The compressed LAZ format is not yet supported, as I rely on the **rLiDAR** `readLAS` function for importing data^[Silva, Crookston, Hudak, and Vierling (2015). rLiDAR: LiDAR Data Processing and Visualization. R package version 0.1. https://CRAN.R-project.org/package=rLiDAR].
+<!-- output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"gapfraction: R functions for airborne laser scanning data of forests"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+[Voronoi equation reference]("http://e-collection.library.ethz.ch/view/eth:3321")
+-->
 
-## Functions Included
+> "The science of today is the technology of tomorrow."
+[Edward Teller]("http://news.stanford.edu/news/2003/september24/tellerobit-924.html")
 
-The **gapfraction** package implements a barycentric interpolation-based spike-free canopy height model (CHM) algorithm based on Khosravipour et al. (2013)^[Khosravipour et al. (2013) Development of an algorithm to generate a LiDAR pit-free canopy height model. http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf] and (2016)^[Khosravipour et al. (2016) Generating spike-free digital surface models using LiDAR raw point clouds: A new approach for forestry applications. http://www.sciencedirect.com/science/article/pii/S0303243416300873], two new LiDAR metrics of canopy gap fraction ($P_o$) and angular canopy closure ($ACC$), several recent individual tree crown (ITC) detection methods, canopy distance and direction metrics, effective leaf area index ($L_e$) and apparent clumping index ($ACI$) estimation methods, as well as four mathematical fisheye (hemispherical) lens models: equi-angular, equi-distant, stereographic, and orthographic. An alphabetical list of functions in the gapfraction package is provided below.
+The **gapfraction** package for **R** is designed for processing airborne laser scanning (ALS) light-detection-and-ranging (LiDAR) data of forests. The package was produced for a chapter of my doctoral thesis at University of British Columbia^[Erickson, A. (2017) A hybrid modeling approach to simulating past-century understory solar irradiation in Alberta, Canada. University of British Columbia.]. The package is designed to be used with LiDAR data pre-processed with **LAStools**^[LAStools: http://rapidlasso.com/lastools/], **USDA Fusion**^[USDA Fusion: http://forsys.cfr.washington.edu/fusion/fusionlatest.html], or the new **lidR** package from Jean-Romain Roussel^[lidR: https://github.com/Jean-Romain/lidR]. The main input to functions are LAS or LAZ format height-normalized point clouds, typically LiDAR plots corresponding to field plots. The functions are designed to accept either paths to height-normalized LAS/LAZ files or `data.frame`/`data.table` objects created with **lidR** or **rLiDAR** from Carlos Silva^[rLiDAR: https://cran.r-project.org/web/packages/rLiDAR/index.html] packages. Functions automatically detect whether a path or object is input for the `las` parameter.
+
+## Functions included
+
+The **gapfraction** package implements a new barycentric interpolation spike-free canopy height model (CHM) algorithm based on Khosravipour et al. (2013)^[Khosravipour et al. (2013) Development of an algorithm to generate a LiDAR pit-free canopy height model. http://www.riegl.com/uploads/tx_pxpriegldownloads/khosravipour_SilviLaser2013.pdf] and (2016)^[Khosravipour et al. (2016) Generating spike-free digital surface models using LiDAR raw point clouds: A new approach for forestry applications. http://www.sciencedirect.com/science/article/pii/S0303243416300873], in addition to two new LiDAR metrics of canopy gap fraction ($P_o$), several individual tree crown (ITC) detection algorithms, canopy distance and direction metrics, effective leaf area index ($L_e$) and apparent clumping index ($ACI$) estimation methods. Four mathematical fisheye (hemispherical) lens models are implemented: equi-angular, equi-distant, stereographic, and orthographic. Finally, a new `radial.grid` function is included for polar plots, while a modified sun path plotting function is also provided. An alphabetical list of functions contained in the **gapfraction** package is provided below.
 
 - `chm` - Simple canopy height model
 - `chm.sf` - Barycentric interpolation spike-free canopy height model
@@ -40,23 +54,111 @@ The **gapfraction** package implements a barycentric interpolation-based spike-f
 - `vcc.r` - Canopy-to-total-return ratio of vertical canopy cover
 - `vcc.sci` - Solberg's cover index of vertical canopy cover
 
-## Equations Implemented
+## Canopy light transmission equations implemented
 
-You can write math expressions:
-$Y = X\beta + \epsilon$
-
+####Point-density normalized gap fraction:
 $$\begin{align*}
-\sum_{k=1}^n c x_k
-&=cx_1+cx_2+\cdots+cx_n\\
-&=c(x_1+x_2+\cdots+x_n)\\
-&=c\sum_{k=1}^nx_k
+P_\text{pdn} &= \sum_{i=1}^{n} \sum_{j=1}^{n}
+\left(\frac{{n_\text{first return}}_{i,j}} {\rho_\text{first return} / {{A_\text{sector}}_{i,j}}} \times \frac{A_{\text{sector}_{i,j}}}{A_\text{hemisphere}}\right)
 \end{align*}$$
 
-# Getting Started
+####Hemispherical Voronoi gap fraction above a canopy height threshold with an equidistant lens projection:
+$$\begin{align*}
+x_\text{equidistant} &= \left( \frac{x}{\sqrt{x^2+y^2}} \right)
+\times atan2 \left( \sqrt{x^2+y^2},z \right) \\
+y_\text{equidistant} &= \left( \frac{y}{\sqrt{x^2+y^2}} \right)
+\times atan2 \left( \sqrt{x^2+y^2},z \right) \\[4pt]
+p &= \left( x_\text{equidistant}, y_\text{equidistant} \right) \\[4pt]
+V_a(A_i) &= p|d_a (p,A_i) \le d_a(p,A_j), j \ne i, j=1, \cdots, n \\
+P_\text{hv} &= 1 - \sum_{i=1}^{n} V_a(A_i)
+\text{ where } h_i \ge h_\text{threshold}
+\end{align*}$$
 
-## Data Pre-processing
+####Beer-Lambert Law canopy gap fraction:
+$$\begin{align*}
+L_e &= 2\sum_{i=1}^n - \ln\overline{P(\theta_i)}\cos{\theta}
+\frac{\sin\theta_i}{\sum_{j=1}^n\sin\theta_j} \\
+P_o &= \sum_{i=1}^n \exp \left (\frac{-L_eG(\theta_i)}{\cos\theta_i} \right)
+\end{align*}$$
 
-For LiDAR data without ground point classifications, height-normalized point clouds can be produced either with two **LAStools** command line functions, `lasground` and `lasheight`, or with three functions in **USDA Fusion**, `GroundFilter`, `GridSurfaceCreate`, and `CanopyModel`. If the ground points are already classified then you only need to use the `lasheight` function of **LAStools**, while the process for Fusion still requires the same three functions. Hence, I recommend that you use, as the **LAStools** ground point classification algorithm is also superior to that of **Fusion**, producing more accurate height-normalized point clouds. This is because **Fusion** uses the Kraus and Pfeifer (1998) algorithm^[Kraus and Pfeifer (1998) Determination of terrain models in wooded areas with airborne laser scanner data. http://www.sciencedirect.com/science/article/pii/S0924271698000094], while **LAStools** implements an optimized version of the Axelsson (1999) algorithm^[Axelsson (1999) Processing of laser scanner data—algorithms and applications. http://www.sciencedirect.com/science/article/pii/S0924271699000088]. For more information, read Maguya, Junttila, and Kauranne (2014)^[Maguya, Junttila, and Kauranne (2014) http://www.mdpi.com/2072-4292/6/7/6524]. An example application of `lasground` and `lasheight`, implemented in **Command Prompt** or **Bash**, is provided below. Very simple!
+####Canopy-to-total-return ratio:
+$$\begin{align*}
+VCC_r &= \frac {\sum_{i=1}^n n_{\text{all}_i} \gt 1.25 \text{ m}}
+{\sum_{i=1}^n n_{\text{last}_i} + n_{\text{single}_i}}
+\end{align*}$$
+
+####Canopy-to-total-first-return ratio:
+$$\begin{align*}
+VCC_\text{fr} &= \frac {\sum_{i=1}^n n_{\text{all}_i} \gt 1.25 \text{ m}}
+{\sum_{i=1}^n n_{\text{first}_i}}
+\end{align*}$$
+
+####Intensity-return ratio:
+$$\begin{align*}
+VCC_\text{ir} &= \frac {\sum_{i=1}^n I_{\text{ground}_i} \gt 1.25 \text{ m}}
+{\sum_{i=1}^n I_{\text{all}_i}}
+\end{align*}$$
+
+####Beer's Law modified intensity-return ratio:
+$$\begin{align*}
+VCC_\text{bl} &= \frac {\frac
+{\sum_{i=1}^n I_{\text{ground single}_i} }
+{\sum_{i=1}^n I_{\text{all}_i}} + \sqrt \frac
+{\sum_{i=1}^n I_{\text{ground last}_i}}
+{\sum_{i=1}^n I_{\text{all}_i}} }
+{\frac
+{\sum_{i=1}^n I_{\text{first}_i} + I_{\text{single}_i}}
+{\sum_{i=1}^n I_{\text{all}_i}} + \sqrt \frac
+{\sum_{i=1}^n I_{\text{intermediate}_i} + I_{\text{last}_i}}
+{\sum_{i=1}^n I_{\text{all}_i}} }
+\end{align*}$$
+
+####Above-height cover index:
+$$\begin{align*}
+VCC_\text{aci} &= \frac
+{\sum_{i=1}^n n_{\text{single}_i} + n_{\text{all}_i \gt 1.25 \text{ m}} +
+n_{\text{intermediate}_i} + n_{\text{last}_i}}
+{\sum_{i=1}^n n_{\text{all}_i}}
+\end{align*}$$
+
+####First-echo cover index:
+$$\begin{align*}
+VCC_\text{fci} &= \frac
+{\sum_{i=1}^n n_{\text{single}_i \gt 1.25 \text{ m}} +
+n_{\text{first}_i \gt 1.25 \text{ m}}}
+{\sum_{i=1}^n n_{\text{single}_i} +
+n_{\text{first}_i}}
+\end{align*}$$
+
+####Solberg's cover index:
+$$\begin{align*}
+VCC_\text{sci} &= \frac
+{\sum_{i=1}^n n_{\text{single}_i \gt 1.25 \text{ m}} +
+\frac{1}{2} (n_{\text{first}_i \gt 1.25 \text{ m}} +
+n_{\text{last}_i \gt 1.25 \text{ m}})}
+{\sum_{i=1}^n n_{\text{single}_i} + \frac{1}{2}
+(n_{\text{first}_i} + n_{\text{last}_i})}
+\end{align*}$$
+
+####Canopy-to-total-pixel ratio:
+$$\begin{align*}
+VCC_p &= \frac
+{\sum_{i=1}^n n_{\text{CHM}_i \gt 1.25 \text{ m}}}
+{\sum_{i=1}^n n_{\text{CHM}_i}}
+\end{align*}$$
+
+####Cartesian-Voronoi fractional cover:
+$$\begin{align*}
+V_a(A_i) &= p|d_a (p,A_i) \le d_a(p,A_j), j \ne i, j=1, \cdots, n \\
+P_\text{cv} &= 1 - \sum_{i=1}^{n} V_a(A_i)
+\text{ where } h_i \ge h_\text{threshold}
+\end{align*}$$
+
+# Getting started
+
+## Data pre-processing
+
+By far, the simplest option for pre-processing data is to follow the **lidR** package [tutorial]("https://github.com/Jean-Romain/lidR/wiki/lasnormalize"), which utilizes **LAStools** under the hood. For LiDAR data without ground point classifications, height-normalized point clouds can be produced either with two **LAStools** command line functions, `lasground` and `lasheight`, or with three functions in **USDA Fusion**, `GroundFilter`, `GridSurfaceCreate`, and `CanopyModel`. If the ground points are already classified then you only need to use the `lasheight` function of **LAStools**, while the process for Fusion still requires the same three functions. Hence, I recommend that you use **LAStools**, as its ground point classification algorithm is also superior to that of **Fusion**, producing more accurate height-normalized point clouds. This is because **Fusion** uses the Kraus and Pfeifer (1998) algorithm^[Kraus and Pfeifer (1998) Determination of terrain models in wooded areas with airborne laser scanner data. http://www.sciencedirect.com/science/article/pii/S0924271698000094], while **LAStools** implements an optimized version of the Axelsson (1999) algorithm^[Axelsson (1999) Processing of laser scanner data—algorithms and applications. http://www.sciencedirect.com/science/article/pii/S0924271699000088]. For more information, read Maguya, Junttila, and Kauranne (2014)^[Maguya, Junttila, and Kauranne (2014) http://www.mdpi.com/2072-4292/6/7/6524]. An example application of `lasground` and `lasheight`, implemented in **Command Prompt** or **Bash**, is provided below.
 
 ```
 lasground -i lidar.las -o lidar_g.las 
@@ -71,7 +173,7 @@ system(lasground -i lidar.las -o lidar_g.las)
 system(lasheight -i lidar_g.las -o lidar_n.las -replace_z)
 ```
 
-To loop through LAS files stored in a folder, the syntax follows something like this:
+To loop through LAS files in a folder, the syntax follows this pseudocode:
 
 ```
 folder <- 'C:/lidar'
@@ -91,9 +193,13 @@ for (i in 1:length(files)) {
 ```
 What this `for` loop does is read in each LAS file path, extract the name of the file without extension, create the filenames of the ground and height-normalized outputs, execute `lasground`, wait for the output, execute `lasheight` using the ground file as the input, wait for the output, then proceed to the next iteration. The code should be simple to parallelize using the `foreach` package, with each fork running in a new Command Prompt or Bash window.
 
-## Example Data
+Again, using the **lidR** package is much simpler!
 
-After loading the gapfraction package with the `library` function, the example data can be loaded by calling `data(las)`. The included data consists of $X,Y,Z$ coordinates in UTM 11N and meters, along with 8-bit unsigned interger values for intensity and return number. The data represents a 100-meter diameter LiDAR plot in the foothills of western Alberta, Canada, where I conducted my PhD research. Based on previous research, I recommend using plots minimally of this size for comparison to ground data (e.g., hemispherical photography) to capture edge effects.
+## Example data
+
+After loading the gapfraction package with the `library` function, the example data can be loaded by calling `data(las)`. The included data consists of fake $X,Y,Z$ coordinates in UTM 11N and meters, along with 8-bit unsigned interger values for intensity and return number. The data consists of one 100-meter diameter LiDAR plot. Based on previous research, I recommend using plots minimally of this size for comparison to ground data (e.g., hemispherical photography) to capture edge effects.
+
+Let's get started!
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=6, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE)
@@ -107,9 +213,9 @@ knitr::kable(head(las,10))
 
 Once the data is loaded, you can proceed to call functions from the `gapfraction` package.
 
-## Example Usage
+## Example usage
 
-Computing hemispherical Voronoi gap fraction.
+#### Computing hemispherical Voronoi gap fraction
 
 ```{r Phv, echo=3:4, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6.5}
 require(gapfraction)
@@ -118,7 +224,7 @@ P.hv(las=las, model="equidist", thresh.val=1.25, thresh.var="height", reprojecti
      pol.deg=5, azi.deg=45, col="height", plots=T, plots.each=T, plots.save=F)
 ```
 
-Comparison of canopy height model (CHM) algorithms.
+#### Comparison of canopy height model (CHM) algorithms
 
 ```{r chmplots, echo=3:4, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
 require(gapfraction)
@@ -127,7 +233,7 @@ chm(las)
 chm.sf(las)
 ```
 
-Creating a pit-free CHM and performing individual tree crown (ITC) detection with the standard variable-window and watershed algorithms.
+#### Creating a pit-free CHM and performing individual tree crown (ITC) detection with the standard variable-window and watershed algorithms
 
 ```{r stditc, echo=4:5, messages=FALSE, warnings=FALSE, verbose=FALSE, fig.show='hold', fig.width=6, fig.height=6}
 require(gapfraction)
@@ -137,7 +243,7 @@ mw   <- itc.mw(chm, ht2rad=function(x) 0.15746*x)
 wat  <- itc.wat(chm, ht2rad=function(x) 0.15746*x)
 ```
 
-Creating a stacked pit-free CHM and performing individual tree crown (ITC) detection with the hierarchical variable-window and watershed algorithms.
+#### Creating a stacked pit-free CHM and performing individual tree crown (ITC) detection with the hierarchical variable-window and watershed algorithms
 
 ```{r hieritc, echo=4:5, messages=FALSE, warnings=FALSE, verbose=FALSE}
 require(gapfraction)
@@ -147,17 +253,6 @@ mw   <- itc.mw.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
 wat  <- itc.wat.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
 ```
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+The `itc` algorithms store values for `trees` and `crown.area` in a two-element named numeric vector.
 
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+Happy laser scanning :)

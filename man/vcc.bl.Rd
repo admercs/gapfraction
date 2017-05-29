@@ -22,17 +22,16 @@ This function calculates canopy cover per the Beer's Law-modified Intensity-retu
 \examples{
 vcc.bl(las='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.sciencedirect.com/science/article/pii/S0034425708003106}
 
 \url{http://link.springer.com/chapter/10.1007\%2F978-94-017-8663-8_20}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}
 \keyword{fractional}
 \keyword{vertical}
-

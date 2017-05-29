@@ -40,14 +40,13 @@ This function implements Erickson's hemispherical-Voronoi gap fraction algorithm
 \examples{
 P.hv(las='C:/plot.las', model='equidist', thresh.val=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', plots=TRUE, plots.each=FALSE, plots.save=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 Forthcoming
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{fraction,}
 \keyword{gap}
 \keyword{thiessen}
 \keyword{voronoi,}
-

@@ -43,7 +43,7 @@ chm <- function(las=NA, las.proj=NA, las.reproj=NA, nx=100, ny=100, fun=max, sil
   }
 
   if(!exists("las")) {
-    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LAS       <- lidR::readLAS(las)
     LASfolder <- dirname(las)
     LASname   <- strsplit(basename(las),'\\.')[[1]][1]
   } else LAS  <- las

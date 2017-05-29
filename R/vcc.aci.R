@@ -25,7 +25,7 @@ vcc.aci <- function(las=NA, thresh.val=1.25, silent=FALSE) {
   }
 
   if(!exists("las")) {
-    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LAS       <- lidR::readLAS(las)
     LASfolder <- dirname(las)
     LASname   <- strsplit(basename(las),'\\.')[[1]][1]
   } else LAS  <- las

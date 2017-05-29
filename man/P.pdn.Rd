@@ -29,16 +29,15 @@ This function implements Erickson's point-density-normalized gap fraction along 
 \examples{
 P.pdn(las='C:/plot.las', pol.deg=15, azi.deg=45, reprojection=NA, silent=FALSE, plots=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 Forthcoming
 
 \url{http://www.sciencedirect.com/science/article/pii/S0168192310000328}
 }
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
+}
 \keyword{aci}
 \keyword{fraction,}
 \keyword{gap}
 \keyword{lai,}
-

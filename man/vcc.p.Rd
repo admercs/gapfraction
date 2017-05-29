@@ -22,17 +22,16 @@ This function calculates canopy cover as the ratio of canopy pixels to non-canop
 \examples{
 vcc.p(chm=chm, thresh.val=1.25, silent=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.sciencedirect.com/science/article/pii/S0924271614001646}
 
 \url{http://treephys.oxfordjournals.org/content/early/2009/06/24/treephys.tpp042.full}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}
 \keyword{fractional}
 \keyword{vertical}
-

@@ -40,7 +40,7 @@ P.pdn <- function(las=NA, pol.deg=5, azi.deg=45, reprojection=NA, silent=TRUE, p
   }
 
   if(!exists("las")) {
-    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LAS       <- lidR::readLAS(las)
     LASfolder <- dirname(las)
     LASname   <- strsplit(basename(las),'\\.')[[1]][1]
   } else LAS  <- las

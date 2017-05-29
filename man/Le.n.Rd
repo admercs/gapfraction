@@ -22,11 +22,11 @@ This function calculates LAI as a function of the effective LAI and fractional c
 \examples{
 Le.n(las='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.sciencedirect.com/science/article/pii/S0034425706001751}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{LAI,}
 \keyword{Le,}
@@ -34,4 +34,3 @@ Adam Erickson, \email{adam.erickson@ubc.ca}
 \keyword{effective}
 \keyword{index}
 \keyword{leaf}
-

@@ -40,13 +40,12 @@ This function detects individual tree crowns using a moving window function with
 \examples{
 itc.mw.h(chm.stack=chms, res=1, ht2rad=function(x) 0.15746*x/res, min.h=1, type='circle', fun=max, num=TRUE, stacked=FALSE, silent=FALSE, plots=FALSE, geoTIFF=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://www.mdpi.com/2072-4292/4/4/950/htm}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{itc,}
 \keyword{moving}
 \keyword{window}
-

@@ -22,17 +22,16 @@ This function calculates fractional cover per the First-echo Cover Index
 \examples{
 vcc.fci(las='C:/plot.las', thresh.val=1.25, silent=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 \url{http://geography.swan.ac.uk/silvilaser/papers/oral_papers/Forestry\%20Applications\%20\%26\%20Inventory/Holmgren.pdf}
 
 \url{http://link.springer.com/chapter/10.1007\%2F978-94-017-8663-8_20}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{canopy}
 \keyword{cover}
 \keyword{cover,}
 \keyword{fractional}
 \keyword{vertical}
-

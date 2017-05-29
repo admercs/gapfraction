@@ -45,13 +45,12 @@ This function creates radial grid plots for four common hemispherical lens geome
 \examples{
 radial.grid.hemi()
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \seealso{
 \code{\link{plotrix}}
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{grid,}
 \keyword{hemispherical}
 \keyword{radial,}
-

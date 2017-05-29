@@ -28,7 +28,7 @@ vcc.cv <- function(las=NA, reprojection=NA, col='height', col2=NA, thresh.var='h
   }
 
   if(!exists("las")) {
-    LAS       <- rLiDAR::readLAS(las, short=FALSE)
+    LAS       <- lidR::readLAS(las)
     LASfolder <- dirname(las)
     LASname   <- strsplit(basename(las),'\\.')[[1]][1]
   } else LAS  <- las

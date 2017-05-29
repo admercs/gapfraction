@@ -41,11 +41,11 @@ This function is a wrapper that allows you to run \code{P.hv} on multiple plots 
 P.hv.par(las='C:/plot.las', models=c('equidist','stereo'), threshs=seq(1,4,0.5))
 P.hv.par(las=las.list, models='all', thresh.vals=1.25, thresh.var='height', reprojection=NA, pol.deg=5, azi.deg=45, col='height', plots=TRUE, plots.each=FALSE, plots.save=FALSE)
 }
-\author{
-Adam Erickson, \email{adam.erickson@ubc.ca}
-}
 \references{
 Forthcoming
+}
+\author{
+Adam Erickson, \email{adam.erickson@ubc.ca}
 }
 \keyword{Voronoi,}
 \keyword{fraction,}
@@ -53,4 +53,3 @@ Forthcoming
 \keyword{hemispherical}
 \keyword{parallel,}
 \keyword{tesselation}
-

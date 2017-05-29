@@ -16,9 +16,9 @@
 #' @export
 #' @return The results of \code{sun.path}
 #' @examples
-#' sun.path(location.name='Jena', phi=50.9106, lambda=11.5672, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0)
+#' sun.path(location.name='UBC', phi=49.2606, lambda=-123.2460, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0)
 
-sun.path <- function(location.name='Jena', phi=50.9106, lambda=11.5672, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0) {
+sun.path <- function(location.name='UBC', phi=49.2606, lambda=-123.2460, out='', type='polar', lang='en', locale='English', ieqot=FALSE, summert=0) {
 
   if (lang=="de") {
     ltext=c("N","O","S","W","Nord","Ost","Sud","West","Azimuth","Hohenwinkel","MEZ","MESZ","Uhr","Sonnenstandsdiagramm","Zenit","Horizont")

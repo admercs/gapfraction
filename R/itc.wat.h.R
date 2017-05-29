@@ -41,7 +41,7 @@ itc.wat.h <- function(chm.stack=NA, res=1, ht2rad=NA, min.h=1, tolerance=0.1, fu
   for(i in 2:(length(chm.unstk))) {
     chm <- chm.unstk[[i]]
     if(max(raster::values(chm)[!is.na(raster::values(chm))]) <= min.h) next
-    itc.layer[i] <- try(itc.wat(chm=chm, tolerance=tolerance, ht2rad=ht2rad, min.h=min.h, res=res, silent=silent, ws.plot=ws.plot, num=F))
+    itc.layer[[i]] <- try(itc.wat(chm=chm, tolerance=tolerance, ht2rad=ht2rad, min.h=min.h, res=res, silent=silent, ws.plot=ws.plot, num=F))
   }
 
   itc.layer  <- itc.layer[!sapply(itc.layer, is.null)]
