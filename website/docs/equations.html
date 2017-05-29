@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Canopy light transmission equations</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">gapfraction</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="gapfraction.html">Home</a>
+</li>
+<li>
+  <a href="functions.html">Functions</a>
+</li>
+<li>
+  <a href="equations.html">Equations</a>
+</li>
+<li>
+  <a href="preprocessing.html">Pre-processing</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Canopy light transmission equations</h1>
+
+</div>
+
+
+<p><br></p>
+<p>The package implements a number of popular equations, as well as two new ones, for canopy light transmission derived from airborne laser scanning data.</p>
+<p><br></p>
+<div id="point-density-normalized-gap-fraction" class="section level4">
+<h4>Point-density normalized gap fraction:</h4>
+<p><span class="math display">\[\begin{align*}
+P_\text{pdn} &amp;= \sum_{i=1}^{n} \sum_{j=1}^{n}
+\left(\frac{{n_\text{first return}}_{i,j}} {\rho_\text{first return} / {{A_\text{sector}}_{i,j}}} \times \frac{A_{\text{sector}_{i,j}}}{A_\text{hemisphere}}\right)
+\end{align*}\]</span></p>
+</div>
+<div id="hemispherical-voronoi-gap-fraction-using-an-equidistant-lens-model" class="section level4">
+<h4>Hemispherical Voronoi gap fraction using an equidistant lens model:</h4>
+<p><span class="math display">\[\begin{align*}
+x_\text{equidistant} &amp;= \left( \frac{x}{\sqrt{x^2+y^2}} \right)
+\times atan2 \left( \sqrt{x^2+y^2},z \right) \\
+y_\text{equidistant} &amp;= \left( \frac{y}{\sqrt{x^2+y^2}} \right)
+\times atan2 \left( \sqrt{x^2+y^2},z \right) \\[4pt]
+p &amp;= \left( x_\text{equidistant}, y_\text{equidistant} \right) \\[4pt]
+V_a(A_i) &amp;= p|d_a (p,A_i) \le d_a(p,A_j), j \ne i, j=1, \cdots, n \\
+P_\text{hv} &amp;= 1 - \sum_{i=1}^{n} V_a(A_i)
+\text{ where } h_i \ge h_\text{threshold}
+\end{align*}\]</span></p>
+</div>
+<div id="beer-lambert-law-canopy-gap-fraction" class="section level4">
+<h4>Beer-Lambert Law canopy gap fraction:</h4>
+<p><span class="math display">\[\begin{align*}
+L_e &amp;= 2\sum_{i=1}^n - \ln\overline{P(\theta_i)}\cos{\theta}
+\frac{\sin\theta_i}{\sum_{j=1}^n\sin\theta_j} \\
+P_o &amp;= \sum_{i=1}^n \exp \left (\frac{-L_eG(\theta_i)}{\cos\theta_i} \right)
+\end{align*}\]</span></p>
+</div>
+<div id="canopy-to-total-return-ratio" class="section level4">
+<h4>Canopy-to-total-return ratio:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_r &amp;= \frac {\sum_{i=1}^n n_{\text{all}_i} \gt 1.25 \text{ m}}
+{\sum_{i=1}^n n_{\text{last}_i} + n_{\text{single}_i}}
+\end{align*}\]</span></p>
+</div>
+<div id="canopy-to-total-first-return-ratio" class="section level4">
+<h4>Canopy-to-total-first-return ratio:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_\text{fr} &amp;= \frac {\sum_{i=1}^n n_{\text{all}_i} \gt 1.25 \text{ m}}
+{\sum_{i=1}^n n_{\text{first}_i}}
+\end{align*}\]</span></p>
+</div>
+<div id="intensity-return-ratio" class="section level4">
+<h4>Intensity-return ratio:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_\text{ir} &amp;= \frac {\sum_{i=1}^n I_{\text{ground}_i} \gt 1.25 \text{ m}}
+{\sum_{i=1}^n I_{\text{all}_i}}
+\end{align*}\]</span></p>
+</div>
+<div id="beers-law-modified-intensity-return-ratio" class="section level4">
+<h4>Beer’s Law modified intensity-return ratio:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_\text{bl} &amp;= \frac {\frac
+{\sum_{i=1}^n I_{\text{ground single}_i} }
+{\sum_{i=1}^n I_{\text{all}_i}} + \sqrt \frac
+{\sum_{i=1}^n I_{\text{ground last}_i}}
+{\sum_{i=1}^n I_{\text{all}_i}} }
+{\frac
+{\sum_{i=1}^n I_{\text{first}_i} + I_{\text{single}_i}}
+{\sum_{i=1}^n I_{\text{all}_i}} + \sqrt \frac
+{\sum_{i=1}^n I_{\text{intermediate}_i} + I_{\text{last}_i}}
+{\sum_{i=1}^n I_{\text{all}_i}} }
+\end{align*}\]</span></p>
+</div>
+<div id="above-height-cover-index" class="section level4">
+<h4>Above-height cover index:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_\text{aci} &amp;= \frac
+{\sum_{i=1}^n n_{\text{single}_i} + n_{\text{all}_i \gt 1.25 \text{ m}} +
+n_{\text{intermediate}_i} + n_{\text{last}_i}}
+{\sum_{i=1}^n n_{\text{all}_i}}
+\end{align*}\]</span></p>
+</div>
+<div id="first-echo-cover-index" class="section level4">
+<h4>First-echo cover index:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_\text{fci} &amp;= \frac
+{\sum_{i=1}^n n_{\text{single}_i \gt 1.25 \text{ m}} +
+n_{\text{first}_i \gt 1.25 \text{ m}}}
+{\sum_{i=1}^n n_{\text{single}_i} +
+n_{\text{first}_i}}
+\end{align*}\]</span></p>
+</div>
+<div id="solbergs-cover-index" class="section level4">
+<h4>Solberg’s cover index:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_\text{sci} &amp;= \frac
+{\sum_{i=1}^n n_{\text{single}_i \gt 1.25 \text{ m}} +
+\frac{1}{2} (n_{\text{first}_i \gt 1.25 \text{ m}} +
+n_{\text{last}_i \gt 1.25 \text{ m}})}
+{\sum_{i=1}^n n_{\text{single}_i} + \frac{1}{2}
+(n_{\text{first}_i} + n_{\text{last}_i})}
+\end{align*}\]</span></p>
+</div>
+<div id="canopy-to-total-pixel-ratio" class="section level4">
+<h4>Canopy-to-total-pixel ratio:</h4>
+<p><span class="math display">\[\begin{align*}
+VCC_p &amp;= \frac
+{\sum_{i=1}^n n_{\text{CHM}_i \gt 1.25 \text{ m}}}
+{\sum_{i=1}^n n_{\text{CHM}_i}}
+\end{align*}\]</span></p>
+</div>
+<div id="cartesian-voronoi-fractional-cover" class="section level4">
+<h4>Cartesian-Voronoi fractional cover:</h4>
+<p><span class="math display">\[\begin{align*}
+V_a(A_i) &amp;= p|d_a (p,A_i) \le d_a(p,A_j), j \ne i, j=1, \cdots, n \\
+P_\text{cv} &amp;= 1 - \sum_{i=1}^{n} V_a(A_i)
+\text{ where } h_i \ge h_\text{threshold}
+\end{align*}\]</span></p>
+<p><br></p>
+<p>Feel free to submit a pull request to add new equations!</p>
+<p><br></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

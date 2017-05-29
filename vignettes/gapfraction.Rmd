@@ -4,21 +4,12 @@ author:
   name: "Adam Erickson, PhD Candidate, University of British Columbia"
   email: "adam.erickson@ubc.ca"
 date: "Updated: May 28, 2017"
-header-includes:
-  \usepackage{amsmath}
-output:
-  html_document:
-    theme: yeti
-    highlight: default
----
-
-<!-- output: rmarkdown::html_vignette
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"gapfraction: R functions for airborne laser scanning data of forests"}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{gapfraction: R functions for airborne laser scanning data of forests}
   %\VignetteEncoding{UTF-8}
-[Voronoi equation reference]("http://e-collection.library.ethz.ch/view/eth:3321")
--->
+---
 
 > "The science of today is the technology of tomorrow."
 [Edward Teller]("http://news.stanford.edu/news/2003/september24/tellerobit-924.html")

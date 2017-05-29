@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>A word on data pre-processing</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">gapfraction</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="gapfraction.html">Home</a>
+</li>
+<li>
+  <a href="functions.html">Functions</a>
+</li>
+<li>
+  <a href="equations.html">Equations</a>
+</li>
+<li>
+  <a href="preprocessing.html">Pre-processing</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">A word on data pre-processing</h1>
+
+</div>
+
+
+<p><br></p>
+<p>The <strong>gapfraction</strong> package requires height-normalized LiDAR points clouds. Users can either provide the path to these files</p>
+<p>By far, the simplest option for pre-processing data is to follow the <strong>lidR</strong> package <a href="%22https://github.com/Jean-Romain/lidR/wiki/lasnormalize%22">tutorial</a>, which utilizes <strong>LAStools</strong> under the hood. Alternatively, for LiDAR data without ground point classifications, height-normalized point clouds can be produced either with two <strong>LAStools</strong> command line functions, <code>lasground</code> and <code>lasheight</code>, or with three functions in <strong>USDA Fusion</strong>, <code>GroundFilter</code>, <code>GridSurfaceCreate</code>, and <code>CanopyModel</code>. If the ground points are already classified then you only need to use the <code>lasheight</code> function of <strong>LAStools</strong>, while the process for Fusion still requires the same three functions. Hence, I recommend that you use <strong>LAStools</strong>, as its ground point classification algorithm is also superior to that of <strong>Fusion</strong>, producing more accurate height-normalized point clouds. This is because <strong>Fusion</strong> uses the Kraus and Pfeifer (1998) algorithm<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, while <strong>LAStools</strong> implements an optimized version of the Axelsson (1999) algorithm<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. For more information, read Maguya, Junttila, and Kauranne (2014)<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. An example application of <code>lasground</code> and <code>lasheight</code>, implemented in <strong>Command Prompt</strong> or <strong>Bash</strong>, is provided below.</p>
+<pre><code>lasground -i lidar.las -o lidar_g.las 
+lasheight -i lidar_g.las -o lidar_n.las -replace_z </code></pre>
+<p>In order to run these functions, you need to istall <strong>LAStools</strong>. For Windows, don’t forget to add the <strong>LAStools</strong> <code>bin</code> directory to your system path<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>. For a single LiDAR plot, this is simple to run without leaving your R session. You can call these functions using the <code>system</code> function included in base <strong>R</strong>, as shown below.</p>
+<pre><code>setwd(&#39;C:/lidar&#39;)
+system(lasground -i lidar.las -o lidar_g.las)
+system(lasheight -i lidar_g.las -o lidar_n.las -replace_z)</code></pre>
+<p>To loop through LAS files in a folder, the syntax follows this pseudocode:</p>
+<pre><code>folder &lt;- &#39;C:/lidar&#39;
+files  &lt;- list.files(folder, pattern=&quot;\\.las$&quot;, full.names=TRUE)
+
+for (i in 1:length(files)) {
+  file   &lt;- files[i]
+  basenm &lt;- basename(file)
+  filenm &lt;- strsplit(basenm,&#39;.&#39;,fixed=TRUE)[[1]][1]
+  ground &lt;- paste(folder,filenm,&#39;_ground.las&#39;,sep=&#39;&#39;)
+  htnorm &lt;- paste(folder,filenm,&#39;_norm.las&#39;,sep=&#39;&#39;)
+  system(paste(&#39;lasground -i &#39;,file,&#39; -o &#39;,ground, sep=&#39;&#39;))
+  while (!file.exists(ground)) { Sys.sleep(1) }
+  system(paste(&#39;lasheight -i &#39;,ground,&#39; -o &#39;,htnorm,&#39; -replace_z&#39;, sep=&#39;&#39;))
+  while (!file.exists(htnorm)) { Sys.sleep(1) }
+}</code></pre>
+<p>This <code>for</code> loop reads each LAS file path, extracts the name of the file without extension, creates the filenames of the ground and height-normalized outputs, executes <code>lasground</code>, waits for the output, executes <code>lasheight</code> using the ground file as the input, waits for the output, then proceeds to the next iteration. The code should be simple to parallelize using the <code>foreach</code> package.</p>
+<p>Again, the <strong>lidR</strong> package is recommended for its ease of use.</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Kraus and Pfeifer (1998) Determination of terrain models in wooded areas with airborne laser scanner data. <a href="http://www.sciencedirect.com/science/article/pii/S0924271698000094" class="uri">http://www.sciencedirect.com/science/article/pii/S0924271698000094</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Axelsson (1999) Processing of laser scanner data—algorithms and applications. <a href="http://www.sciencedirect.com/science/article/pii/S0924271699000088" class="uri">http://www.sciencedirect.com/science/article/pii/S0924271699000088</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Maguya, Junttila, and Kauranne (2014) <a href="http://www.mdpi.com/2072-4292/6/7/6524" class="uri">http://www.mdpi.com/2072-4292/6/7/6524</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p><a href="http://www.computerhope.com/issues/ch000549.htm" class="uri">http://www.computerhope.com/issues/ch000549.htm</a><a href="#fnref4">↩</a></p></li>
+</ol>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

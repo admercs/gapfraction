@@ -1,0 +1,18 @@
+name: "gapfraction"
+output_dir: "docs"
+navbar:
+  title: "gapfraction"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Functions"
+      href: functions.html
+    - text: "Equations"
+      href: equations.html
+    - text: "Pre-processing"
+      href: preprocessing.html
+    - text: "About"
+      href: about.html
+output:
+  html_document:
+    theme: yeti
