@@ -11,7 +11,7 @@
 
 
 
-<title>gapfraction: R functions for LiDAR metrics of canopy light transmission</title>
+<title>gapfraction: R functions for LiDAR canopy light transmission</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -202,18 +202,26 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">gapfraction: R functions for LiDAR metrics of canopy light transmission</h1>
+<h1 class="title toc-ignore">gapfraction: R functions for LiDAR canopy light transmission</h1>
+<h4 class="author"><em>Adam Erickson, PhD Candidate, University of British Columbia</em></h4>
+<h4 class="date"><em>Updated: May 30, 2017</em></h4>
 
 </div>
 
 
 <!-- [Voronoi equation reference]("http://e-collection.library.ethz.ch/view/eth:3321") -->
 <p><br></p>
+<div class="figure">
+<img src="plots_1600.jpg" />
+
+</div>
+<p><br></p>
 <blockquote>
 <p>“The science of today is the technology of tomorrow.” <a href="http://news.stanford.edu/news/2003/september24/tellerobit-924.html">Edward Teller</a></p>
 </blockquote>
-<p>The <strong>gapfraction</strong> package for <strong>R</strong> is designed for processing airborne laser scanning (ALS) light-detection-and-ranging (LiDAR) data of forests. Many functions may work for terrestrial laser scanning data too. The package was produced for a chapter of Adam Erickson’s doctoral thesis at University of British Columbia<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. The package is designed to be used with LiDAR data pre-processed with <strong>LAStools</strong><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>, <strong>USDA Fusion</strong><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>, or the new <strong>lidR</strong> package from Jean-Romain Roussel<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>.</p>
-<p>The main input to functions are LAS or LAZ format height-normalized point clouds, typically LiDAR plots corresponding to field plots. The functions are designed to accept either paths to height-normalized LAS/LAZ files or <code>data.frame</code>/<code>data.table</code> objects created with <strong>lidR</strong> or <strong>rLiDAR</strong> from Carlos Silva<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> packages. Functions automatically detect whether a path or object is input for the <code>las</code> parameter. If using objects, the column order and naming conventions must follow those of <strong>lidR</strong> and <strong>rLiDAR</strong>.</p>
+<p>The <strong>gapfraction</strong> package for <strong>R</strong> was designed for modeling understory light in forests with light-detection-and-ranging (LiDAR) data. In addition to metrics of canopy gap fraction (<span class="math inline">\(P_o\)</span>), angular canopy closure (ACC), and vertical canopy cover (VCC), the package implements a new canopy height model (CHM) algorithm, popular individual tree crown (ITC) detection algorithms, and a number of other algorithms that produce useful features for statistical modeling, including the distance of trees from plot center.</p>
+<p>While the package was originally intended for processing airborne laser scanning (ALS) data, most of its functions should may work for terrestrial laser scanning (TLS) data. The package was produced for one chapter of Adam Erickson’s doctoral thesis at University of British Columbia<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. The <strong>gapfraction</strong> package is designed to be used with LAS or LAZ format point cloud data pre-processed with <strong>LAStools</strong><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>, <strong>USDA Fusion</strong><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>, or the new <strong>lidR</strong> package from Jean-Romain Roussel<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>. The package also accepts LAS objects imported from <strong>rLiDAR</strong> by Carlos Silva<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>.</p>
+<p>The main input to functions are height-normalized point clouds in LAS or LAZ format, typically LiDAR plots corresponding to field plots of similar size. The functions are designed to accept file paths or <code>data.frame</code>/<code>data.table</code> objects imported with the <strong>lidR</strong> or <strong>rLiDAR</strong> packages. Functions automatically detect whether a path or object is input for the <code>las</code> parameter. If using objects created from LAS/LAZ files, the column order and naming conventions must follow those of <strong>lidR</strong> and <strong>rLiDAR</strong>, which together provide a standardized object API for LiDAR data in R, based on the ASPRS LAS specification 1.4. It is highly recommended to use either <strong>lidR</strong> inr R or <strong>LAStools</strong> CLI. For more information on these, view the Pre-processing page on this site.</p>
 <p><br></p>
 <div id="getting-started" class="section level1">
 <h1>Getting started</h1>
@@ -222,9 +230,9 @@ $(document).ready(function () {
 <h2>Installation</h2>
 <p>To install the <strong>gapfraction</strong> package, first ensure that you have a working development environment, as the package depends on the <strong>lidr</strong> package. Required software is listed below.</p>
 <ul>
-<li>Windows: Rtools.exe</li>
-<li>Mac: Xcode</li>
-<li>Linux: R development branch (e.g., r-devel or r-base-dev)</li>
+<li>Windows: <code>Rtools.exe</code></li>
+<li>Mac: <code>Xcode</code></li>
+<li>Linux: <code>R development branch</code> (e.g., r-devel or r-base-dev)</li>
 </ul>
 <p>Next, install <strong>gapfraction</strong> from the R command line:</p>
 <pre><code>devtools::install_github(&quot;adam-erickson/gapfraction&quot;, dependencies=TRUE)</code></pre>
@@ -232,7 +240,7 @@ $(document).ready(function () {
 </div>
 <div id="example-data" class="section level2">
 <h2>Example data</h2>
-<p>After loading the gapfraction package with the <code>library</code> function, the example data can be loaded by calling <code>data(las)</code>. The included data consists of fake <span class="math inline">\(X,Y,Z\)</span> coordinates in UTM 11N and meters, along with 8-bit unsigned interger values for intensity and return number. The data consists of one 100-meter diameter LiDAR plot. Based on previous research, I recommend using plots minimally of this size for comparison to ground data (e.g., hemispherical photography) to capture edge effects.</p>
+<p>After loading the <strong>gapfraction</strong> package with <code>library(gapfraction)</code>, the example data can be loaded by calling <code>data(las)</code>. The included data consists of an example 100-meter circular radius LiDAR plot with synthetic <span class="math inline">\(X,Y,Z\)</span> coordinates in UTM 11N and height in meters, along with 8-bit unsigned interger values for intensity and return number. Based on previous research, I recommend using plots minimally of this size for comparison to ground data (e.g., hemispherical photography) to capture edge effects.</p>
 <p>Let’s get started!</p>
 <table>
 <thead>
@@ -324,9 +332,8 @@ $(document).ready(function () {
 <h2>Example usage</h2>
 <div id="computing-hemispherical-voronoi-gap-fraction" class="section level4">
 <h4>Computing hemispherical Voronoi gap fraction</h4>
-<p><br></p>
 <pre class="r"><code>P.hv(las=las, model=&quot;equidist&quot;, thresh.val=1.25, thresh.var=&quot;height&quot;, reprojection=NA,
-     pol.deg=5, azi.deg=45, col=&quot;height&quot;, plots=T, plots.each=T, plots.save=F)</code></pre>
+     pol.deg=5, azi.deg=45, col=&quot;height&quot;, plots=T, plots.each=F, plots.save=F)</code></pre>
 <pre><code>## nerror = 4 
 ## Increasing madj and trying again.
 ## nerror = 4 
@@ -344,11 +351,10 @@ $(document).ready(function () {
 ## nerror = 4 
 ## Increasing madj and trying again.</code></pre>
 <pre><code>## [1] 0.4943591</code></pre>
-<p><img src="index_files/figure-html/Phv-1.png" width="576" /><img src="index_files/figure-html/Phv-2.png" width="576" /><img src="index_files/figure-html/Phv-3.png" width="576" /><img src="index_files/figure-html/Phv-4.png" width="576" /></p>
+<p><img src="index_files/figure-html/Phv-1.png" width="576" /></p>
 </div>
 <div id="comparison-of-canopy-height-model-chm-algorithms" class="section level4">
 <h4>Comparison of canopy height model (CHM) algorithms</h4>
-<p><br></p>
 <pre class="r"><code>chm(las)</code></pre>
 <pre><code>## class       : RasterLayer 
 ## dimensions  : 100, 100, 10000  (nrow, ncol, ncell)
@@ -369,20 +375,23 @@ $(document).ready(function () {
 ## values      : 0, 20.41133  (min, max)</code></pre>
 <p><img src="index_files/figure-html/chmplots-1.png" width="576" /><img src="index_files/figure-html/chmplots-2.png" width="576" /></p>
 </div>
-<div id="creating-a-pit-free-chm-and-performing-individual-tree-crown-itc-detection-with-the-standard-variable-window-and-watershed-algorithms" class="section level4">
-<h4>Creating a pit-free CHM and performing individual tree crown (ITC) detection with the standard variable-window and watershed algorithms</h4>
-<p><br></p>
+<div id="performing-individual-tree-crown-itc-detection-on-a-chm-with-the-standard-variable-window-and-watershed-algorithms-both-allow-user-provided-height-to-crown-radius-functions" class="section level4">
+<h4>Performing individual tree crown (ITC) detection on a CHM with the standard variable-window and watershed algorithms; both allow user-provided height-to-crown-radius functions</h4>
 <pre class="r"><code>mw   &lt;- itc.mw(chm, ht2rad=function(x) 0.15746*x)
 wat  &lt;- itc.wat(chm, ht2rad=function(x) 0.15746*x)</code></pre>
 <p><img src="index_files/figure-html/stditc-1.png" width="576" /><img src="index_files/figure-html/stditc-2.png" width="576" /></p>
 </div>
-<div id="creating-a-stacked-pit-free-chm-and-performing-individual-tree-crown-itc-detection-with-the-hierarchical-variable-window-and-watershed-algorithms" class="section level4">
-<h4>Creating a stacked pit-free CHM and performing individual tree crown (ITC) detection with the hierarchical variable-window and watershed algorithms</h4>
-<p><br></p>
+<div id="creating-a-stacked-pit-free-chm-and-performing-individual-tree-crown-itc-detection-with-the-hierarchical-variable-window-and-watershed-algorithms-these-also-allow-users-to-input-empirical-height-to-crown-radius-functions" class="section level4">
+<h4>Creating a stacked pit-free CHM and performing individual tree crown (ITC) detection with the hierarchical variable-window and watershed algorithms; these also allow users to input empirical height-to-crown-radius functions</h4>
 <pre class="r"><code>mw   &lt;- itc.mw.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)
 wat  &lt;- itc.wat.h(chm, ht2rad=function(x) 0.15746*x, silent=TRUE)</code></pre>
 <p>The <code>itc</code> algorithms store values for <code>trees</code> and <code>crown.area</code> in a two-element named numeric vector.</p>
-<p>Please submit any issues and pull requests at the <strong>gapfraction</strong> page on GitHub at <a href="https://github.com/adam-erickson/gapfraction">adam-erickson/gapfraction</a>.</p>
+<p>Please submit any issues or pull requests at the <strong>gapfraction</strong> page on GitHub at <a href="https://github.com/adam-erickson/gapfraction">adam-erickson/gapfraction</a>.</p>
+<p><br></p>
+<div class="figure">
+<img src="drevil.jpg" />
+
+</div>
 </div>
 </div>
 </div>
