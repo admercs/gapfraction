@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="https://github.com/adamercs/gapfraction-website/blob/master/plots_1600.jpg")>
+  <img src="https://github.com/admercs/gapfraction-website/blob/master/plots_1600.jpg")>
 </p>
 
 # gapfraction
